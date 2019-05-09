@@ -5,72 +5,60 @@ import {hls} from "../controllers/hls";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import {ListItemText} from "@material-ui/core";
+import {m3uToJson} from "../utils/m3u_json_parser";
 
 interface IVideoProps {
     showControls?: boolean;
     className?: string;
 }
 
-const dataChannels = [
-{
-    description: "Test",
-    id: "Test",
-    url: 'http://video-auth1.iol.pt:1935/beachcam/arrifana/chunks.m3u8'
-},
-{
-    description: "Test",
-    id: "Test",
-    url: 'http://video-auth1.iol.pt:1935/beachcam/arrifana/chunks.m3u8'
-},
-{
-    description: "Test",
-    id: "Test",
-    url: 'http://video-auth1.iol.pt:1935/beachcam/arrifana/chunks.m3u8'
+interface IChannel{
+    'group-title': string;
+    title: string;
+    'tvg-id': string
+    'tvg-logo': string
+    'tvg-name': string;
+    url: string;
 }
-];
 
-export class ChannelList extends React.Component<IVideoProps, {}> {
-    async componentDidMount(){
-        // var xhr = new XMLHttpRequest();
-        const response = await axios.get("https://raw.githubusercontent.com/freearhey/iptv/master/channels/pt.m3u")
-        const playlist = this.parse(response.data)
-        console.log(playlist)
+export class ChannelList extends React.Component<IVideoProps, {
+    playlist: Array<IChannel>
+}> {
+    constructor(props: IVideoProps, context: any) {
+        super(props, context);
 
-
-
-        // xhr.open("GET", );
-        // xhr.setRequestHeader( 'Access-Control-Allow-Origin', '*');
-        // // xhr.overrideMimeType("audio/x-mpegurl"); // Needed, see below.
-        // // xhr.onload = this.parse;
-        // xhr.send();
-        //
-        // console.log(xhr.response)
+        this.state = {
+            playlist: []
+        }
     }
 
-    parse = (data: string) => {
+    async componentDidMount(){
+        const response = await axios.get("https://raw.githubusercontent.com/freearhey/iptv/master/channels/pt.m3u");
 
-        var playlist = window.M3U.parse(data);
-    };
+        this.setState({
+            playlist: m3uToJson(response.data)
+        })
+    }
 
     render() {
+        const {playlist} = this.state;
+
         return (
             <List>
-                {dataChannels.map(i => <Channel {...i}/>)}
+                {playlist.map(i => <Channel onClick={this.onClickChannel} {...i}/>)}
             </List>
         )
     }
+
+    onClickChannel = (channel: IChannel) => {
+        hls.loadSource(channel.url, 'video');
+    }
 }
 
-interface IChannelProps{
-    description: string;
-    url: string;
-    id: string;
-}
-
-const Channel = (props: IChannelProps) => {
+const Channel = (props: IChannel & {onClick: (item: IChannel) => void}) => {
     return (
         <ListItem>
-            <ListItemText primary={props.description}/>
+            <ListItemText primary={props.title} onClick={() => props.onClick(props)}/>
         </ListItem>
     )
-}
+};

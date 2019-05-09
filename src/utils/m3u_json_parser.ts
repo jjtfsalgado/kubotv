@@ -1,23 +1,26 @@
-function m3utojson(m3u) {
-    return m3u
-        .replace('#EXTM3U', '')
-        .split('#EXTINF:0,')
-        .slice(1)
-        .map(function(str, index) {
-            var channel = str.split('\n').slice(0,-1);
+const regex = /#EXTINF:(.+?)[,]\s?(.+?)[\r\n]+?((?:https?|rtmp):\/\/(?:\S*?\.\S*?)(?:[\s)\[\]{};"\'<]|\.\s|$))/gm;
+const regexAttr = /([a-zA-Z0-9\-\_]+?)="([^"]*)"/gm;
 
-            return {
-                "id": index + 1,
-                "number": index + 1,
-                "title": channel[0],
-                "tv_logo": "",
-                "tv_categories": [2],
-                "streaming_url": channel[1],
-                "announce": "",
-                "volume_shift": 0
-            };
-        });
+export function m3uToJson(str: string) {
+    let match;
+    const data = [];
+
+    while(match = regex.exec(str)){
+        const obj = {
+            title: match[2],
+            url: match[3].trim()
+        };
+
+        const attrs = match[1].match(regexAttr);
+
+        const r = attrs.reduce((accum: any, value) => {
+            const at = value.split('=');
+            accum[at[0]] = at[1];
+            return accum;
+        }, {});
+
+        data.push(Object.assign(obj, r))
+    }
+
+    return data;
 }
-
-
-var parseM3U = m3utojson(playlist) ;
