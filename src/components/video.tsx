@@ -20,7 +20,7 @@ export class Video extends React.Component<IVideoProps,{}>{
     componentDidMount(): void {
         var video = document.getElementById('video') as HTMLVideoElement;
         if(hls.isSupported()) {
-            hls.loadSource('http://173.236.10.10:1935/dgrau/dgrau/live.m3u8', 'video');
+            hls.loadChannel('http://173.236.10.10:1935/dgrau/dgrau/live.m3u8', 'video');
 
         }
         // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
