@@ -1,11 +1,11 @@
 import * as React from "react";
 import axios from "axios";
-import {hls, IChannel} from "../controllers/hls";
+import {hls, IChannel} from "../../controllers/hls";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import {ListItemText} from "@material-ui/core";
-import {m3uToJson} from "../utils/m3u_json_parser";
-import ToolBar from "./ui/toolbar"
+import {m3uToJson} from "../../utils/m3u_json_parser";
+import ToolBar from "./toolbar"
 
 interface IVideoProps {
     showControls?: boolean;
@@ -58,3 +58,4 @@ const Channel = (props: IChannel & { onClick: (item: IChannel) => void }) => {
         </ListItem>
     )
 };
+

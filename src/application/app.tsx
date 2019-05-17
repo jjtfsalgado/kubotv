@@ -1,8 +1,9 @@
 import * as React from 'react';
 import css from "./app.less";
-import {Video} from "./video";
-import {ChannelList} from "./channel_list";
-import {Dialog} from "./ui/dialog";
+import {Video} from "./video/video";
+import {ChannelList} from "./channels/channel_list";
+import {Dialog} from "../components/dialog/dialog";
+import {DialogCtrl} from "../components/dialog/ctrl";
 
 class Test extends React.Component<{},{}>{
     render(){
@@ -14,7 +15,7 @@ class Test extends React.Component<{},{}>{
 
 export class App extends React.Component<{},{}>{
     async componentDidMount(){
-        const res = await Dialog.async(<Test/>, {title: "test", okText:"Ok"});
+        const res = await DialogCtrl.async(<Test/>, {title: "test", okText:"Ok"});
         console.log(res)
     }
 

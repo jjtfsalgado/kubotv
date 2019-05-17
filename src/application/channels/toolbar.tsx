@@ -29,6 +29,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import {hls} from "../../controllers/hls";
+import {ListDialog} from "./list_dialog";
 
 
 const styles = (theme: Theme) =>
@@ -205,7 +206,8 @@ export class ToolBar extends React.Component<Props, {
     }
 
     onLoad = async () => {
-        await hls.loadPlaylist(this.state.url);
+        const playlist = await hls.loadPlaylist(this.state.url);
+        await ListDialog.show({ data: playlist})
     };
 
     onToggleMenu = () => {
