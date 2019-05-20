@@ -13,6 +13,7 @@ export interface IChannel {
 
 export const hls = new class{
     private dispatcher: (playlist: Array<IChannel>) => void;
+    private key = "js_playlist";
 
     constructor() {
         this.hls = new Hls()
@@ -24,13 +25,10 @@ export const hls = new class{
         return Hls.isSupported()
     }
 
-    public loadChannel(url: string, targetMediaId: string){
-        const video = document.getElementById(targetMediaId) as HTMLVideoElement;
+    public async loadChannel (url: string){
+        const video = document.getElementById("video") as HTMLVideoElement;
         this.hls.loadSource(url);
         this.hls.config.xhrSetup = (xhr, url) => {
-            // xhr.setRequestHeader("Access-Control-Allow-Headers", "X-Custom-Header");
-            // xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
-
             return xhr;
         };
         this.hls.attachMedia(video);
@@ -48,7 +46,16 @@ export const hls = new class{
         return m3uToJson(response.data)
     }
 
+    public async init(){
+        const playlist = JSON.parse(localStorage.getItem(this.key));
+        await this.loadChannel(playlist[0].url);
+        return playlist;
+    }
+
     public updateView(playlist:Array<IChannel>){
+        if(!playlist){return}
+
+        localStorage.setItem(this.key, JSON.stringify(playlist));
         this.dispatcher(playlist)
     }
 }();

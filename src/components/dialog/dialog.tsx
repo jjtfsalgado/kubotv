@@ -44,9 +44,7 @@ export abstract class Dialog<P, S> extends React.Component<P & {
     }
 
     private onSuccess = async () => {
-        const result = await this.getResult();
-        console.log(result)
-        this.props.onSuccess(result)
+        this.props.onSuccess(await this.getResult())
     };
 
     abstract getResult(): Promise<any>;

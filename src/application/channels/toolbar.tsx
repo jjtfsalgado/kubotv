@@ -30,6 +30,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import {hls} from "../../controllers/hls";
 import {ListDialog} from "./list_dialog";
+import {LoadPlaylistDialog} from "./load_playlist_dialog";
 
 
 const styles = (theme: Theme) =>
@@ -97,8 +98,6 @@ export interface Props extends WithStyles<typeof styles> {}
 
 export class ToolBar extends React.Component<Props, {
     showMenu: boolean;
-    showPlaylistDialog: boolean;
-    url:string;
 }> {
     constructor(props: Props) {
         super(props);
@@ -113,7 +112,7 @@ export class ToolBar extends React.Component<Props, {
 
     render(){
         const { classes } = this.props;
-        const {showMenu, showPlaylistDialog} = this.state;
+        const {showMenu} = this.state;
 
         return [
             <div className={classes.root}>
@@ -136,7 +135,7 @@ export class ToolBar extends React.Component<Props, {
                                     <Paper>
                                         <ClickAwayListener onClickAway={this.onToggleMenu}>
                                         <MenuList>
-                                            <MenuItem onClick={() => this.setState({showPlaylistDialog: true})}>
+                                            <MenuItem onClick={this.onShowLoadPlaylist}>
                                                 <ListItemIcon>
                                                     <CloudUpload />
                                                 </ListItemIcon>
@@ -172,43 +171,9 @@ export class ToolBar extends React.Component<Props, {
                         </div>
                     </Toolbar>
                 </AppBar>
-            </div>,
-            <Dialog
-                open={showPlaylistDialog}
-                onClose={this.handleClose}
-                aria-labelledby="form-dialog-title">
-
-                <DialogTitle id="form-dialog-title">Load M3U playlist</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Insert a valid URL or upload an M3U file
-                    </DialogContentText>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        onChange={this.onChange}
-                        id="name"
-                        label="Url"
-                        type="email"
-                        fullWidth
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={this.onLoad} color="primary">
-                        Load
-                    </Button>
-                    <Button onClick={this.handleClose} color="primary">
-                        Cancel
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            </div>
         ]
     }
-
-    onLoad = async () => {
-        const playlist = await hls.loadPlaylist(this.state.url);
-        await ListDialog.show({ data: playlist})
-    };
 
     onToggleMenu = () => {
         this.setState({
@@ -216,18 +181,18 @@ export class ToolBar extends React.Component<Props, {
         })
     };
 
-    handleClose = () => {
-        this.setState({
-            showPlaylistDialog: false
-        })
-    };
-
-    onChange = (ev: any) => {
-        this.setState({
-            url:ev.target.value
-        })
-    };
+    onShowLoadPlaylist = async () => {
+        const url = await LoadPlaylistDialog.show();
+        if(url){
+            const playlist = await hls.loadPlaylist(url);
+            const selectedChannels = await ListDialog.show({ data: playlist});
+            if(selectedChannels){
+                await hls.updateView(selectedChannels)
+            }
+        }
+    }
 }
+
 
 ToolBar.propTypes = {
     classes: PropTypes.object.isRequired,
