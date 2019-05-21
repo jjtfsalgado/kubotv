@@ -13,3 +13,10 @@ export function cls(...args: Array<any>) {
         }, [])
         .join(" ");
 }
+
+export function sortBy (collection: Array<any>, iterator: any){
+    var isString = typeof iterator === 'string';
+    return collection.sort(function(x, y) {
+        return isString ? x[iterator] - y[iterator] : iterator(x) - iterator(y);
+    });
+};

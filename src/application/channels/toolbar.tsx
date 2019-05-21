@@ -97,22 +97,19 @@ const styles = (theme: Theme) =>
 export interface Props extends WithStyles<typeof styles> {}
 
 export class ToolBar extends React.Component<Props, {
-    showMenu: boolean;
+    search: string;
 }> {
     constructor(props: Props) {
         super(props);
 
-        this.state = {
-            showMenu: false,
-            showPlaylistDialog: false
-        } as any
+        this.state = {} as any
     }
 
     menuRef: any;
 
     render(){
         const { classes } = this.props;
-        const {showMenu} = this.state;
+        const {search} = this.state;
 
         return [
             <div className={classes.root}>
@@ -120,39 +117,11 @@ export class ToolBar extends React.Component<Props, {
                     <Toolbar>
                         <IconButton className={classes.menuButton}
                                     color="inherit"
-                                    onClick={this.onToggleMenu}
+                                    onClick={this.onShowLoadPlaylist}
                                     aria-label="Open drawer"
                                     buttonRef={(node) => this.menuRef = node}>
-                            <MenuIcon/>
+                            <CloudUpload />
                         </IconButton>
-                        <Popper open={showMenu} anchorEl={this.menuRef} transition>
-                            {({ TransitionProps, placement }) => (
-                                <Grow
-                                    {...TransitionProps}
-                                    id="menu-list-grow"
-                                    style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-                                >
-                                    <Paper>
-                                        <ClickAwayListener onClickAway={this.onToggleMenu}>
-                                        <MenuList>
-                                            <MenuItem onClick={this.onShowLoadPlaylist}>
-                                                <ListItemIcon>
-                                                    <CloudUpload />
-                                                </ListItemIcon>
-                                                <ListItemText inset primary="Load" />
-                                            </MenuItem>
-                                            <MenuItem>
-                                                <ListItemIcon>
-                                                    <InboxIcon />
-                                                </ListItemIcon>
-                                                <ListItemText inset primary="Settings" />
-                                            </MenuItem>
-                                        </MenuList>
-                                        </ClickAwayListener>
-                                    </Paper>
-                                </Grow>
-                            )}
-                        </Popper>
                         <Typography className={classes.title} variant="h6" color="inherit" noWrap>
                             Playlist
                         </Typography>
@@ -167,6 +136,8 @@ export class ToolBar extends React.Component<Props, {
                                     root: classes.inputRoot,
                                     input: classes.inputInput,
                                 }}
+                                value={search}
+                                onChange={this.onSearch}
                             />
                         </div>
                     </Toolbar>
@@ -175,9 +146,12 @@ export class ToolBar extends React.Component<Props, {
         ]
     }
 
-    onToggleMenu = () => {
+    onSearch = (ev) => {
+        const value = ev.target.value;
+        hls.search(value);
+
         this.setState({
-            showMenu: !this.state.showMenu
+            search: value
         })
     };
 

@@ -4,6 +4,9 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import {ListItemText} from "@material-ui/core";
 import ToolBar from "./toolbar"
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 interface IVideoProps {
     showControls?: boolean;
@@ -19,7 +22,7 @@ export class ChannelList extends React.Component<IVideoProps, {
         this.state = {
             playlist: []
         };
-        hls.register = (playlist:Array<IChannel>) => this.setState({playlist});
+        hls.register = (playlist: Array<IChannel>) => this.setState({playlist});
     }
 
     async componentDidMount() {
@@ -35,7 +38,7 @@ export class ChannelList extends React.Component<IVideoProps, {
             <div>
                 <ToolBar/>
                 <List>
-                    {playlist && playlist.map(i => <Channel onClick={this.onClickChannel} {...i}/>)}
+                    {playlist && playlist.map(i => <Channel onClick={this.onClickChannel} item={i} />)}
                 </List>
             </div>
         )
@@ -46,11 +49,37 @@ export class ChannelList extends React.Component<IVideoProps, {
     }
 }
 
-const Channel = (props: IChannel & { onClick: (item: IChannel) => void }) => {
-    return (
-        <ListItem>
-            <ListItemText primary={props.title} onClick={() => props.onClick(props)}/>
-        </ListItem>
-    )
+class Channel extends React.PureComponent<{
+    item: IChannel;
+    onClick: (item: IChannel) => void
+}, {}> {
+
+    render() {
+        const {item} = this.props;
+
+        return (
+            <div>
+                <ListItem>
+                    <ListItemText primary={item && item.title}
+                                  onClick={this.onClick}/>
+                    <ListItemSecondaryAction>
+                        <IconButton aria-label="Delete" onClick={this.onDelete}>
+                            <DeleteIcon/>
+                        </IconButton>
+                    </ListItemSecondaryAction>
+                </ListItem>
+            </div>
+        )
+    }
+
+    onClick = () => {
+        const {onClick, item} = this.props;
+        onClick(item)
+    };
+
+    onDelete = () => {
+        const {item} = this.props;
+        hls.deleteChannel(item)
+    };
 };
 
