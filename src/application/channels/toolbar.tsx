@@ -5,32 +5,15 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
-import { fade } from '@material-ui/core/styles/colorManipulator';
+import {fade} from '@material-ui/core/styles/colorManipulator';
 import {Theme, WithStyles, withStyles} from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import createStyles from "@material-ui/core/styles/createStyles";
-import {Popper} from "@material-ui/core";
-import Grow from "@material-ui/core/Grow";
-import Paper from "@material-ui/core/Paper";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-import MenuList from "@material-ui/core/MenuList";
-import MenuItem from "@material-ui/core/MenuItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from '@material-ui/icons/Settings';
-import DraftsIcon from '@material-ui/icons/Drafts';
 import CloudUpload from '@material-ui/icons/CloudUpload';
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogActions from "@material-ui/core/DialogActions";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import {hls} from "../../controllers/hls";
 import {ListDialog} from "./list_dialog";
 import {LoadPlaylistDialog} from "./load_playlist_dialog";
+import {newGuid} from "../../utils/function";
 
 
 const styles = (theme: Theme) =>
@@ -146,7 +129,7 @@ export class ToolBar extends React.Component<Props, {
         ]
     }
 
-    onSearch = (ev) => {
+    onSearch = (ev: any) => {
         const value = ev.target.value;
         hls.search(value);
 
@@ -161,6 +144,7 @@ export class ToolBar extends React.Component<Props, {
             const playlist = await hls.loadPlaylist(url);
             const selectedChannels = await ListDialog.show({ data: playlist});
             if(selectedChannels){
+                selectedChannels.forEach((i: any) => i["id"] = newGuid());
                 await hls.updateView(selectedChannels)
             }
         }

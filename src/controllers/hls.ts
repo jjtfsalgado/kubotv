@@ -10,6 +10,7 @@ export interface IChannel {
     'tvg-logo': string
     'tvg-name': string;
     url: string;
+    id: string
 }
 
 export const hls = new class{
@@ -35,6 +36,9 @@ export const hls = new class{
         this.hls.attachMedia(video);
         this.hls.on(Hls.Events.MANIFEST_PARSED,async function() {
             await video.play();
+        });
+        this.hls.on(Hls.Events.ERROR, function (event, data) {
+            return alert("Ups something went wrong.. Couldn't load that channel");
         });
     }
 

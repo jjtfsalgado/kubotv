@@ -4,27 +4,27 @@ import {DialogCtrl} from "../../components/dialog/ctrl";
 import TextField from "@material-ui/core/TextField";
 import {DialogContentText} from "@material-ui/core";
 
-// interface IListDialogProps {
-//     data: Array<IChannel>
-// }
-
-export class LoadPlaylistDialog extends Dialog<
-    {},{
-    url:string;
-}>{
-
+export class LoadPlaylistDialog extends Dialog<{},{}>{
     constructor(props: any) {
         super(props);
-        this.state = {} as any
+
+        this.urlRef = React.createRef();
+        this.fileRef = React.createRef();
     }
+
+    urlRef: React.RefObject<any>;
+    fileRef: React.RefObject<any>;
 
     static show = async () => await DialogCtrl.async(LoadPlaylistDialog, Object.assign({}, {title: "Load playlist", okText: "Load"}));
 
     getResult(): Promise<any> {
         const {url} = this.state;
-        return new Promise((res, rej) => {
-            res(url)
-        });
+        this.fileRef
+        this.urlRef
+
+        // return new Promise((res, rej) => {
+        //     res(url)
+        // });
     }
 
     renderBody(){
@@ -34,19 +34,23 @@ export class LoadPlaylistDialog extends Dialog<
             </DialogContentText>,
             <TextField
                 autoFocus
+                inputRef={this.urlRef}
                 margin="dense"
                 onChange={this.onChange}
-                id="name"
+                id="url"
                 label="Url"
-                type="email"
+                fullWidth
+            />,
+            <TextField
+                inputRef={this.fileRef}
+                autoFocus
+                margin="dense"
+                onChange={this.onChange}
+                id="file"
+                label="File"
+                type="file"
                 fullWidth
             />
         ];
-    }
-
-    onChange = (ev: any) => {
-        this.setState({
-            url:ev.target.value
-        })
     }
 }

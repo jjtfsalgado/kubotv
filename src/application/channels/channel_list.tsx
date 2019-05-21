@@ -38,7 +38,7 @@ export class ChannelList extends React.Component<IVideoProps, {
             <div>
                 <ToolBar/>
                 <List>
-                    {playlist && playlist.map(i => <Channel onClick={this.onClickChannel} item={i} />)}
+                    {playlist && playlist.map(i => <Channel key={i.id} onClick={this.onClickChannel} item={i} />)}
                 </List>
             </div>
         )
