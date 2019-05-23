@@ -1,7 +1,7 @@
 import * as Hls from "hls.js";
 import axios from "axios";
 import {m3uToJson} from "../utils/m3u_json_parser";
-import {sortBy} from "../utils/function";
+import {readFile, sortBy} from "../utils/function";
 
 export interface IChannel {
     'group-title': string;
@@ -54,9 +54,14 @@ export const hls = new class{
         this.dispatcher = callback;
     }
 
-    public async loadPlaylist(url: string){
+    public async loadFromUrl(url: string){
         const response = await axios.get(url);
         return m3uToJson(response.data)
+    }
+
+    public async loadFromFile(file: any){
+        const response = await readFile(file);
+        return m3uToJson(response)
     }
 
     public async init(){

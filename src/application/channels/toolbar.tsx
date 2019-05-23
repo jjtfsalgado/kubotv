@@ -139,9 +139,9 @@ export class ToolBar extends React.Component<Props, {
     };
 
     onShowLoadPlaylist = async () => {
-        const url = await LoadPlaylistDialog.show();
-        if(url){
-            const playlist = await hls.loadPlaylist(url);
+        const playlist = await LoadPlaylistDialog.show();
+        debugger
+        if(playlist){
             const selectedChannels = await ListDialog.show({ data: playlist});
             if(selectedChannels){
                 selectedChannels.forEach((i: any) => i["id"] = newGuid());

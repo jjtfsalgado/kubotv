@@ -12,8 +12,7 @@ export function m3uToJson(str: string) {
         };
 
         const attrs = match[1].match(regexAttr);
-
-        const r = attrs.reduce((accum: any, value) => {
+        const r = attrs && attrs.reduce((accum: any, value) => {
             const at = value.split('=');
             accum[at[0]] = at[1];
             return accum;

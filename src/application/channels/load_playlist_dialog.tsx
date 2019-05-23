@@ -3,6 +3,8 @@ import * as React from "react";
 import {DialogCtrl} from "../../components/dialog/ctrl";
 import TextField from "@material-ui/core/TextField";
 import {DialogContentText} from "@material-ui/core";
+import {nullProp, readFile} from "../../utils/function";
+import {hls} from "../../controllers/hls";
 
 export class LoadPlaylistDialog extends Dialog<{},{}>{
     constructor(props: any) {
@@ -17,14 +19,15 @@ export class LoadPlaylistDialog extends Dialog<{},{}>{
 
     static show = async () => await DialogCtrl.async(LoadPlaylistDialog, Object.assign({}, {title: "Load playlist", okText: "Load"}));
 
-    getResult(): Promise<any> {
-        const {url} = this.state;
-        this.fileRef
-        this.urlRef
+    async getResult(): Promise<any> {
+        const url = nullProp(this.urlRef, i => i.current, i => i.value);
+        const file = nullProp(this.fileRef, i => i.current, i => i.files[0]);
 
-        // return new Promise((res, rej) => {
-        //     res(url)
-        // });
+        if(!!url){
+            return await hls.loadFromUrl(url)
+        }else if(!!file){
+            return await hls.loadFromFile(file)
+        }
     }
 
     renderBody(){
@@ -36,7 +39,6 @@ export class LoadPlaylistDialog extends Dialog<{},{}>{
                 autoFocus
                 inputRef={this.urlRef}
                 margin="dense"
-                onChange={this.onChange}
                 id="url"
                 label="Url"
                 fullWidth
@@ -45,7 +47,6 @@ export class LoadPlaylistDialog extends Dialog<{},{}>{
                 inputRef={this.fileRef}
                 autoFocus
                 margin="dense"
-                onChange={this.onChange}
                 id="file"
                 label="File"
                 type="file"
