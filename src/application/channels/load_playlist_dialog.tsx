@@ -1,6 +1,6 @@
-import {Dialog} from "../../components/dialog/dialog";
+import {Dialog} from "../../components/dialog/base/dialog";
 import * as React from "react";
-import {DialogCtrl} from "../../components/dialog/ctrl";
+import {DialogCtrl} from "../../components/dialog/base/ctrl";
 import TextField from "@material-ui/core/TextField";
 import {DialogContentText} from "@material-ui/core";
 import {nullProp, readFile} from "../../utils/function";

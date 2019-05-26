@@ -7,6 +7,12 @@ import ToolBar from "./toolbar"
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
+import FolderIcon from "@material-ui/icons/Folder";
+import {cls} from "../../utils/function";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import Avatar from "@material-ui/core/Avatar";
+
+import css from "./channel_list.less";
 
 interface IVideoProps {
     showControls?: boolean;
@@ -33,13 +39,16 @@ export class ChannelList extends React.Component<IVideoProps, {
 
     render() {
         const {playlist} = this.state;
+        const {className} = this.props;
 
         return (
-            <div>
+            <div className={cls(className)}>
                 <ToolBar/>
-                <List>
-                    {playlist && playlist.map(i => <Channel key={i.id} onClick={this.onClickChannel} item={i} />)}
-                </List>
+                <div className={css.container}>
+                    <List className={css.list}>
+                        {playlist && playlist.map(i => <Channel key={i.id} onClick={this.onClickChannel} item={i}/>)}
+                    </List>
+                </div>
             </div>
         )
     }
@@ -58,17 +67,20 @@ class Channel extends React.PureComponent<{
         const {item} = this.props;
 
         return (
-            <div>
-                <ListItem>
-                    <ListItemText primary={item && item.title}
-                                  onClick={this.onClick}/>
-                    <ListItemSecondaryAction>
-                        <IconButton aria-label="Delete" onClick={this.onDelete}>
-                            <DeleteIcon/>
-                        </IconButton>
-                    </ListItemSecondaryAction>
-                </ListItem>
-            </div>
+            <ListItem>
+                <ListItemAvatar>
+                    <Avatar>
+                        <FolderIcon />
+                    </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary={item && item.title}
+                              onClick={this.onClick}/>
+                <ListItemSecondaryAction>
+                    <IconButton aria-label="Delete" onClick={this.onDelete}>
+                        <DeleteIcon/>
+                    </IconButton>
+                </ListItemSecondaryAction>
+            </ListItem>
         )
     }
 

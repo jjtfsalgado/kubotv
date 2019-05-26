@@ -29,21 +29,46 @@ export const hls = new class{
 
     public async loadChannel (url: string){
         const video = document.getElementById("video") as HTMLVideoElement;
+        // url+='.m3u';
+
         this.hls.loadSource(url);
-        this.hls.config.xhrSetup = (xhr, url) => {
-            return xhr;
-        };
         this.hls.attachMedia(video);
-        this.hls.on(Hls.Events.MANIFEST_PARSED,async function() {
+        this.hls.on(Hls.Events.MANIFEST_PARSED,async () => {
             await video.play();
         });
-        this.hls.on(Hls.Events.ERROR, function (event, data) {
-            return alert("Ups something went wrong.. Couldn't load that channel");
+        this.hls.on(Hls.Events.ERROR, async (event: any, data) => {
+            const errorType = data.type;
+            const errorDetails = data.details;
+            const errorFatal = data.fatal;
+            console.error(url, data);
+
+            if(errorFatal){
+                switch(errorType) {
+                    case Hls.ErrorTypes.NETWORK_ERROR:
+                        // try to recover network error
+                        console.warn("fatal network error encountered, try to recover");
+                        this.hls.startLoad();
+                        break;
+                    case Hls.ErrorTypes.MEDIA_ERROR:
+                        console.warn("fatal media error encountered, try to recover");
+                        this.hls.recoverMediaError();
+                        break;
+                    default:
+                        // cannot recover
+                        this.hls.destroy();
+                        break;
+                }
+            }
         });
     }
 
     private get getData(){
         return JSON.parse(localStorage.getItem(this.key));
+    };
+
+    public deleteData(){
+        localStorage.removeItem(this.key);
+        this.dispatcher(this.getData)
     };
 
     private set setData(playlist: Array<IChannel>){
