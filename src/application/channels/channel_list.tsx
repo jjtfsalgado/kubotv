@@ -62,7 +62,6 @@ export class ChannelList extends React.Component<IVideoProps, {
 
         return (
             <div className={cls(className)}>
-                <ToolBar/>
                 <div className={css.container}>
                     <List className={css.list}>
                         {playlist && playlist.map(i => (

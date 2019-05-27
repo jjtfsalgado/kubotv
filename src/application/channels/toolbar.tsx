@@ -148,9 +148,6 @@ export class ToolBar extends React.Component<Props, {
                                 </Grow>
                             )}
                         </Popper>
-                        <Typography className={classes.title} variant="h6" color="inherit" noWrap>
-                            Playlist
-                        </Typography>
                         <div className={classes.grow} />
                         <div className={classes.search}>
                             <div className={classes.searchIcon}>
