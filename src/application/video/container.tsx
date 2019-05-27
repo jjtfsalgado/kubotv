@@ -34,7 +34,7 @@ export class VideoContainer extends React.Component<IVideoProps, {
         const {className} = this.props;
         const {selectedChannel} = this.state;
 
-        return (
+        return [
             <div className={cls(className)}>
                 <Video showControls={true}/>
                 {selectedChannel && (
@@ -42,6 +42,6 @@ export class VideoContainer extends React.Component<IVideoProps, {
                         {selectedChannel.title}
                     </Typography>)}
             </div>
-        )
+        ]
     }
 }

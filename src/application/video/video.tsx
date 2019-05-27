@@ -12,7 +12,7 @@ export class Video extends React.Component<IVideoProps,{}>{
     render() {
         const {showControls, className} = this.props;
         return <video id="video"
-                      className={cls(css.video, className)}
+                      className={cls(css.player, className)}
                       controls={showControls}/>
     }
 }
