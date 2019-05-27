@@ -36,7 +36,6 @@ export class VideoContainer extends React.Component<IVideoProps, {
 
         return (
             <div className={cls(className)}>
-                <Ad client={"ca-pub-9406837176504492"} slot={"5196477120"} style={{display:"inline-block",width:"970px",height:"90px"}}/>
                 <Video showControls={true}/>
                 {selectedChannel && (
                     <Typography variant="h6" color="secondary">
