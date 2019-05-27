@@ -1,9 +1,10 @@
 import * as React from "react";
 import {cls} from "../../utils/function";
-
-// import css from "./channel_list.less";
 import {Video} from "./video";
 import {Typography} from "@material-ui/core";
+import {IChannel} from "../../controllers/hls";
+import {eventDispatcher, EVENTS} from "../../controllers/pub_sub";
+import {Ad} from "../../components/advertisement/ad";
 
 interface IVideoProps {
     showControls?: boolean;
@@ -11,18 +12,36 @@ interface IVideoProps {
 }
 
 export class VideoContainer extends React.Component<IVideoProps, {
+    selectedChannel: IChannel;
 }> {
+    private eventListener: { delete: () => void };
+
+    constructor(props: IVideoProps, context: any) {
+        super(props, context);
+
+        this.state = {} as any;
+
+        this.eventListener = eventDispatcher.subscribe(EVENTS.CHANNEL_UPDATE, this.onChannelUpdate)
+    }
+
+    onChannelUpdate = (channel: IChannel) => {
+        this.setState({
+            selectedChannel: channel
+        })
+    };
+
     render() {
         const {className} = this.props;
+        const {selectedChannel} = this.state;
 
         return (
             <div className={cls(className)}>
-                <Typography variant="h6" color="inherit">
-                    Header
-                </Typography>
-                <div>
-                    <Video showControls={true}/>
-                </div>
+                <Ad client={"ca-pub-9406837176504492"} slot={"5196477120"} style={{display:"inline-block",width:"970px",height:"90px"}}/>
+                <Video showControls={true}/>
+                {selectedChannel && (
+                    <Typography variant="h6" color="secondary">
+                        {selectedChannel.title}
+                    </Typography>)}
             </div>
         )
     }

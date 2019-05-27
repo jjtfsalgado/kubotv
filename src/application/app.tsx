@@ -3,6 +3,7 @@ import css from "./app.less";
 import {Video} from "./video/video";
 import {ChannelList} from "./channels/channel_list";
 import {VideoContainer} from "./video/container";
+import {Ad} from "../components/advertisement/ad";
 
 export class App extends React.Component<{},{}>{
     render() {

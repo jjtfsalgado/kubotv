@@ -1,7 +1,8 @@
 import * as Hls from "hls.js";
 import axios from "axios";
 import {m3uToJson} from "../utils/m3u_json_parser";
-import {readFile, sortBy} from "../utils/function";
+import {readFile} from "../utils/function";
+import {eventDispatcher, EVENTS} from "./pub_sub";
 
 export interface IChannel {
     'group-title': string;
@@ -14,7 +15,6 @@ export interface IChannel {
 }
 
 export const hls = new class{
-    private dispatcher: (playlist: Array<IChannel>) => void;
     private key = "js_playlist";
 
     constructor() {
@@ -27,9 +27,10 @@ export const hls = new class{
         return Hls.isSupported()
     }
 
-    public async loadChannel (url: string){
+    public async loadChannel (channel: IChannel){
+        eventDispatcher.publish(EVENTS.CHANNEL_UPDATE, channel);
+        const url = channel.url;
         const video = document.getElementById("video") as HTMLVideoElement;
-        // url+='.m3u';
 
         this.hls.loadSource(url);
         this.hls.attachMedia(video);
@@ -62,22 +63,26 @@ export const hls = new class{
         });
     }
 
+    public deleteChannel(item:IChannel){
+        if(!item){return}
+        const channels = this.getData;
+        if(!channels){return};
+        const filtered = channels.filter((i: IChannel) => i.url !== item.url);
+        this.updateView(filtered, true)
+    }
+
     private get getData(){
         return JSON.parse(localStorage.getItem(this.key));
     };
 
     public deleteData(){
         localStorage.removeItem(this.key);
-        this.dispatcher(this.getData)
+        eventDispatcher.publish(EVENTS.PLAYLIST_UPDATE, this.getData)
     };
 
     private set setData(playlist: Array<IChannel>){
         localStorage.setItem(this.key, JSON.stringify(playlist));
     };
-
-    public set register(callback: (playlist:Array<IChannel>) => void){
-        this.dispatcher = callback;
-    }
 
     public async loadFromUrl(url: string){
         const response = await axios.get(url);
@@ -91,7 +96,7 @@ export const hls = new class{
 
     public async init(){
         const playlist = this.getData;
-        await this.loadChannel(playlist[0].url);
+        await this.loadChannel(playlist[0]);
         return playlist;
     }
 
@@ -101,7 +106,7 @@ export const hls = new class{
             playlist = playlist.filter(i => i.title.toLowerCase().includes(value.toLowerCase()));
         }
 
-        this.dispatcher(playlist);
+        eventDispatcher.publish(EVENTS.PLAYLIST_UPDATE, this.getData)
     }
 
     public updateView(playlist:Array<IChannel>, replace?: boolean){
@@ -112,14 +117,6 @@ export const hls = new class{
         }
 
         this.setData = playlist;
-        this.dispatcher(playlist)
-    }
-
-    public deleteChannel(item:IChannel){
-        if(!item){return}
-        const channels = this.getData;
-        if(!channels){return};
-        const filtered = channels.filter((i: IChannel) => i.url !== item.url);
-        this.updateView(filtered, true)
+        eventDispatcher.publish(EVENTS.PLAYLIST_UPDATE, this.getData)
     }
 }();

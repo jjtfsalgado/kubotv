@@ -31,13 +31,17 @@ const styles = (theme: Theme) =>
     createStyles({
         root: {
             width: '100%',
+            color: "#fff"
+        },
+        toolbar:{
+            backgroundColor: "#121212"
         },
         grow: {
             flexGrow: 1,
         },
         menuButton: {
             marginLeft: -12,
-            marginRight: 20,
+            marginRight: 20
         },
         title: {
             display: 'none',
@@ -68,9 +72,8 @@ const styles = (theme: Theme) =>
             alignItems: 'center',
             justifyContent: 'center',
         },
-        inputRoot: {
-            color: 'inherit',
-            width: '100%',
+        inputRoot:{
+            color: "#fff"
         },
         inputInput: {
             paddingTop: theme.spacing.unit,
@@ -109,7 +112,7 @@ export class ToolBar extends React.Component<Props, {
         return [
             <div className={classes.root}>
                 <AppBar position="static">
-                    <Toolbar>
+                    <Toolbar className={classes.toolbar}>
                         <IconButton className={classes.menuButton}
                                     color="inherit"
                                     onClick={this.onToggleMenu}
