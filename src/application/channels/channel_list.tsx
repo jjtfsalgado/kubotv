@@ -3,7 +3,6 @@ import {hls, IChannel} from "../../controllers/hls";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import {ListItemText} from "@material-ui/core";
-import ToolBar from "./toolbar"
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -104,6 +103,7 @@ class Channel extends React.PureComponent<{
 
         return (
             <ListItem dense={true}
+                      onClick={this.onClick}
                       className={cls(css.item, selected && css.selected)}>
                 <ListItemAvatar>
                     <Avatar>
@@ -111,8 +111,7 @@ class Channel extends React.PureComponent<{
                     </Avatar>
                 </ListItemAvatar>
                 <ListItemText primary={item && item.title}
-                              className={css.primary}
-                              onClick={this.onClick}/>
+                              className={css.primary}/>
                 <ListItemSecondaryAction>
                     <IconButton aria-label="Delete"
                                 color={"secondary"}

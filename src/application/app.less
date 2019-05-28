@@ -7,7 +7,7 @@
   height: 100vh;
   width: 100vw;
   display: grid;
-  grid-template-columns: auto;
+  grid-template-columns: 100%;
   grid-template-rows: 10% 80% 10%;
   overflow: hidden;
   background-color: #292929;
@@ -43,11 +43,13 @@
     }
   }
 
-  @media(max-width: 1200px){
+  @media(max-width: 1400px){
+
     .body{
-      grid-template-columns: auto;
+      grid-template-columns: 100%;
       grid-template-areas: "video""channels";
       grid-template-rows: 50% 50%;
+      grid-row-gap: 30px;
     }
 
     .footer{
