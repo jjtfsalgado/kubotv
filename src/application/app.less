@@ -7,11 +7,11 @@
   height: 100vh;
   width: 100vw;
   display: grid;
-  grid-template-columns: 8fr 2fr;
+  grid-template-columns: auto;
   grid-template-rows: 10% 80% 10%;
   overflow: hidden;
   background-color: #292929;
-  grid-template-areas: "ad ad""video channels""footer footer";
+  grid-template-areas: "ad""body""footer";
 
   .ad{
     grid-area: ad;
@@ -21,18 +21,37 @@
     grid-area: footer;
   }
 
-  .video{
-    padding: 30px;
-    grid-area: video;
-    display: flex;
-    flex-direction: column;
+  .body{
+    display: grid;
+    padding: 20px 50px;
+    grid-area: body;
+    grid-template-columns: 8fr 2fr;
+    grid-template-areas: "video channels";
+    grid-column-gap: 30px;
+
+    .video{
+      grid-area: video;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .channels{
+      min-height: 0;
+      flex-direction: column;
+      display: flex;
+      grid-area: channels;
+    }
   }
 
-  .channels{
-    min-height: 0;
-    padding: 30px 30px 0px 0px;
-    flex-direction: column;
-    display: flex;
-    grid-area: channels;
+  @media(max-width: 1200px){
+    .body{
+      grid-template-columns: auto;
+      grid-template-areas: "video""channels";
+      grid-template-rows: 50% 50%;
+    }
+
+    .footer{
+      grid-area: unset;
+    }
   }
 }

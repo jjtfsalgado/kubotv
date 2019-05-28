@@ -46,6 +46,21 @@ export function nullProp(p: any, ...props: Array<((i: any) => any)>): any {
     return t;
 }
 
+export function debounce(func, context?, ms = 50, immediate = false): any {
+    let timeout;
+    return function (...args) {
+        const later = function () {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+
+        const callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, ms);
+        if (callNow) func.apply(context, args);
+    };
+}
+
 export async function readFile(file: any): string{
     return new Promise((res, rej) => {
         const reader = new FileReader();

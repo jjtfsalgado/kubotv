@@ -14,6 +14,7 @@ import Avatar from "@material-ui/core/Avatar";
 
 import css from "./channel_list.less";
 import {eventDispatcher, EVENTS} from "../../controllers/pub_sub";
+import {Search} from "../../components/search/search";
 
 interface IVideoProps {
     showControls?: boolean;
@@ -62,6 +63,8 @@ export class ChannelList extends React.Component<IVideoProps, {
 
         return (
             <div className={cls(className)}>
+                <Search placeholder={"Search"}
+                        onChange={this.onSearch}/>
                 <div className={css.container}>
                     <List className={css.list}>
                         {playlist && playlist.map(i => (
@@ -74,6 +77,10 @@ export class ChannelList extends React.Component<IVideoProps, {
             </div>
         )
     }
+
+    onSearch = (value: string) => {
+        hls.search(value);
+    };
 
     onSelectChannel = (channel: IChannel) => {
         this.setState({

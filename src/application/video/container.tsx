@@ -37,10 +37,12 @@ export class VideoContainer extends React.Component<IVideoProps, {
         return [
             <div className={cls(className)}>
                 <Video showControls={true}/>
-                {selectedChannel && (
-                    <Typography variant="h6" color="secondary">
-                        {selectedChannel.title}
-                    </Typography>)}
+                <div>
+                    {selectedChannel && (
+                        <Typography variant="h6" color="secondary">
+                            {selectedChannel.title}
+                        </Typography>)}
+                </div>
             </div>
         ]
     }

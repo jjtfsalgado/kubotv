@@ -12,8 +12,10 @@ export class App extends React.Component<{},{}>{
                 <div className={css.ad}>
                     <ToolBar/>
                 </div>
-                <VideoContainer className={css.video}/>
-                <ChannelList className={css.channels}/>
+                <div className={css.body}>
+                    <VideoContainer className={css.video}/>
+                    <ChannelList className={css.channels}/>
+                </div>
                 <div className={css.footer}>
                     <Ad client={"ca-pub-9406837176504492"}
                         slot={"5196477120"}

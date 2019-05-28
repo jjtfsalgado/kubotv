@@ -106,7 +106,7 @@ export const hls = new class{
             playlist = playlist.filter(i => i.title.toLowerCase().includes(value.toLowerCase()));
         }
 
-        eventDispatcher.publish(EVENTS.PLAYLIST_UPDATE, this.getData)
+        eventDispatcher.publish(EVENTS.PLAYLIST_UPDATE, playlist)
     }
 
     public updateView(playlist:Array<IChannel>, replace?: boolean){
