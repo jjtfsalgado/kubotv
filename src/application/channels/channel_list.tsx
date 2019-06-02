@@ -6,14 +6,16 @@ import {ListItemText} from "@material-ui/core";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
-import FolderIcon from "@material-ui/icons/Folder";
 import {cls} from "../../utils/function";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import Avatar from "@material-ui/core/Avatar";
 
 import css from "./channel_list.less";
 import {eventDispatcher, EVENTS} from "../../controllers/pub_sub";
 import {Search} from "../../components/search/search";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import Avatar from "@material-ui/core/Avatar";
+
 
 interface IVideoProps {
     showControls?: boolean;
@@ -68,7 +70,7 @@ export class ChannelList extends React.Component<IVideoProps, {
                     <List className={css.list}>
                         {playlist && playlist.map(i => (
                             <Channel key={i.id}
-                                     selected={selectedChannel && (selectedChannel.id === i.id)}
+                                     selected={selectedChannel ? (selectedChannel.id === i.id) : null}
                                      onClick={this.onClickChannel}
                                      item={i}/>))}
                     </List>
@@ -105,11 +107,9 @@ class Channel extends React.PureComponent<{
             <ListItem dense={true}
                       onClick={this.onClick}
                       className={cls(css.item, selected && css.selected)}>
-                <ListItemAvatar>
-                    <Avatar>
-                        <FolderIcon />
-                    </Avatar>
-                </ListItemAvatar>
+                    <IconButton onClick={this.onClickFavorite} color={"secondary"}>
+                        {item.favorite ? <FavoriteIcon/> : <FavoriteBorderIcon/>}
+                    </IconButton>
                 <ListItemText primary={item && item.title}
                               className={css.primary}/>
                 <ListItemSecondaryAction>
@@ -132,5 +132,11 @@ class Channel extends React.PureComponent<{
         const {item} = this.props;
         hls.deleteChannel(item)
     };
+
+    onClickFavorite = (ev) => {
+        ev.stopPropagation();
+        const {item} = this.props;
+        hls.toggleFavorite(item)
+    }
 };
 

@@ -1,6 +1,10 @@
 import * as React from "react";
 import {cls} from "../../utils/function";
 
+declare global {
+    interface Window { adsbygoogle: any; }
+}
+
 export class Ad extends React.Component<{
     slot: string;
     client: string;
@@ -8,7 +12,10 @@ export class Ad extends React.Component<{
     className?: any;
 },{}>{
     componentDidMount () {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
+        if(window) (window.adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-9406837176504492",
+            enable_page_level_ads: true
+        });
     }
 
     render () {
@@ -17,6 +24,7 @@ export class Ad extends React.Component<{
         return (
             <ins className={cls("adsbygoogle", className)}
                 style={style}
+                 data-adtest={"on"}
                 data-ad-client={client}
                 data-ad-slot={slot} />
         );

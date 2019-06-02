@@ -3,11 +3,7 @@ import * as PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
-import {fade} from '@material-ui/core/styles/colorManipulator';
 import {Theme, WithStyles, withStyles} from '@material-ui/core/styles';
-import SearchIcon from '@material-ui/icons/Search';
 import MenuIcon from '@material-ui/icons/Menu';
 import DeleteIcon from '@material-ui/icons/Delete';
 import createStyles from "@material-ui/core/styles/createStyles";
@@ -34,7 +30,7 @@ const styles = (theme: Theme) =>
             color: "#fff"
         },
         toolbar:{
-            backgroundColor: "#121212"
+            backgroundColor: "#292929"
         },
         menuButton: {
             marginLeft: -12,
@@ -81,9 +77,7 @@ export class ToolBar extends React.Component<Props, {
                             {({ TransitionProps, placement }) => (
                                 <Grow
                                     {...TransitionProps}
-                                    id="menu-list-grow"
-                                    style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-                                >
+                                    style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}>
                                     <Paper>
                                         <ClickAwayListener onClickAway={this.onToggleMenu}>
                                         <MenuList>
@@ -129,7 +123,6 @@ export class ToolBar extends React.Component<Props, {
         if(playlist){
             const selectedChannels = await ListDialog.show({ data: playlist});
             if(selectedChannels){
-                selectedChannels.forEach((i: any) => i["id"] = newGuid());
                 await hls.updateView(selectedChannels)
             }
         }
@@ -137,8 +130,8 @@ export class ToolBar extends React.Component<Props, {
 }
 
 
-ToolBar.propTypes = {
+(ToolBar as any).propTypes = {
     classes: PropTypes.object.isRequired,
-} as any;
+};
 
 export default withStyles(styles)(ToolBar);

@@ -2,6 +2,15 @@
   overflow: auto;
   flex: 1;
 
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    height: 56px;
+    background: hsla(0, 0%, 53.3%, .4);
+  }
+
   .list{
 
     .item{
@@ -14,7 +23,7 @@
       }
 
       &.selected{
-        background-color: #121212;
+        background-color: #292929;
       }
     }
   }

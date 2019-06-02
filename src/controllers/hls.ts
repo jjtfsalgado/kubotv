@@ -1,7 +1,7 @@
 import * as Hls from "hls.js";
 import axios from "axios";
 import {m3uToJson} from "../utils/m3u_json_parser";
-import {readFile} from "../utils/function";
+import {readFile, sortByMany} from "../utils/function";
 import {eventDispatcher, EVENTS} from "./pub_sub";
 
 export interface IChannel {
@@ -12,6 +12,7 @@ export interface IChannel {
     'tvg-name': string;
     url: string;
     id: string
+    favorite: boolean;
 }
 
 export const hls = new class{
@@ -71,6 +72,18 @@ export const hls = new class{
         this.updateView(filtered, true)
     }
 
+    public toggleFavorite(item:IChannel){
+        if(!item){return}
+        const channels = this.getData;
+        if(!channels){return};
+        const channelIndex = channels.findIndex((i: IChannel) => i.id === item.id);
+        const channel = channels[channelIndex];
+        channel.favorite = !channel.favorite;
+        channels[channelIndex] = channel;
+
+        this.updateView(channels, true)
+    }
+
     private get getData(){
         return JSON.parse(localStorage.getItem(this.key));
     };
@@ -115,6 +128,8 @@ export const hls = new class{
         if(!replace && this.getData){
             playlist = playlist.concat(this.getData)
         }
+
+        sortByMany(playlist,  i => i.favorite ? -1 : 1, i => i.title);
 
         this.setData = playlist;
         eventDispatcher.publish(EVENTS.PLAYLIST_UPDATE, this.getData)

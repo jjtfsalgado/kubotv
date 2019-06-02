@@ -70,3 +70,33 @@ export async function readFile(file: any): string{
         reader.readAsText(file);
     })
 }
+
+export function sortByMany<T>(arr: Array<T>, ...sorts: Array<(i: T) => any>): void {
+    const sorter = (a, b) => {
+        for (const s of sorts) {
+            let va, vb;
+            va = undefault(s.call(arr, a), null);
+            vb = undefault(s.call(arr, b), null);
+
+            if (va === vb) {
+                continue; // skip to next
+            }
+
+            if (va > vb || vb === null) {
+                if (vb == null) return -1;
+                return 1;
+            }
+
+            if (va < vb || va === null) {
+                if (va == null) return 1;
+                return -1;
+            }
+        }
+        return 0;
+    };
+    arr.sort(sorter);
+}
+
+export function undefault(val, def) {
+    return val === undefined ? def : val;
+}

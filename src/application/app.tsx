@@ -4,8 +4,19 @@ import {ChannelList} from "./channels/channel_list";
 import {VideoContainer} from "./video/container";
 import {Ad} from "../components/advertisement/ad";
 import ToolBar from "./channels/toolbar";
+import {hls} from "../controllers/hls";
 
 export class App extends React.Component<{},{}>{
+    async componentWillMount(){
+        const urlParams = new URLSearchParams(window.location.search);
+        if(!urlParams){return};
+        const urlParam = urlParams.get("url");
+        if(urlParam){
+            const channels = await hls.loadFromUrl(urlParam);
+            await hls.updateView(channels, true);
+        }
+    }
+
     render() {
         return (
             <div className={css.app}>
