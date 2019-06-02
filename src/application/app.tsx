@@ -14,6 +14,7 @@ export class App extends React.Component<{},{}>{
         if(urlParam){
             const channels = await hls.loadFromUrl(urlParam);
             await hls.updateView(channels, true);
+            window.history.replaceState(null, null, window.location.pathname);
         }
     }
 

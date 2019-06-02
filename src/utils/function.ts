@@ -14,13 +14,6 @@ export function cls(...args: Array<any>) {
         .join(" ");
 }
 
-export function sortBy (collection: Array<any>, iterator: any){
-    var isString = typeof iterator === 'string';
-    return collection.sort(function(x, y) {
-        return isString ? x[iterator] - y[iterator] : iterator(x) - iterator(y);
-    });
-};
-
 export function newGuid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -61,7 +54,7 @@ export function debounce(func, context?, ms = 50, immediate = false): any {
     };
 }
 
-export async function readFile(file: any): string{
+export async function readFile(file: any){
     return new Promise((res, rej) => {
         const reader = new FileReader();
         reader.onload = (e) => {
