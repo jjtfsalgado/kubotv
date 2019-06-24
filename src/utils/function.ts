@@ -54,7 +54,7 @@ export function debounce(func, context?, ms = 50, immediate = false): any {
     };
 }
 
-export async function readFile(file: any){
+export async function readFile(file: any): Promise<any>{
     return new Promise((res, rej) => {
         const reader = new FileReader();
         reader.onload = (e) => {

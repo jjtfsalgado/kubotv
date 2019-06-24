@@ -43,7 +43,7 @@
     }
   }
 
-  @media(max-width: 1400px){
+  @media screen and (max-width: 1400px) {
 
     .body{
       grid-template-columns: 100%;
@@ -54,6 +54,13 @@
 
     .footer{
       grid-area: unset;
+    }
+  }
+
+  @media(max-width: 500px){
+
+    .body{
+      padding: 10px;
     }
   }
 }

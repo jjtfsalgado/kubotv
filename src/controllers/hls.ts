@@ -33,35 +33,42 @@ export const hls = new class{
         const url = channel.url;
         const video = document.getElementById("video") as HTMLVideoElement;
 
-        this.hls.loadSource(url);
-        this.hls.attachMedia(video);
-        this.hls.on(Hls.Events.MANIFEST_PARSED,async () => {
-            await video.play();
-        });
-        this.hls.on(Hls.Events.ERROR, async (event: any, data) => {
-            const errorType = data.type;
-            const errorDetails = data.details;
-            const errorFatal = data.fatal;
-            console.error(url, data);
+        if(this.isSupported()){
+            this.hls.loadSource(url);
+            this.hls.attachMedia(video);
+            this.hls.on(Hls.Events.MANIFEST_PARSED,async () => {
+                await video.play();
+            });
+            this.hls.on(Hls.Events.ERROR, async (event: any, data) => {
+                const errorType = data.type;
+                const errorDetails = data.details;
+                const errorFatal = data.fatal;
+                console.error(url, data);
 
-            if(errorFatal){
-                switch(errorType) {
-                    case Hls.ErrorTypes.NETWORK_ERROR:
-                        // try to recover network error
-                        console.warn("fatal network error encountered, try to recover");
-                        this.hls.startLoad();
-                        break;
-                    case Hls.ErrorTypes.MEDIA_ERROR:
-                        console.warn("fatal media error encountered, try to recover");
-                        this.hls.recoverMediaError();
-                        break;
-                    default:
-                        // cannot recover
-                        this.hls.destroy();
-                        break;
+                if(errorFatal){
+                    switch(errorType) {
+                        case Hls.ErrorTypes.NETWORK_ERROR:
+                            // try to recover network error
+                            console.warn("fatal network error encountered, try to recover");
+                            this.hls.startLoad();
+                            break;
+                        case Hls.ErrorTypes.MEDIA_ERROR:
+                            console.warn("fatal media error encountered, try to recover");
+                            this.hls.recoverMediaError();
+                            break;
+                        default:
+                            // cannot recover
+                            this.hls.destroy();
+                            break;
+                    }
                 }
-            }
-        });
+            });
+        }else if(video.canPlayType('application/vnd.apple.mpegurl')){
+            video.src = url;
+            video.addEventListener('loadedmetadata',async () => {
+                await video.play();
+            });
+        }
     }
 
     public deleteChannel(item:IChannel){

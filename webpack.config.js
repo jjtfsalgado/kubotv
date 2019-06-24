@@ -46,8 +46,7 @@ module.exports = {
         hot: true
     },
     output: {
-        filename: 'bundle.js',
-        path: path.resolve(__dirname, 'dist'),
-        publicPath: '/'
-    }
+        filename: "bundle.js",
+        path: __dirname + "/dist"
+    },
 };

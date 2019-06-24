@@ -1,5 +1,6 @@
 import * as React from "react";
 import {cls} from "../../utils/function";
+import {CSSProperties} from "react";
 
 declare global {
     interface Window { adsbygoogle: any; }
@@ -8,7 +9,7 @@ declare global {
 export class Ad extends React.Component<{
     slot: string;
     client: string;
-    style: Partial<CSSStyleDeclaration>;
+    style: Partial<CSSProperties>;
     className?: any;
 },{}>{
     componentDidMount () {
