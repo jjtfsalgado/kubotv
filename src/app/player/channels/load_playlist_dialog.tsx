@@ -1,10 +1,10 @@
-import {Dialog} from "../../components/dialog/base/dialog";
+import {Dialog} from "../../../ui/dialog/base/dialog";
 import * as React from "react";
-import {DialogCtrl} from "../../components/dialog/base/ctrl";
+import {DialogCtrl} from "../../../ui/dialog/base/ctrl";
 import TextField from "@material-ui/core/TextField";
 import {DialogContentText} from "@material-ui/core";
-import {nullProp, readFile} from "../../utils/function";
-import {hls} from "../../controllers/hls";
+import {nullProp, readFile} from "../../../utils/function";
+import {hls} from "../../../controllers/hls";
 
 export class LoadPlaylistDialog extends Dialog<{},{}>{
     constructor(props: any) {

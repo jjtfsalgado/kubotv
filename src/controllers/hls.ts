@@ -63,7 +63,7 @@ export const hls = new class{
                     }
                 }
             });
-        }else if(video.canPlayType('application/vnd.apple.mpegurl')){
+        }else if(video.canPlayType('app/vnd.apple.mpegurl')){
             video.src = url;
             video.addEventListener('loadedmetadata',async () => {
                 await video.play();

@@ -1,0 +1,38 @@
+@maxWidth: 980px;
+
+.home{
+  .toolbar{
+    max-width: @maxWidth;
+  }
+
+  .content{
+    overflow: auto;
+
+    .welcome{
+      height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: grey;
+
+      .welcome-content{
+        width: @maxWidth;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3em;
+        flex-direction: column;
+
+        .links{
+          * > {
+
+
+          }
+        }
+
+        margin: 20px;
+      }
+    }
+  }
+}
+

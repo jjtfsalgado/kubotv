@@ -1,7 +1,7 @@
-import {Dialog} from "../../components/dialog/base/dialog";
+import {Dialog} from "../dialog/base/dialog";
 import {DialogContentText} from "@material-ui/core";
 import * as React from "react";
-import {DialogCtrl} from "../../components/dialog/base/ctrl";
+import {DialogCtrl} from "../dialog/base/ctrl";
 
 interface IConfirmDialogProps {
     message: string;

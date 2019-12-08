@@ -1,11 +1,11 @@
-import {Dialog} from "../../components/dialog/base/dialog";
+import {Dialog} from "../../../ui/dialog/base/dialog";
 import {List} from "@material-ui/core";
 import ListItem from "@material-ui/core/ListItem";
 import * as React from "react";
 import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
-import {DialogCtrl} from "../../components/dialog/base/ctrl";
-import {IChannel} from "../../controllers/hls";
+import {DialogCtrl} from "../../../ui/dialog/base/ctrl";
+import {IChannel} from "../../../controllers/hls";
 
 interface IListDialogProps {
     data: Array<IChannel>

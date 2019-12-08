@@ -1,16 +1,11 @@
- html, body {
-   margin: 0;
-   height: 100%;
-}
-
-.app{
+.player{
   height: 100vh;
   width: 100vw;
   display: grid;
   grid-template-columns: 100%;
   grid-template-rows: 10% 80% 10%;
   overflow: hidden;
-  background-color:#121212;
+
   grid-template-areas: "ad""body""footer";
 
   .ad{
@@ -33,6 +28,7 @@
       grid-area: video;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
     }
 
     .channels{
