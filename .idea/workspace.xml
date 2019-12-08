@@ -1,42 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="62180f1e-954c-4785-a4bb-ff3b8ca2f383" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/legacy/toolbar.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/home/home.less" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/home/home.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/login/login.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/player/player.less" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/player/player.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/toolbar/toolbar.less" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ui/toolbar/toolbar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/react-typescript-less.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/react-typescript-less.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/bundle.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/bundle.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/bundle.js.gz" beforeDir="false" afterPath="$PROJECT_DIR$/dist/bundle.js.gz" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/bundle.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/bundle.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/bundle.js.map.gz" beforeDir="false" afterPath="$PROJECT_DIR$/dist/bundle.js.map.gz" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/dist/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/application/app.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/app.less" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/application/app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/app.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/application/channels/channel_list.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/player/channels/channel_list.less" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/application/channels/channel_list.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/player/channels/channel_list.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/application/channels/list_dialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/player/channels/list_dialog.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/application/channels/load_playlist_dialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/player/channels/load_playlist_dialog.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/application/channels/toolbar.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/application/video/container.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/player/video/container.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/application/video/video.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/player/video/video.less" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/application/video/video.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/player/video/video.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/advertisement/ad.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/ads/ad.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dialog/base/ctrl.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/dialog/base/ctrl.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dialog/base/dialog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/dialog/base/dialog.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dialog/confirm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/dialog/confirm.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/search/search.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/search/search.less" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/search/search.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/search/search.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controllers/hls.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/hls.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
-    </list>
+    <list default="true" id="62180f1e-954c-4785-a4bb-ff3b8ca2f383" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,7 +124,7 @@
       <workItem from="1564324680867" duration="883000" />
       <workItem from="1564902107139" duration="16000" />
       <workItem from="1575805248310" duration="11105000" />
-      <workItem from="1575824016327" duration="1296000" />
+      <workItem from="1575824016327" duration="1579000" />
     </task>
     <servers />
   </component>
