@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="62180f1e-954c-4785-a4bb-ff3b8ca2f383" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/webpack.config.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -16,23 +17,6 @@
         <option value="XSLT Stylesheet" />
       </list>
     </option>
-  </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>xhr</find>
-      <find>ButtonClassKey</find>
-      <find>LocalStorage</find>
-      <find>Icon</find>
-      <find>m3u</find>
-      <find>debugger</find>
-      <find>updateView</find>
-      <find>init</find>
-      <find>styles</find>
-      <find>primary</find>
-      <find>PaletteType</find>
-      <find>Playlist</find>
-      <find>icon</find>
-    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -127,7 +111,7 @@
       <workItem from="1564902107139" duration="16000" />
       <workItem from="1575805248310" duration="11105000" />
       <workItem from="1575824016327" duration="1579000" />
-      <workItem from="1575825990109" duration="2129000" />
+      <workItem from="1575825990109" duration="3149000" />
     </task>
     <servers />
   </component>
