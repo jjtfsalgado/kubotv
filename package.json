@@ -4,8 +4,9 @@
   "description": "React typescript less boilerplate",
   "main": "index.js",
   "scripts": {
+    "start": "yarn prod && node server.js",
     "dev": "webpack-dev-server --config ./webpack.config.js --mode development",
-    "start": "webpack --config ./webpack.prod.js",
+    "prod": "webpack --config ./webpack.prod.js",
     "test": "echo \"No test specified\" && exit 0"
   },
   "keywords": [],
