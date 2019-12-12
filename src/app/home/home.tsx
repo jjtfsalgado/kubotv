@@ -14,7 +14,7 @@ export function Home () {
                         <h4>IPTV</h4>
                         <h1>Your tv, everywhere.</h1>
                         <div className={css.links}>
-                            <a>Watch now</a><a>Learn more</a>
+                            <a>Watch now</a><a>Learn more yey</a>
                         </div>
                     </div>
                 </div>
