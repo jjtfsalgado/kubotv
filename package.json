@@ -12,8 +12,7 @@
   "author": "José Salgado",
   "license": "ISC",
   "devDependencies": {
-    "@material-ui/core": "^3.9.3",
-    "@material-ui/icons": "^3.0.2",
+
     "@types/hls.js": "^0.12.4",
     "@types/react": "^16.8.14",
     "@types/react-dom": "^16.8.4",
@@ -25,7 +24,7 @@
     "less": "^3.9.0",
     "less-loader": "^4.1.0",
     "react-hot-loader": "^4.8.4",
-    "react-router-dom": "^5.1.2",
+
     "style-loader": "^0.23.1",
     "typescript": "^3.4.5"
   },
@@ -36,6 +35,9 @@
     "webpack-cli": "^3.3.1",
     "webpack-merge": "^4.2.1",
     "compression-webpack-plugin": "^2.0.0",
-    "awesome-typescript-loader": "^5.2.1"
+    "awesome-typescript-loader": "^5.2.1",
+    "react-router-dom": "^5.1.2",
+    "@material-ui/core": "^3.9.3",
+    "@material-ui/icons": "^3.0.2"
   }
 }
