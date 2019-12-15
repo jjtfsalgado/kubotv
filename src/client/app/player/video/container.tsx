@@ -1,5 +1,5 @@
 import * as React from "react";
-import {cls} from "../../../utils/function";
+import {cls} from "../../../../utils/function";
 import {Video} from "./video";
 import {Typography} from "@material-ui/core";
 import {IChannel} from "../../../controllers/hls";

@@ -1,7 +1,7 @@
 import * as Hls from "hls.js";
 import axios from "axios";
-import {m3uToJson} from "../utils/m3u_json_parser";
-import {readFile, sortByMany} from "../utils/function";
+import {m3uToJson} from "../../utils/m3u_json_parser";
+import {readFile, sortByMany} from "../../utils/function";
 import {eventDispatcher, EVENTS} from "./pub_sub";
 
 export interface IChannel {

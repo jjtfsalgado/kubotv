@@ -1,12 +1,16 @@
 import * as React from "react";
+
 import {ToolBar} from "../../ui/toolbar/toolbar";
 import css from "./home.less"
+import {Link} from "react-router-dom";
 
 export function Home () {
     return (
         <div className={css.home}>
             <ToolBar className={css.toolbar}>
                 <div>This my logo</div>
+                <Link to={"/login"}>Login</Link>
+                <Link to={"/register"}>Sign up</Link>
             </ToolBar>
             <div className={css.content}>
                 <div className={css.welcome}>

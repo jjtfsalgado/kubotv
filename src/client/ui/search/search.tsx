@@ -6,7 +6,7 @@ import css from "./search.less"
 import * as React from "react";
 import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import {debounce} from "../../utils/function";
+import {debounce} from "../../../utils/function";
 
 export class Search extends React.Component<{
     placeholder: string;

@@ -3,7 +3,7 @@ const webpack = require('webpack');
 
 module.exports = {
     entry: [
-        './src/index.tsx'
+        './src/client/index.tsx'
     ],
     module: {
         rules: [
@@ -37,9 +37,6 @@ module.exports = {
     resolve: {
         extensions: [ '.tsx', '.ts', '.js', '.jsx' ]
     },
-    plugins: [
-        new webpack.HotModuleReplacementPlugin()
-    ],
     devServer: {
         historyApiFallback: true,
         contentBase: './dist',

@@ -1,5 +1,5 @@
 import * as React from "react";
-import {cls} from "../../utils/function";
+import {cls} from "../../../utils/function";
 import {CSSProperties} from "react";
 
 declare global {

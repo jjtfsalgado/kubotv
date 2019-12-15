@@ -4,6 +4,7 @@ import {Player} from "./player/player";
 import {Home} from "./home/home";
 import {Login} from "./login/login";
 import css from "./app.less";
+import {Register} from "./register/register";
 
 export function App() {
     return (
@@ -12,6 +13,9 @@ export function App() {
                 <Switch>
                     <Route path="/player">
                         <Player/>
+                    </Route>
+                    <Route path="/register">
+                        <Register/>
                     </Route>
                     <Route path="/login">
                         <Login/>

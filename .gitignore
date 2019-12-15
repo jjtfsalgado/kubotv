@@ -1,5 +1,6 @@
 .idea/
 dist
+
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml
@@ -35,3 +36,4 @@ dist
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+/dist/

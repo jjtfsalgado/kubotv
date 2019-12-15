@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import css from "./video.less";
-import {cls} from "../../../utils/function";
+import {cls} from "../../../../utils/function";
 
 interface IVideoProps{
     showControls?: boolean;

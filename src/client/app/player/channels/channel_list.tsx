@@ -6,7 +6,7 @@ import {ListItemText} from "@material-ui/core";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
-import {cls} from "../../../utils/function";
+import {cls} from "../../../../utils/function";
 
 import css from "./channel_list.less";
 import {eventDispatcher, EVENTS} from "../../../controllers/pub_sub";
