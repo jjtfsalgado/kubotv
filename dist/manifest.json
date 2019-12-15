@@ -1,9 +1,0 @@
-{
-  "name": "IPTV Player",
-  "short_name": "IPTV",
-  "description": "IPTV Player",
-  "lang": "en-GB",
-  "start_url": "localhost:8080",
-  "scope": "localhost:8080",
-  "display": "standalone"
-}
