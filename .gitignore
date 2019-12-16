@@ -1,5 +1,5 @@
 .idea/
-dist
+dist/bundle.*
 
 # User-specific stuff
 .idea/**/workspace.xml
@@ -37,4 +37,3 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-/dist/
