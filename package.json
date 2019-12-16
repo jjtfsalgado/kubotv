@@ -4,7 +4,7 @@
   "description": "React typescript less boilerplate",
   "main": "index.js",
   "scripts": {
-    "start": "yarn server:prod && yarn client:prod && node server.js",
+    "start": "yarn server:prod & yarn client:prod & node server.js & wait -n",
     "dev": "start yarn server:dev && start yarn client:dev",
     "client:dev": "webpack --watch --config ./webpack.config.js --mode development",
     "client:prod": "webpack --config ./webpack.prod.js",
