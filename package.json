@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "build": "yarn client:prod && yarn server:prod",
+    "heroku-postbuild": "yarn client:prod && yarn server:prod",
     "dev": "start yarn server:dev && start yarn client:dev",
     "client:dev": "webpack --watch --config ./webpack.config.js --mode development",
     "client:prod": "webpack --config ./webpack.prod.js",
