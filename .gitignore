@@ -7,7 +7,7 @@ dist
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
-
+server.js*
 
 
 
@@ -36,4 +36,5 @@ dist
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+yarn.lock*
 /dist/

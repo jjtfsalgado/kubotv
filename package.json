@@ -19,6 +19,7 @@
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
     "@types/hls.js": "^0.12.4",
+    "@types/node": "^12.12.18",
     "@types/react": "^16.8.14",
     "@types/react-dom": "^16.8.4",
     "@types/react-router-dom": "^5.1.3",
