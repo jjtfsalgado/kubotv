@@ -20,9 +20,12 @@ module.exports = {
         extensions: [ '.tsx', '.ts', '.js', '.jsx' ]
     },
     plugins: [
-        new NodemonPlugin(),
+        new NodemonPlugin()
     ],
     target: 'node',
+    node: {
+        __dirname: false
+    },
     output: {
         filename: "server.js",
         path: __dirname

@@ -15,7 +15,9 @@ app.use(function (req, res, next){
 
 app.use(express.static('dist'));
 
-app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'dist/index.html')));
+app.get('*', (req, res) => {
+    res.sendFile('dist/index.html', {root: __dirname})
+});
 
 app.listen(PORT, function () {
     console.log('#### Express server is up on port ' + PORT);
