@@ -20,8 +20,7 @@ module.exports = {
         extensions: [ '.tsx', '.ts', '.js', '.jsx' ]
     },
     plugins: [
-        new NodemonPlugin(),
-        new webpack.IgnorePlugin(/^pg-native^/)
+        new NodemonPlugin()
     ],
     target: 'node',
     node: {

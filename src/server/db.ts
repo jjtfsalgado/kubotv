@@ -10,10 +10,12 @@ class Db {
         });
 
         await client.connect();
-        const res = await client.query('SELECT table_schema,table_name FROM information_schema.tables;');
+        const res = await client.query('SELECT version();');
         // for (let row of res.rows) {
         // console.log(JSON.stringify(row));
         // }
+        console.log(res)
+
         await client.end();
     };
 };
