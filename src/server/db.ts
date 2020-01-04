@@ -1,5 +1,5 @@
+import {Client} from "pg";
 const cfg = require('../../config');
-const {Client} = require('pg');
 
 class Db {
     async init() {
