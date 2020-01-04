@@ -1,5 +1,5 @@
 .idea/
-#config.ts
+config.ts
 dist/bundle.*
 
 # User-specific stuff
@@ -8,7 +8,7 @@ dist/bundle.*
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
-server.js*
+*server.js*
 
 
 

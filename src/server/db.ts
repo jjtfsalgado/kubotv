@@ -1,11 +1,19 @@
 import {Client} from "pg";
-const cfg = require('../../config');
+import {_DEV_} from "../../global";
+
 
 class Db {
     async init() {
+        let connectionString;
+        if(_DEV_){
+            const r = await import("../../config");
+            connectionString = r._DATABASE_URL_;
+        }else{
+            connectionString = process.env.DATABASE_URL;
+        }
 
         const client = new Client({
-            connectionString: cfg._DEV_ ? cfg._DATABASE_URL_ : process.env.DATABASE_URL,
+            connectionString,
             ssl: true
         });
 
@@ -14,7 +22,7 @@ class Db {
         // for (let row of res.rows) {
         // console.log(JSON.stringify(row));
         // }
-        console.log(res)
+        console.log("buuuuuu")
 
         await client.end();
     };
