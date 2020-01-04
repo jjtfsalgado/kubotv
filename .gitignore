@@ -1,5 +1,5 @@
 .idea/
-#config.ts
+.env
 dist/bundle.*
 
 # User-specific stuff
@@ -9,8 +9,6 @@ dist/bundle.*
 .idea/**/dictionaries
 .idea/**/shelf
 server.js*
-*.server.js*
-!webpack.*
 
 
 # Generated files

@@ -1,10 +1,11 @@
 import {Client} from "pg";
-import {_DEV_} from "../../global";
-import {_DATABASE_URL_} from "../../config";
+import {config} from 'dotenv';
+
+config();
 
 class Db {
     async init() {
-        const connectionString = _DEV_ ? _DATABASE_URL_ : process.env.DATABASE_URL;
+        const connectionString = process.env.DATABASE_URL;
 
         const client = new Client({
             connectionString,
