@@ -8,8 +8,9 @@ dist/bundle.*
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
-*server.js*
-
+server.js*
+*.server.js*
+!webpack.*
 
 
 # Generated files
