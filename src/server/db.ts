@@ -1,15 +1,10 @@
 import {Client} from "pg";
 import {_DEV_} from "../../global";
-
+import {_DATABASE_URL_} from "../../config";
 
 class Db {
     async init() {
-        let connectionString;
-        if(_DEV_){
-            import("../../config").then(i => connectionString = i._DATABASE_URL_);
-        }else{
-            connectionString = process.env.DATABASE_URL;
-        }
+        const connectionString = _DEV_ ? _DATABASE_URL_ : process.env.DATABASE_URL;
 
         const client = new Client({
             connectionString,

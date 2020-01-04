@@ -1,5 +1,5 @@
 .idea/
-config.ts
+#config.ts
 dist/bundle.*
 
 # User-specific stuff
