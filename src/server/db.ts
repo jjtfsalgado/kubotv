@@ -6,8 +6,7 @@ class Db {
     async init() {
         let connectionString;
         if(_DEV_){
-            const r = await import("../../config");
-            connectionString = r._DATABASE_URL_;
+            import("../../config").then(i => connectionString = i._DATABASE_URL_);
         }else{
             connectionString = process.env.DATABASE_URL;
         }

@@ -9,7 +9,7 @@
     "dev": "start yarn server:dev && start yarn client:dev",
     "client:dev": "webpack --watch --config ./webpack.config.js --mode development",
     "server:dev": "webpack --watch --config ./webpack.server.js --mode development",
-    "client:prod": "webpack --config ./webpack.prod.js",
+    "client:prod": "webpack --config ./webpack.prod.js --mode production",
     "server:prod": "webpack --config ./webpack.server.js --mode production",
     "test": "echo \"No test specified\" && exit 0"
   },
