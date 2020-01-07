@@ -1,9 +1,7 @@
 import {Client} from "pg";
-import {config} from 'dotenv';
 
-config();
 
-class Db {
+class DbCtrl {
     async init() {
         const connectionString = process.env.DATABASE_URL;
 
@@ -21,6 +19,4 @@ class Db {
     };
 };
 
-const db = new Db();
-
-export default db;
+const dbCtrl = new DbCtrl();

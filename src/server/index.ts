@@ -1,5 +1,8 @@
-import db from './db';
-import http from './http';
+import {config} from 'dotenv';
 
-db.init();
-http.init();
+//apply environment variables defined on the .env file
+config();
+
+export * from "./express"
+export * from "./db"
+
