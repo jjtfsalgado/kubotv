@@ -1,22 +1,31 @@
-import {Client} from "pg";
+import {Pool, QueryConfig} from "pg";
+import {config} from "dotenv"
+config();
 
 
 class DbCtrl {
-    async init() {
-        const connectionString = process.env.DATABASE_URL;
+    private readonly _pool: Pool;
 
-        const client = new Client({
-            connectionString,
+    constructor() {
+        this._pool = new Pool({
+            connectionString: process.env.DATABASE_URL,
             ssl: true
         });
+    }
 
-        await client.connect();
-        const res = await client.query('SELECT version();');
-        console.log(JSON.stringify(res));
-        console.log("buuuuuu")
-
-        await client.end();
-    };
+    get pool(){
+        return this._pool
+    }
 };
 
-const dbCtrl = new DbCtrl();
+export const dbCtrl = new DbCtrl();
+
+
+(async () => {
+    const {pool} = dbCtrl;
+
+    await pool.query('DROP TABLE IF EXISTS users');
+    await pool.query(`CREATE TABLE users (id serial PRIMARY KEY, password VARCHAR (50) NOT NULL,email VARCHAR (355) UNIQUE NOT NULL)`);
+})();
+
+

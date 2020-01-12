@@ -1,6 +1,6 @@
 import * as express from 'express';
 import {Express, Router} from 'express';
-import User from "./routes/user";
+import Users from "./routes/users";
 import {_DEV_} from "../../global";
 
 class ExpressCtrl{
@@ -15,7 +15,7 @@ class ExpressCtrl{
         return this._app
     }
 
-    public router = (): Router => {
+    private router = (): Router => {
         const router = express.Router();
         !_DEV_ && router.use(this._browserRestriction);
         return router;
@@ -39,7 +39,9 @@ class ExpressCtrl{
             next();
         });
 
-        this.app.use('/user', User(this.router()));
+        this.app.use(express.json());
+
+        this.app.use('/users', Users(this.router()));
 
         this.app.use(express.static('dist'));
 
