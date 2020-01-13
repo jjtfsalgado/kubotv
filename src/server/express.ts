@@ -30,7 +30,7 @@ class ExpressCtrl{
     };
 
     private _init = () => {
-        const PORT = process.env.PORT || 2000;
+        const PORT = process.env.PORT;
         this.app.use((req, res, next) => {
             if (req.headers['x-forwarded-proto'] === 'https') {
                 return res.redirect('http://' + req.hostname + req.url);
