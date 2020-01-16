@@ -1,6 +1,6 @@
 import {IRouteSql} from "./interface";
 
-const UserSql: IRouteSql = {
+const UserSql = {
     get: () => ({
       text: "select * from users"
     }),
@@ -8,9 +8,9 @@ const UserSql: IRouteSql = {
         text: "select * from users where id like $1",
         values: [id]
     }),
-    post: (password: string, email: string) => ({
-      text:"INSERT INTO users(password, email) VALUES($1, $2)",
-      values: [password, email]
+    insert: (password: string, email: string, hash: string, salt: string) => ({
+      text:"INSERT INTO users(password, email, hash, salt) VALUES($1, $2, $3, $4)",
+      values: [password, email, hash, salt]
     })
 };
 
