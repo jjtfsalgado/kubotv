@@ -10,7 +10,7 @@ const HASH = process.env.HASH;
 
 function Users(router: Router): Router {
 
-    //get user
+    //get users
     router.get('/', async (req, res) => {
         const re = await dbCtrl.pool.query(UserSql.get());
 
@@ -27,12 +27,13 @@ function Users(router: Router): Router {
 
         if(!password || !email) return;
 
+        //todo hash password without salt on the frontend
         const salt = await bcrypt.genSalt();
         const hash = await bcrypt.hash(password, salt);
 
         await dbCtrl.pool.query(UserSql.insert(password, email, hash, salt));
 
-        return res.status(200).json({status: "success"});
+        return res.status(200).json({status: "success", hash, salt});
     });
 
     //insert user
