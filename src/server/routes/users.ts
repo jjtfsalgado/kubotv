@@ -69,6 +69,48 @@ function Users(router: Router): Router {
         return res.status(201).json({ status: 'success', message: 'User created' })
     });
 
+    //login
+    router.post('/login', async (req, res) => {
+        const {email, password} = req.body;
+
+        const result = await dbCtrl.pool.query(UserSql.getUserSalt(email));
+
+        const {salt, hash} = result.rows[0];
+
+
+        console.log(new Buffer(hash), new Buffer(salt))
+
+        const str = bcrypt.encodeBase64(salt, 10);
+
+        console.log(str, password, salt)
+
+        const h = await bcrypt.hash(password, str);
+        const isAuthenticated = await bcrypt.compare(h, hash);
+
+
+
+
+        if(!isAuthenticated){
+            return res.status(401).json({ status: 'failure', message: 'User unauthorised' })
+        }
+
+        const token = await jwt.sign({email, password}, HASH);
+
+        res.header('x-auth', token);
+
+        res.redirect('/login');
+    });
+
+
+    //logout
+    router.post('/logout', async (req, res) => {
+
+
+
+
+
+    });
+
     return router;
 }
 
