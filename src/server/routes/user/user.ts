@@ -1,24 +1,17 @@
-import {Router} from "express";
-import {dbCtrl} from "../db";
+import {dbCtrl} from "../../db";
 import UserSql from "./users.sql";
 import * as nodemailer from "nodemailer";
 import * as jwt from "jsonwebtoken";
 import * as bcrypt from "bcryptjs";
+import {Router} from "express";
 
 
 const HASH = process.env.HASH;
 
-function Users(router: Router): Router {
-
-    //get users
-    router.get('/', async (req, res) => {
-        const re = await dbCtrl.pool.query(UserSql.get());
-
-        return res.status(200).json({status: "success", data: re.rows[0]});
-    });
+function User(router: Router): Router {
 
     //get user
-    router.get('/verify/:token', async (req, res) => {
+    router.get('/:token', async (req, res) => {
         const {token} = req.params;
 
         const decoded: any = jwt.verify(token, HASH);
@@ -31,7 +24,7 @@ function Users(router: Router): Router {
         const salt = await bcrypt.genSalt();
         const hash = await bcrypt.hash(password, salt);
 
-        await dbCtrl.pool.query(UserSql.insert(password, email, hash, salt));
+        await dbCtrl.pool.query(UserSql.insert(email, hash, salt));
 
         return res.status(200).json({status: "success", hash, salt});
     });
@@ -51,7 +44,7 @@ function Users(router: Router): Router {
         });
 
         const token = jwt.sign({email, password}, HASH);
-        const link = `http://${req.get('host')}/users/verify/${token}`;
+        const link = `http://${req.get('host')}/users/${token}`;
 
         const mailOptions = {
             from: '"Plusnetv" <info@plusnetv.net>', // sender address
@@ -69,49 +62,11 @@ function Users(router: Router): Router {
         return res.status(201).json({ status: 'success', message: 'User created' })
     });
 
-    //login
-    router.post('/login', async (req, res) => {
-        const {email, password} = req.body;
+    //todo patch -> change password
+    //todo delete -> delete user
 
-        const result = await dbCtrl.pool.query(UserSql.getUserSalt(email));
-
-        const {salt, hash} = result.rows[0];
-
-
-        console.log(new Buffer(hash), new Buffer(salt))
-
-        const str = bcrypt.encodeBase64(salt, 10);
-
-        console.log(str, password, salt)
-
-        const h = await bcrypt.hash(password, str);
-        const isAuthenticated = await bcrypt.compare(h, hash);
-
-
-
-
-        if(!isAuthenticated){
-            return res.status(401).json({ status: 'failure', message: 'User unauthorised' })
-        }
-
-        const token = await jwt.sign({email, password}, HASH);
-
-        res.header('x-auth', token);
-
-        res.redirect('/login');
-    });
-
-
-    //logout
-    router.post('/logout', async (req, res) => {
-
-
-
-
-
-    });
 
     return router;
 }
 
-export default Users;
+export default User;
