@@ -24,9 +24,10 @@ function User(router: Router): Router {
         const salt = await bcrypt.genSalt();
         const hash = await bcrypt.hash(password, salt);
 
-        await dbCtrl.pool.query(UserSql.insert(email, hash, salt));
+        const result = await dbCtrl.pool.query(UserSql.insert(email, hash, salt));
+        if(!result) return res.sendStatus(300);
 
-        return res.status(200).json({status: "success", hash, salt});
+        return res.redirect("/login")
     });
 
     //insert user
@@ -44,7 +45,7 @@ function User(router: Router): Router {
         });
 
         const token = jwt.sign({email, password}, HASH);
-        const link = `http://${req.get('host')}/users/${token}`;
+        const link = `http://${req.get('host')}/user/${token}`;
 
         const mailOptions = {
             from: '"Plusnetv" <info@plusnetv.net>', // sender address

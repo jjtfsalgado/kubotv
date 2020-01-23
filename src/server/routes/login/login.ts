@@ -11,11 +11,8 @@ function Login(router: Router): Router {
     //login
     router.post('/', async (req, res) => {
         const {email, password} = req.body;
-
         const result = await dbCtrl.pool.query(UserSql.getUserHash(email));
-
         const {hash} = result.rows[0];
-
         const isAuthenticated = await bcrypt.compare(password, hash);
 
         if(!isAuthenticated){
@@ -23,20 +20,16 @@ function Login(router: Router): Router {
         }
 
         const token = await jwt.sign({email, password}, HASH);
-        console.log(token)
 
         res.header('x-auth', token);
 
-        res.redirect('/player');
+        res.send(200)
     });
 
     //logout
     router.delete('/', async (req, res) => {
-
-
-
-
-
+        res.removeHeader('x-auth');
+        res.send(200);
     });
 
     return router;
