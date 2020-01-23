@@ -1,7 +1,8 @@
 import * as express from 'express';
 import {Express, Router} from 'express';
-import Users from "./routes/users";
+import User from "./routes/user/user";
 import {_DEV_} from "../../global";
+import Login from "./routes/login/login";
 
 class ExpressCtrl{
     private readonly _app: Express;
@@ -32,7 +33,7 @@ class ExpressCtrl{
     private _init = () => {
         const PORT = process.env.PORT;
         this.app.use((req, res, next) => {
-            if (req.headers['x-forwarded-proto'] === 'https') {
+            if (req.protocol === 'https') {
                 return res.redirect('http://' + req.hostname + req.url);
             };
 
@@ -41,7 +42,8 @@ class ExpressCtrl{
 
         this.app.use(express.json());
 
-        this.app.use('/users', Users(this.router()));
+        this.app.use('/user', User(this.router()));
+        this.app.use('/login', Login(this.router()));
 
         this.app.use(express.static('dist'));
 

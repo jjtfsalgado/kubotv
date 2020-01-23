@@ -1,42 +1,43 @@
-import {Router} from "express";
-import {dbCtrl} from "../db";
+import {dbCtrl} from "../../db";
 import UserSql from "./users.sql";
 import * as nodemailer from "nodemailer";
 import * as jwt from "jsonwebtoken";
+import * as bcrypt from "bcryptjs";
+import {Router} from "express";
 
 
 const HASH = process.env.HASH;
 
-function Users(router: Router): Router {
+function User(router: Router): Router {
 
     //get user
-    router.get('/', async (req, res) => {
-        const re = await dbCtrl.pool.query(UserSql.get());
-
-        return res.status(200).json({status: "success", data: re.rows[0]});
-    });
-
-    //get user
-    router.get('/verify/:token', async (req, res) => {
+    router.get('/:token', async (req, res) => {
         const {token} = req.params;
 
         const decoded: any = jwt.verify(token, HASH);
 
         const {password, email} = decoded;
 
-        await dbCtrl.pool.query(UserSql.post(password, email));
+        if(!password || !email) return;
 
-        return res.status(200).json({status: "success"});
+        //todo hash password without salt on the frontend
+        const salt = await bcrypt.genSalt();
+        const hash = await bcrypt.hash(password, salt);
+
+        const result = await dbCtrl.pool.query(UserSql.insert(email, hash, salt));
+        if(!result) return res.sendStatus(300);
+
+        return res.redirect("/login")
     });
 
-    //post user
+    //insert user
     router.post('/', async (req, res) => {
         const {email, password} = req.body;
 
         const transporter = nodemailer.createTransport({
             host: "mail.privateemail.com",
-            port: 587,
-            secure: false,
+            port: 465,
+            secure: true,
             auth:{
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS
@@ -44,7 +45,7 @@ function Users(router: Router): Router {
         });
 
         const token = jwt.sign({email, password}, HASH);
-        const link = `http://${req.get('host')}/users/verify/${token}`;
+        const link = `http://${req.get('host')}/user/${token}`;
 
         const mailOptions = {
             from: '"Plusnetv" <info@plusnetv.net>', // sender address
@@ -62,7 +63,11 @@ function Users(router: Router): Router {
         return res.status(201).json({ status: 'success', message: 'User created' })
     });
 
+    //todo patch -> change password
+    //todo delete -> delete user
+
+
     return router;
 }
 
-export default Users;
+export default User;

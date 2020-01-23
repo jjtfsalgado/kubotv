@@ -24,8 +24,8 @@ export const dbCtrl = new DbCtrl();
 (async () => {
     const {pool} = dbCtrl;
 
-    await pool.query('DROP TABLE IF EXISTS users');
-    await pool.query(`CREATE TABLE users (id serial PRIMARY KEY, password VARCHAR (50) NOT NULL,email VARCHAR (355) UNIQUE NOT NULL)`);
+    // await pool.query('DROP TABLE IF EXISTS users');
+    // await pool.query(`CREATE TABLE users (id serial PRIMARY KEY, password VARCHAR (50) NOT NULL, email VARCHAR (355) UNIQUE NOT NULL, hash BYTEA)`);
 })();
 
 
