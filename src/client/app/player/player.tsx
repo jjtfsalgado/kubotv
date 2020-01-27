@@ -11,6 +11,7 @@ import axios from "axios";
 
 import {useHistory} from "react-router-dom"
 import * as H from "history";
+import {localStorageCtrl} from "../../controllers/localhost";
 
 export function Player(){
     useEffect(() => {
@@ -51,5 +52,6 @@ async function onLogout(history: H.History<any>){
     const res = await axios.delete("/login");
     if(!res) return;
 
+    localStorageCtrl.tokenDelete();
     history.push("/")
 }
