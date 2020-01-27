@@ -3,18 +3,22 @@ import UserSql from "./users.sql";
 import * as nodemailer from "nodemailer";
 import * as jwt from "jsonwebtoken";
 import * as bcrypt from "bcryptjs";
-import {Router} from "express";
+import {_HASH_} from "../../../../global";
+import {verifyToken} from "../login/login";
+import {NextFunction, Request, Response} from "express-serve-static-core";
 
+interface IUser {
+    insert(req: Request<any, any, any>, res: Response<any>, next: NextFunction) : Promise<any>,
+    verifyEmail(req: Request<any, any, any>, res: Response<any>, next: NextFunction) : Promise<any>,
+}
 
-const HASH = process.env.HASH;
+class User implements IUser{
+    async insert(req: Request<any, any, any>, res: Response<any>, next: NextFunction){
 
-function User(router: Router): Router {
-
-    //get user
-    router.get('/:token', async (req, res) => {
         const {token} = req.params;
 
-        const decoded: any = jwt.verify(token, HASH);
+        const decoded: any = await verifyToken(token, _HASH_);
+        if(!decoded) return;
 
         const {password, email} = decoded;
 
@@ -28,10 +32,9 @@ function User(router: Router): Router {
         if(!result) return res.sendStatus(300);
 
         return res.redirect("/login")
-    });
+    }
 
-    //insert user
-    router.post('/', async (req, res) => {
+    async verifyEmail(res, req){
         const {email, password} = req.body;
 
         const transporter = nodemailer.createTransport({
@@ -44,7 +47,7 @@ function User(router: Router): Router {
             }
         });
 
-        const token = jwt.sign({email, password}, HASH);
+        const token = jwt.sign({email, password}, _HASH_);
         const link = `http://${req.get('host')}/user/${token}`;
 
         const mailOptions = {
@@ -61,13 +64,13 @@ function User(router: Router): Router {
         }
 
         return res.status(201).json({ status: 'success', message: 'User created' })
-    });
+    }
 
     //todo patch -> change password
     //todo delete -> delete user
 
 
-    return router;
 }
 
-export default User;
+export default new User();
+

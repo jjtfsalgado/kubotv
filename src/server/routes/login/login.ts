@@ -2,14 +2,25 @@ import {dbCtrl} from "../../db";
 import UserSql from "./login.sql";
 import * as jwt from "jsonwebtoken";
 import * as bcrypt from "bcryptjs";
-import {Router} from "express";
+import {_HASH_, _HEADER_AUTH_} from "../../../../global";
+import {NextFunction, Request, Response} from "express-serve-static-core";
 
+export async function verifyToken(token: string, privateKey: string = _HASH_){
+    return new Promise((res, rej) => {
+        jwt.verify(token, privateKey, (err, decoded) => {
+            if(err) return rej(err);
+            res(decoded)
+        })
+    })
+}
 
-const HASH = process.env.HASH;
+interface ILogin {
+    login(req: Request<any, any, any>, res: Response<any>, next: NextFunction) : Promise<any>,
+    logout(req: Request<any, any, any>, res: Response<any>, next: NextFunction) : Promise<any>,
+}
 
-function Login(router: Router): Router {
-    //login
-    router.post('/', async (req, res) => {
+class Login implements ILogin{
+    async login(req: Request<any, any, any>, res: Response<any>, next: NextFunction){
         const {email, password} = req.body;
         const result = await dbCtrl.pool.query(UserSql.getUserHash(email));
         const {hash} = result.rows[0];
@@ -19,20 +30,17 @@ function Login(router: Router): Router {
             return res.status(401).json({ status: 'failure', message: 'User unauthorised' })
         }
 
-        const token = await jwt.sign({email, password}, HASH);
+        const token = await jwt.sign({email, password}, _HASH_);
 
-        res.header('x-auth', token);
+        res.header(_HEADER_AUTH_, token);
 
         res.send(200)
-    });
+    }
 
-    //logout
-    router.delete('/', async (req, res) => {
-        res.removeHeader('x-auth');
+    async logout(req: Request<any, any, any>, res: Response<any>, next: NextFunction){
+        res.removeHeader(_HEADER_AUTH_);
         res.send(200);
-    });
-
-    return router;
+    }
 }
 
-export default Login;
+export default new Login();

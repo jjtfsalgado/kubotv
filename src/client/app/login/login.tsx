@@ -1,11 +1,12 @@
 import * as React from "react";
+import {useReducer} from "react";
 import {Button, TextField} from "@material-ui/core";
 import axios from "axios";
 import css from "./login.less"
-import {useReducer} from "react";
-import * as bcrypt from "bcryptjs";
 import {useHistory} from "react-router-dom";
 import * as H from "history";
+import {_HEADER_AUTH_} from "../../../../global";
+import {localStorageCtrl} from "../../controllers/localhost";
 
 interface IAction<T>{
     property: string,
@@ -46,6 +47,9 @@ async function onLogin(email: string, password: string, history: H.History<any>)
     //todo handle wrong password
     if(!res) return;
 
-    axios.defaults.headers.common['x-auth'] = res.headers['x-auth'];
+    const token = res.headers[_HEADER_AUTH_];
+
+    axios.defaults.headers.common[_HEADER_AUTH_] = token;
+    localStorageCtrl.tokenSet = token;
     history.push("/player");
 }
