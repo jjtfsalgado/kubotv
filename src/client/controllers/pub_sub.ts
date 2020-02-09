@@ -8,6 +8,8 @@ export const eventDispatcher = new class {
         const topic = this.topics[event];
         topic.add(listener);
 
+        console.info("added new listener");
+
         return {
             delete: () => {
                 topic.delete(listener);

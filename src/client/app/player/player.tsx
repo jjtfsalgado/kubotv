@@ -11,18 +11,26 @@ import axios from "axios";
 
 import {useHistory} from "react-router-dom"
 import * as H from "history";
-import {localStorageCtrl} from "../../controllers/localhost";
+import localStorageCtrl from "../../controllers/localhost";
+import {hls} from "../../controllers/hls";
 
 export function Player(){
     useEffect(() => {
-        // const urlParams = new URLSearchParams(window.location.search);
-        // if(!urlParams){return};
-        // const urlParam = urlParams.get("url");
-        // if(urlParam){
-        //     const channels = await hls.loadFromUrl(urlParam);
-        //     await hls.updateView(channels, true);
-        //     window.history.replaceState(null, null, window.location.pathname);
-        // }
+
+        (async () => {
+            console.log("#### player has rendered")
+
+            const urlParams = new URLSearchParams(window.location.search);
+            if(!urlParams) return;
+
+            let urlParam = "https://raw.githubusercontent.com/freearhey/iptv/master/channels/pt.m3u";
+
+            if(urlParam){
+                const channels = await hls.loadFromUrl(urlParam);
+                await hls.updateView(channels, true);
+                window.history.replaceState(null, null, window.location.pathname);
+            }
+        })();
     }, []);
 
     function onToggleMenu(){

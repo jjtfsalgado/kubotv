@@ -1,31 +1,24 @@
 import * as React from 'react';
 import {useEffect, useState} from 'react';
-import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
+import {BrowserRouter, Redirect, Route, Switch, useHistory} from "react-router-dom";
 import {Player} from "./player/player";
 import {Home} from "./home/home";
 import {Login} from "./login/login";
 import css from "./app.less";
 import {SignUp} from "./register/signup";
-import {localStorageCtrl} from "../controllers/localhost";
+import localStorageCtrl from "../controllers/localhost";
 import axios from "axios";
+
 
 export function App() {
     return (
         <div className={css.app}>
             <BrowserRouter>
                 <Switch>
-                    <PrivateRoute path="/player">
-                        <Player/>
-                    </PrivateRoute>
-                    <Route path="/register">
-                        <SignUp/>
-                    </Route>
-                    <Route path="/login">
-                        <Login/>
-                    </Route>
-                    <Route path="/">
-                        <Home/>
-                    </Route>
+                    <PrivateRoute path="/player" children={<Player/>}/>
+                    <Route path="/register" children={<SignUp/>}/>
+                    <Route path="/login" children={<Login/>}/>
+                    <Route path="/" children={<Home/>}/>
                 </Switch>
             </BrowserRouter>
         </div>
@@ -35,7 +28,6 @@ export function App() {
 
 async function verifyToken(token: string): Promise<boolean>{
     const response = await axios.post(`/verify/${token}`);
-
     return response.data
 };
 
@@ -48,7 +40,6 @@ function PrivateRoute({ children, ...rest }) {
             setAuthentication(token ? await verifyToken(token) : false);
         })()
     }, []);
-
 
     if(isAuthenticated == null) return <p>Loading...</p>;
 

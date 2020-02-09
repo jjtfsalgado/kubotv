@@ -6,7 +6,7 @@ import css from "./login.less"
 import {useHistory} from "react-router-dom";
 import * as H from "history";
 import {_HEADER_AUTH_} from "../../../../global";
-import {localStorageCtrl} from "../../controllers/localhost";
+import localStorageCtrl from "../../controllers/localhost";
 
 interface IAction<T>{
     property: string,
