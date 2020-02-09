@@ -15,4 +15,4 @@ class LocalStorageCtrl{
     }
 }
 
-export const localStorageCtrl = new LocalStorageCtrl();
+export default new LocalStorageCtrl();

@@ -1,49 +1,76 @@
 import * as React from "react";
+import {useEffect, useReducer} from "react";
 import {cls} from "../../../../utils/function";
 import {Video} from "./video";
 import {Typography} from "@material-ui/core";
-import {IChannel} from "../../../controllers/hls";
 import {eventDispatcher, EVENTS} from "../../../controllers/pub_sub";
-import {Ad} from "../../../ui/ads/ad";
+import {reducer} from "../../login/login";
 
 interface IVideoProps {
     showControls?: boolean;
     className?: string;
 }
 
-export class VideoContainer extends React.Component<IVideoProps, {
-    selectedChannel: IChannel;
-}> {
-    private eventListener: { delete: () => void };
+export function VideoContainer(props: IVideoProps) {
 
-    constructor(props: IVideoProps, context: any) {
-        super(props, context);
+    const {className} = props;
+    const [state, dispatch] = useReducer(reducer, {});
+    const {selectedChannel} = state;
 
-        this.state = {} as any;
+    console.log("#### video container rendering");
 
-        this.eventListener = eventDispatcher.subscribe(EVENTS.CHANNEL_UPDATE, this.onChannelUpdate)
-    }
+    useEffect( () => {
+        console.log("#### video container -> useEffect");
 
-    onChannelUpdate = (channel: IChannel) => {
-        this.setState({
-            selectedChannel: channel
-        })
-    };
+        let even = eventDispatcher.subscribe(EVENTS.CHANNEL_UPDATE, (value) => {
 
-    render() {
-        const {className} = this.props;
-        const {selectedChannel} = this.state;
+            console.log("#### updating channel");
 
-        return [
-            <div className={cls(className)}>
-                <Video showControls={true}/>
-                <div>
-                    {selectedChannel && (
-                        <Typography variant="h6" color="secondary">
-                            {selectedChannel.title}
-                        </Typography>)}
-                </div>
+            dispatch({property: "selectedChannel", value})
+        });
+
+        return () => even.delete();
+    }, []);
+
+    return (
+        <div className={cls(className)}>
+            <Video showControls={true} url={selectedChannel && selectedChannel.url}/>
+            <div style={{flex: "0 0 40px"}}>
+                {selectedChannel && (
+                    <Typography variant="h6" color="secondary">
+                        {selectedChannel.title}
+                    </Typography>)}
             </div>
-        ]
-    }
-}
+        </div>
+    )
+};
+
+
+// export class VideoContainer extends React.Component<IVideoProps, {
+//     selectedChannel: IChannel;
+// }> {
+//     private eventListener: { delete: () => void };
+//
+//     constructor(props: IVideoProps, context: any) {
+//         super(props, context);
+//
+//         this.state = {} as any;
+//
+//         this.eventListener = eventDispatcher.subscribe(EVENTS.CHANNEL_UPDATE, this.onChannelUpdate)
+//     }
+//
+//     onChannelUpdate = (channel: IChannel) => {
+//         this.setState({
+//             selectedChannel: channel
+//         })
+//     };
+//
+//     render() {
+//         const {className} = this.props;
+//         const {selectedChannel} = this.state;
+//
+//         return [
+//
+//         ]
+//     }
+// }
