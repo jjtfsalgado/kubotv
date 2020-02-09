@@ -4,6 +4,9 @@ import User from "./routes/user/user";
 import Token from "./routes/token/token";
 import {_HASH_, _HEADER_AUTH_} from "../../global";
 import Login, {verifyToken} from "./routes/login/login";
+import {NextFunction, Request, Response} from "express-serve-static-core";
+import * as request from "request";
+import * as http from "http";
 
 //todo review status codes
 
@@ -62,10 +65,37 @@ class ExpressCtrl{
         this.app.delete('/login', Login.logout);
 
         this.app.post('/verify/:token', Token.verify);
+        this.app.get('/proxy/*', (req: Request, res: Response, next: NextFunction) => {
+            const u = req.params[0];
+            // let u = decodeURIComponent(url);
+            res.header("Access-Control-Allow-Origin", "*");
+            // req.url = u;
+
+
+            //
+            // if(u.startsWith("chunk") || u.startsWith("media")){
+            //     u = "http://193.126.16.68:1935/livenlin4/mp4:2liveartvpub/" + u;
+            // }
+
+            console.log(u);
+
+
+            request.get(u).pipe(res);
+        });
 
         this.app.use(express.static('dist'));
-        this.app.get('*', (req, res) => {
-            res.sendFile('dist/index.html', {root: __dirname})
+
+
+        this.app.get('/:route', (req, res, next) => {
+            const {route} = req.params;
+
+            const excludes = ["proxy"];
+
+            if(!excludes.includes(route)){
+                return res.sendFile('dist/index.html', {root: __dirname})
+            }
+
+            next()
         });
 
         this.app.listen(PORT, () => {
