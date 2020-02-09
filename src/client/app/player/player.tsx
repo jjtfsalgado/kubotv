@@ -13,13 +13,13 @@ import {useHistory} from "react-router-dom"
 import * as H from "history";
 import localStorageCtrl from "../../controllers/localhost";
 import {hls} from "../../controllers/hls";
+import {LoadPlaylistDialog} from "./channels/load_playlist_dialog";
+import {_DEV_} from "../../../../global";
+import {ListDialog} from "./channels/list_dialog";
 
 export function Player(){
     useEffect(() => {
-
         (async () => {
-            console.log("#### player has rendered")
-
             const urlParams = new URLSearchParams(window.location.search);
             if(!urlParams) return;
 
@@ -33,7 +33,15 @@ export function Player(){
         })();
     }, []);
 
-    function onToggleMenu(){
+    async function onToggleMenu(){
+        const result = await LoadPlaylistDialog.show();
+
+
+        const playlist = await ListDialog.show({data: result});
+
+        //todo store the result on the database
+
+        debugger
 
     }
 
@@ -42,7 +50,7 @@ export function Player(){
     return (
         <div className={css.player}>
             <ToolBar>
-                <IconButton onClick={onToggleMenu}
+                <IconButton onClick={() => onToggleMenu()}
                             aria-label="Open drawer">
                     <MenuIcon/>
                 </IconButton>
