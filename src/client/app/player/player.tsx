@@ -14,22 +14,20 @@ import * as H from "history";
 import localStorageCtrl from "../../controllers/localhost";
 import {hls} from "../../controllers/hls";
 import {LoadPlaylistDialog} from "./channels/load_playlist_dialog";
-import {_DEV_} from "../../../../global";
 import {ListDialog} from "./channels/list_dialog";
 
 export function Player(){
     useEffect(() => {
         (async () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            if(!urlParams) return;
+            // const urlParams = new URLSearchParams(window.location.search);
+            // if(!urlParams) return;
 
-            let urlParam = "https://raw.githubusercontent.com/freearhey/iptv/master/channels/pt.m3u";
+            // let urlParam = "https://raw.githubusercontent.com/freearhey/iptv/master/channels/pt.m3u";
 
-            if(urlParam){
-                const channels = await hls.loadFromUrl(urlParam);
-                await hls.updateView(channels, true);
-                window.history.replaceState(null, null, window.location.pathname);
-            }
+            const {data} = await axios.get(`/channel/${localStorageCtrl.userIdGet}`);
+            console.log(data)
+            await hls.updateView(data.channels, true);
+            window.history.replaceState(null, null, window.location.pathname);
         })();
     }, []);
 

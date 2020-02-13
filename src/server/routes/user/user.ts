@@ -17,8 +17,10 @@ class User implements IUser{
 
         const {token} = req.params;
 
-        const decoded: any = await verifyToken(token, _HASH_);
-        if(!decoded) return;
+        const decoded: any = await verifyToken(token);
+
+        console.log(decoded)
+        if(!decoded) return res.sendStatus(300);
 
         const {password, email} = decoded;
 
@@ -34,7 +36,7 @@ class User implements IUser{
         return res.redirect("/login")
     }
 
-    async verifyEmail(res, req){
+    async verifyEmail(req: Request<any, any, any>, res: Response<any>, next: NextFunction){
         const {email, password} = req.body;
 
         const transporter = nodemailer.createTransport({
@@ -68,7 +70,6 @@ class User implements IUser{
 
     //todo patch -> change password
     //todo delete -> delete user
-
 
 }
 
