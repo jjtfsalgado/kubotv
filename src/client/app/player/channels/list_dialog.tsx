@@ -47,7 +47,7 @@ export class ListDialog extends Dialog<
                             tabIndex={-1}
                             disableRipple
                         />
-                        <ListItemText primary={i.title}/>
+                        <ListItemText primary={i.description}/>
                     </ListItem>
                 ))}
             </List>

@@ -17,15 +17,8 @@ export function VideoContainer(props: IVideoProps) {
     const [state, dispatch] = useReducer(reducer, {});
     const {selectedChannel} = state;
 
-    console.log("#### video container rendering");
-
     useEffect( () => {
-        console.log("#### video container -> useEffect");
-
         let even = eventDispatcher.subscribe(EVENTS.CHANNEL_UPDATE, (value) => {
-
-            console.log("#### updating channel");
-
             dispatch({property: "selectedChannel", value})
         });
 

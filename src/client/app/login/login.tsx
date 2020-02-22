@@ -41,7 +41,6 @@ export function Login() {
 }
 
 async function onLogin(email: string, password: string, history: H.History<any>){
-
     const res = await axios.post("/login", {email, password});
 
     //todo handle wrong password
@@ -51,5 +50,6 @@ async function onLogin(email: string, password: string, history: H.History<any>)
 
     axios.defaults.headers.common[_HEADER_AUTH_] = token;
     localStorageCtrl.tokenSet = token;
+    localStorageCtrl.userId = res.data.UserId;
     history.push("/player");
 }

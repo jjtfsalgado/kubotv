@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useEffect, useState} from 'react';
-import {BrowserRouter, Redirect, Route, Switch, useHistory} from "react-router-dom";
+import {HashRouter, Redirect, Route, Switch} from "react-router-dom";
 import {Player} from "./player/player";
 import {Home} from "./home/home";
 import {Login} from "./login/login";
@@ -8,19 +8,24 @@ import css from "./app.less";
 import {SignUp} from "./register/signup";
 import localStorageCtrl from "../controllers/localhost";
 import axios from "axios";
+import {_HEADER_AUTH_} from "../../../global";
 
 
 export function App() {
+    useEffect(() => {
+        axios.defaults.headers.common[_HEADER_AUTH_] = localStorageCtrl.tokenGet;
+    },[]);
+
     return (
         <div className={css.app}>
-            <BrowserRouter>
+            <HashRouter>
                 <Switch>
                     <PrivateRoute path="/player" children={<Player/>}/>
                     <Route path="/register" children={<SignUp/>}/>
                     <Route path="/login" children={<Login/>}/>
                     <Route path="/" children={<Home/>}/>
                 </Switch>
-            </BrowserRouter>
+            </HashRouter>
         </div>
     )
 };
@@ -37,7 +42,8 @@ function PrivateRoute({ children, ...rest }) {
     useEffect( () => {
         (async () => {
             const token = localStorageCtrl.tokenGet;
-            setAuthentication(token ? await verifyToken(token) : false);
+            const isVerified = await verifyToken(token);
+            setAuthentication(isVerified);
         })()
     }, []);
 

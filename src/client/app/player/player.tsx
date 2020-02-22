@@ -12,37 +12,42 @@ import axios from "axios";
 import {useHistory} from "react-router-dom"
 import * as H from "history";
 import localStorageCtrl from "../../controllers/localhost";
-import {hls} from "../../controllers/hls";
+import {hls, IChannel} from "../../controllers/hls";
+import {LoadPlaylistDialog} from "./channels/load_playlist_dialog";
+import {ListDialog} from "./channels/list_dialog";
 
 export function Player(){
+    const history = useHistory();
+
     useEffect(() => {
-
         (async () => {
-            console.log("#### player has rendered")
 
-            const urlParams = new URLSearchParams(window.location.search);
-            if(!urlParams) return;
-
-            let urlParam = "https://raw.githubusercontent.com/freearhey/iptv/master/channels/pt.m3u";
-
-            if(urlParam){
-                const channels = await hls.loadFromUrl(urlParam);
-                await hls.updateView(channels, true);
-                window.history.replaceState(null, null, window.location.pathname);
+            let data;
+            try {
+                const res = await axios.get(`/channel/${localStorageCtrl.userIdGet}`);
+                data = res.data;
+            }catch (e) {
+                //fixme add a better error handling for unauthorised requests. create an http abstraction that captures this errors and handles them
+                return history.push("/")
             }
+
+
+            await hls.updateView(data.channels, true);
         })();
     }, []);
+    async function onToggleMenu(){
+        const result = await LoadPlaylistDialog.show();
 
-    function onToggleMenu(){
+        const playlist: Array<any> = await ListDialog.show({data: result});
+        const p: Array<IChannel> = playlist.map(i => ({...i, user_account_id: localStorageCtrl.userIdGet, channel_name: i.description}));
+        axios.post("/channel", {channels: p})
 
     }
-
-    const history = useHistory();
 
     return (
         <div className={css.player}>
             <ToolBar>
-                <IconButton onClick={onToggleMenu}
+                <IconButton onClick={() => onToggleMenu()}
                             aria-label="Open drawer">
                     <MenuIcon/>
                 </IconButton>

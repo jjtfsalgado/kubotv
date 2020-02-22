@@ -1,5 +1,7 @@
-import {Pool, QueryConfig} from "pg";
+import {Pool} from "pg";
 import {config} from "dotenv"
+import pgFormat from "pg-format";
+
 config();
 
 
@@ -17,6 +19,19 @@ class DbCtrl {
         return this._pool
     }
 };
+
+
+export namespace db{
+    export function insert<T>(tableName: string, values: Array<T>){
+        const val = values[0];
+
+        const parsedValues = values.map(i => Object.values(i));
+        const f = pgFormat(`INSERT INTO ${tableName} (${Object.keys(val).join(",")}) VALUES %L`, parsedValues);
+
+        return f;
+    }
+}
+
 
 export const dbCtrl = new DbCtrl();
 

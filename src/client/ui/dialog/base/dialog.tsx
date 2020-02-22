@@ -5,8 +5,6 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import * as React from "react";
 import {ReactNode} from "react";
-import {DialogCtrl} from "./ctrl";
-import {ClassType} from "react";
 
 
 export abstract class Dialog<P, S> extends React.Component<P & {
