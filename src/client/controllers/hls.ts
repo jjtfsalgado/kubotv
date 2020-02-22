@@ -1,21 +1,20 @@
 import * as Hls from "hls.js";
+import {Config} from "hls.js";
 import axios from "axios";
 import {m3uToJson} from "../../utils/m3u_json_parser";
 import {readFile, sortByMany} from "../../utils/function";
 import {eventDispatcher, EVENTS} from "./pub_sub";
-import {Config} from "hls.js";
-import * as events from "events";
-import {types} from "util";
 
 export interface IChannel {
-    'group-title': string;
-    title: string;
-    'tvg-id': string
-    'tvg-logo': string
-    'tvg-name': string;
+    description: string;
     url: string;
-    id: string
-    favorite: boolean;
+    is_favourite?: boolean;
+    logo_url?: string
+    language?: string;
+    channel_name: string;
+    parent_id?: string
+    user_account_id: string;
+    id?: string;
 }
 
 let base;
@@ -219,7 +218,7 @@ export const hls = new class{
     };
 
     public async loadFromUrl(url: string){
-        const response = await axios.get(`${url}`);
+        const response = await axios.get(`/proxy/${url}`);
         return m3uToJson(response.data)
     }
 
@@ -252,7 +251,6 @@ export const hls = new class{
             playlist = playlist.concat(this.getData)
         }
 
-        sortByMany(playlist,  i => i.favorite ? -1 : 1, i => i.title);
 
         this.setData = playlist;
         eventDispatcher.publish(EVENTS.PLAYLIST_UPDATE, this.getData)

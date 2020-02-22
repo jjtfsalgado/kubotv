@@ -25,11 +25,11 @@ class ExpressCtrl{
     private _authenticate = async (req, res, next) => {
         let token = req.header(_HEADER_AUTH_);
 
-        if(!token) return res.redirect("/");
+        if(!token) return res.sendStatus(500);
 
         const decoded = await verifyToken(token, _HASH_);
 
-        if(!decoded) return res.redirect("/");
+        if(!decoded) return res.sendStatus(500);
 
         next()
     };
@@ -49,7 +49,8 @@ class ExpressCtrl{
         this.app.post('/user', User.verifyEmail);
         this.app.get('/user/:token', User.insert);
 
-        this.app.get('/channel/:userId', Channel.getAll);
+        this.app.get('/channel/:userId', this._authenticate, Channel.getAll);
+        this.app.post('/channel', this._authenticate, Channel.insertAll);
 
         this.app.post('/login', Login.login);
         this.app.delete('/login', Login.logout);
@@ -62,18 +63,6 @@ class ExpressCtrl{
         });
 
         this.app.use(express.static('dist'));
-
-        this.app.get('/:route', (req, res, next) => {
-            const {route} = req.params;
-
-            const excludes = ["proxy"];
-
-            if(!excludes.includes(route)){
-                return res.sendFile('dist/index.html', {root: __dirname})
-            }
-
-            next()
-        });
 
         this.app.listen(PORT, () => {
             console.log('#### Express server is up on port ' + PORT);
