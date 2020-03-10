@@ -13,8 +13,8 @@ import {useHistory} from "react-router-dom"
 import * as H from "history";
 import localStorageCtrl from "../../controllers/localhost";
 import {hls, IChannel} from "../../controllers/hls";
-import {LoadPlaylistDialog} from "./channels/load_playlist_dialog";
-import {ListDialog} from "./channels/list_dialog";
+import {showLoadPlaylistDialog} from "./channels/load_playlist.dialog";
+import {showSelectPlaylistDialog} from "./channels/select_channels.dialog";
 
 export function Player(){
     const history = useHistory();
@@ -35,13 +35,17 @@ export function Player(){
             await hls.updateView(data.channels, true);
         })();
     }, []);
+
     async function onToggleMenu(){
-        const result = await LoadPlaylistDialog.show();
+        const res = await showLoadPlaylistDialog();
 
-        const playlist: Array<any> = await ListDialog.show({data: result});
-        const p: Array<IChannel> = playlist.map(i => ({...i, user_account_id: localStorageCtrl.userIdGet, channel_name: i.description}));
+        if(!res) return;
+
+        const selected = await showSelectPlaylistDialog({data: res});
+        if(!selected) return;
+
+        const p: Array<IChannel> = selected.map(i => ({...i, user_account_id: localStorageCtrl.userIdGet, channel_name: i.description}));
         axios.post("/channel", {channels: p})
-
     }
 
     return (
