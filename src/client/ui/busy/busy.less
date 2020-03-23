@@ -1,0 +1,33 @@
+
+.busy-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #fff0;
+}
+
+.spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  &:after {
+    content: '';
+    position: absolute;
+    border: solid 8px #f90;
+    border-radius: 8px;
+    margin: 4px -16px;
+    animation: ani-play 1s infinite ease-out;
+    //@keyframes ani-play {
+    //  width: 16px;
+    //  height: 24px;
+    //  0% { transform: translate(0, $h) }
+    //  25% { transform: translate($w, 0) }
+    //  50% { transform: translate($w*2, $h) }
+    //  75% { transform: translate($w, 0) }
+    //  100% { transform: translate(0, $h) }
+    //}
+  }
+}

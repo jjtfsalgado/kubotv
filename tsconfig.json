@@ -2,6 +2,7 @@
   "compilerOptions": {
     "outDir": "./dist/",
     "noImplicitAny": false,
+    "skipLibCheck": true,
     "module": "esnext",
     "target": "es6",
     "jsx": "react",
@@ -15,5 +16,8 @@
   },
   "includes": [
     "./externals.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }

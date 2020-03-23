@@ -10,7 +10,6 @@ import localStorageCtrl from "../controllers/localhost";
 import axios from "axios";
 import {_HEADER_AUTH_} from "../../../global";
 
-
 export function App() {
     useEffect(() => {
         axios.defaults.headers.common[_HEADER_AUTH_] = localStorageCtrl.tokenGet;

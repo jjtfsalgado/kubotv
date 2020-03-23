@@ -8,14 +8,11 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {cls} from "../../../../utils/function";
-
 import css from "./channel_list.less";
 import {eventDispatcher, EVENTS} from "../../../controllers/pub_sub";
-import {Search} from "../../../ui/search/search";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import {reducer} from "../../login/login";
-
 
 interface IVideoProps {
     showControls?: boolean;
@@ -26,10 +23,6 @@ export function ChannelList(props: IVideoProps){
     const {showControls, className} = props;
     const [state, dispatch] = useReducer(reducer, {playlist: []});
     const {playlist, selectedChannel} = state;
-
-    const onSearch = (value: string) => {
-        hls.search(value);
-    };
 
     const onPlaylistUpdate = async (playlist: Array<IChannel>) => {
         await hls.loadChannel(playlist[0]);
@@ -57,8 +50,6 @@ export function ChannelList(props: IVideoProps){
 
     return (
         <div className={cls(className)}>
-            <Search placeholder={"Search"}
-                    onChange={onSearch}/>
             <div className={css.container}>
                 <List className={css.list}>
                     {playlist && playlist.map(i => (
@@ -99,7 +90,7 @@ function Channel(props) {
             <IconButton onClick={onClickFavorite} color={"secondary"}>
                 {item.favorite ? <FavoriteIcon/> : <FavoriteBorderIcon/>}
             </IconButton>
-            <ListItemText primary={item && item.title}
+            <ListItemText primary={item && item.description}
                           className={css.primary}/>
             <ListItemSecondaryAction>
                 <IconButton aria-label="Delete"

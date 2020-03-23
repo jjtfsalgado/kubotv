@@ -1,37 +1,21 @@
-.player{
+.player {
   height: 100vh;
   width: 100vw;
   display: grid;
-  grid-template-columns: 100%;
-  grid-template-rows: 10% 80% 10%;
+  grid-template-columns: 240px auto;
+  grid-template-rows: 10% 90%;
   overflow: hidden;
 
-  grid-template-areas: "ad""body""footer";
+  grid-template-areas: "sidepanel search""sidepanel body""sidepanel footer";
 
-  .ad{
-    grid-area: ad;
-  }
-
-  .footer{
+  .footer {
     grid-area: footer;
   }
 
-  .body{
-    display: grid;
-    padding: 20px 50px;
-    grid-area: body;
-    grid-template-columns: 8fr 2fr;
-    grid-template-areas: "video channels";
-    grid-column-gap: 30px;
+  .side-panel{
+    grid-area: sidepanel;
 
-    .video{
-      grid-area: video;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .channels{
+    .channels {
       min-height: 0;
       flex-direction: column;
       display: flex;
@@ -39,23 +23,42 @@
     }
   }
 
-  @media screen and (max-width: 1400px) {
+  .body {
+    display: grid;
+    padding: 20px 50px;
+    grid-area: body;
+    grid-template-rows: 1fr 9fr;
+    grid-template-areas: "search" "video";
+    //grid-column-gap: 30px;
 
-    .body{
+    .search{
+      grid-area: search;
+    }
+
+    .video {
+      grid-area: video;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+  }
+
+  @media screen and (max-width: 1400px) {
+    .body {
       grid-template-columns: 100%;
       grid-template-areas: "video""channels";
       grid-template-rows: 50% 50%;
       grid-row-gap: 30px;
     }
 
-    .footer{
+    .footer {
       grid-area: unset;
     }
   }
 
-  @media(max-width: 500px){
+  @media (max-width: 500px) {
 
-    .body{
+    .body {
       padding: 10px;
     }
   }
