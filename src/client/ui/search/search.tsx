@@ -6,11 +6,12 @@ import css from "./search.less"
 import * as React from "react";
 import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import {debounce} from "../../../utils/function";
+import {cls, debounce} from "../../../utils/function";
 
 export class Search extends React.Component<{
     placeholder: string;
     onChange: (value: string) => void;
+    className?: string;
 }, {
     value: string;
 }> {
@@ -21,15 +22,15 @@ export class Search extends React.Component<{
     }
 
     render() {
-        const {placeholder} = this.props;
+        const {placeholder, className} = this.props;
         const {value} = this.state;
 
         return (
-            <div className={css.search}>
+            <div className={cls(css.search, className)}>
                 <TextField className={css.input}
                            value={value}
                            margin={"normal"}
-                           onChange={(ev) => debounce(this.onChange(ev), this, 100000)}
+                           onChange={(ev) => debounce(this.onChange(ev), this, 1000)}
                            InputProps={{
                                endAdornment: (
                                    <InputAdornment position="end">
