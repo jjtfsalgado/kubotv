@@ -1,11 +1,7 @@
 import {VideoContainer} from "./video/container";
 import {ChannelList} from "./channels/channel_list";
 import * as React from "react";
-import {useEffect} from "react";
-import {ToolBar} from "../../ui/toolbar/toolbar";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/core/SvgIcon/SvgIcon";
-import {Button} from "@material-ui/core";
+import {useEffect, useState} from "react";
 import axios from "axios";
 import {useHistory} from "react-router-dom"
 
@@ -18,8 +14,15 @@ import {showSelectPlaylistDialog} from "./channels/select_channels.dialog";
 import css from "./player.less";
 import {Search} from "../../ui/search/search";
 
+
+interface IPlayerState {
+    showSidepanel: boolean;
+}
+
 export function Player(){
     const history = useHistory();
+    const [state, setState] = useState<IPlayerState>({showSidepanel: true});
+    const {showSidepanel} = state;
 
     useEffect(() => {
         (async () => {
@@ -51,28 +54,32 @@ export function Player(){
         hls.search(value);
     };
 
+    const onToggleSidePanel = () => setState({showSidepanel: !showSidepanel});
+
     return (
         <div className={css.player}>
-            <div className={css.sidePanel}>
-                <ToolBar>
-                    <IconButton onClick={() => onToggleMenu()}
-                                aria-label="Open drawer">
-                        <MenuIcon/>
-                    </IconButton>
-                    <Button onClick={() => onLogout(history)}>Logout</Button>
-                </ToolBar>
-                <ChannelList className={css.channels}/>
+            <div className={css.header}>
+                <div className={css.logo}>
+                    <button onClick={() => onToggleSidePanel()}>
+                        Toggle
+                    </button>
+                </div>
+                <div className={css.search}>
+                    <Search placeholder={"Search"}
+                            onChange={onSearch}/>
+                </div>
+                <div className={css.user}>
+                    <button onClick={() => onLogout(history)}>Logout</button>
+                </div>
             </div>
             <div className={css.body}>
-                <Search placeholder={"Search"}
-                        className={css.search}
-                        onChange={onSearch}/>
+                <div className={css.side} style={{display: showSidepanel ? "flex" : "none"}}>
+                    <ChannelList className={css.channels}/>
+                </div>
                 <VideoContainer className={css.video}/>
             </div>
         </div>
     )
-
-
 }
 
 async function onLogout(history: H.History<any>){

@@ -24,7 +24,7 @@ export const BusyRender = <T extends unknown>(props: {promise: () => Promise<T>,
                 data
             })
         });
-    }, []);
+    }, [promise]);
 
     if(state.loading) return <BusyOverlay/>;
 

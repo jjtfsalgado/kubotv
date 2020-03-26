@@ -2,13 +2,15 @@ import * as React from 'react';
 import {useEffect, useState} from 'react';
 import {HashRouter, Redirect, Route, Switch} from "react-router-dom";
 import {Player} from "./player/player";
-import {Home} from "./home/home";
+import {HomeRouter} from "./home/home";
 import {Login} from "./login/login";
 import css from "./app.less";
 import {SignUp} from "./register/signup";
 import localStorageCtrl from "../controllers/localhost";
 import axios from "axios";
 import {_HEADER_AUTH_} from "../../../global";
+import {Privacy} from "./privacy/privacy";
+import {Terms} from "./terms/terms";
 
 export function App() {
     useEffect(() => {
@@ -20,9 +22,7 @@ export function App() {
             <HashRouter>
                 <Switch>
                     <PrivateRoute path="/player" children={<Player/>}/>
-                    <Route path="/register" children={<SignUp/>}/>
-                    <Route path="/login" children={<Login/>}/>
-                    <Route path="/" children={<Home/>}/>
+                    <Route path="/" children={<HomeRouter/>}/>
                 </Switch>
             </HashRouter>
         </div>

@@ -1,14 +1,37 @@
+@import "../../app/variables";
+
 .list {
   display: flex;
   flex-direction: column;
   overflow: auto;
   padding: unset;
+  flex: 1;
 
-  li {
+  #scrollbar();
+
+  .title{
+    height: 33px;
+    color: @colorTextSecondary;
+    padding: 8px 24px;
+    font-weight: 500;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+  }
+
+  .item {
     list-style-type: none;
-
+    min-height: 40px;
+    padding: 0 24px;
+    display: flex;
+    cursor: pointer;
     //&:hover {
     //  background: #f796;
     //}
+
+    &:hover{
+      background: @colorBgHover;
+    }
   }
 }

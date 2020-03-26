@@ -1,18 +1,10 @@
 import * as React from "react";
 import {useEffect, useReducer} from "react";
 import {hls, IChannel} from "../../../controllers/hls";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import {ListItemText} from "@material-ui/core";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import IconButton from "@material-ui/core/IconButton";
-import DeleteIcon from "@material-ui/icons/Delete";
-import {cls} from "../../../../utils/function";
-import css from "./channel_list.less";
 import {eventDispatcher, EVENTS} from "../../../controllers/pub_sub";
-import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-import FavoriteIcon from "@material-ui/icons/Favorite";
 import {reducer} from "../../login/login";
+import {List} from "../../../ui/list/list";
+import css from "./channel_list.less";
 
 interface IVideoProps {
     showControls?: boolean;
@@ -48,19 +40,19 @@ export function ChannelList(props: IVideoProps){
         await hls.loadChannel(channel);
     };
 
+    const onItemRender = (item) => (
+        <Channel key={item.id}
+                 selected={selectedChannel ? (selectedChannel.id === item.id) : null}
+                 onClick={onClickChannel}
+                 item={item}/>
+    );
+
     return (
-        <div className={cls(className)}>
-            <div className={css.container}>
-                <List className={css.list}>
-                    {playlist && playlist.map(i => (
-                        <Channel key={i.id}
-                                 selected={selectedChannel ? (selectedChannel.id === i.id) : null}
-                                 onClick={onClickChannel}
-                                 item={i}/>))}
-                </List>
-            </div>
-        </div>
-    )
+        <List className={css.list}
+              title={"Channels"}
+              data={playlist}
+              itemRender={onItemRender}/>
+    );
 }
 
 
@@ -84,24 +76,27 @@ function Channel(props) {
     };
 
     return (
-        <ListItem dense={true}
-                  onClick={onClick}
-                  className={cls(css.item, selected && css.selected)}>
-            <IconButton onClick={onClickFavorite} color={"secondary"}>
-                {item.favorite ? <FavoriteIcon/> : <FavoriteBorderIcon/>}
-            </IconButton>
-            <ListItemText primary={item && item.description}
-                          className={css.primary}/>
-            <ListItemSecondaryAction>
-                <IconButton aria-label="Delete"
-                            color={"secondary"}
-                            onClick={onDelete}>
-                    <DeleteIcon/>
-                </IconButton>
-            </ListItemSecondaryAction>
-        </ListItem>
+        <div className={css.channel}
+             onClick={onClick}>
+            <span>{item && item.description}</span>
+        </div>
     )
 }
 
-
+// <ListItem dense={true}
+//           onClick={onClick}
+//           className={cls(css.item, selected && css.selected)}>
+//     <IconButton onClick={onClickFavorite} color={"secondary"}>
+//         {item.favorite ? <FavoriteIcon/> : <FavoriteBorderIcon/>}
+//     </IconButton>
+//     <ListItemText primary={item && item.description}
+//                   className={css.primary}/>
+//     <ListItemSecondaryAction>
+//         <IconButton aria-label="Delete"
+//                     color={"secondary"}
+//                     onClick={onDelete}>
+//             <DeleteIcon/>
+//         </IconButton>
+//     </ListItemSecondaryAction>
+// </ListItem>
 

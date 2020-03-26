@@ -33,7 +33,7 @@ module.exports = {
             }
         ]
     },
-    devtool: 'source-map',
+    devtool: 'eval',
     resolve: {
         extensions: [ '.tsx', '.ts', '.js', '.jsx' ]
     },

@@ -1,45 +1,71 @@
+@import "../../app/variables";
+
 .player {
   height: 100vh;
   width: 100vw;
   display: grid;
   grid-template-columns: 240px auto;
-  grid-template-rows: 10% 90%;
+  grid-template-rows: 56px auto;
   overflow: hidden;
+  grid-template-areas: "header header""body body";
 
-  grid-template-areas: "sidepanel search""sidepanel body""sidepanel footer";
+  .header{
+    grid-area: header;
+    display: grid;
+    grid-template-columns: 240px auto 225px;
+    grid-template-areas: "logo search user";
+
+    .logo{
+      grid-area: logo;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .search{
+      grid-area: search;
+      display: flex;
+      justify-content: center;
+    }
+
+    .user{
+      grid-area: user;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
 
   .footer {
     grid-area: footer;
   }
 
-  .side-panel{
-    grid-area: sidepanel;
-
-    .channels {
-      min-height: 0;
-      flex-direction: column;
-      display: flex;
-      grid-area: channels;
-    }
-  }
-
   .body {
-    display: grid;
-    padding: 20px 50px;
+    display: flex;
     grid-area: body;
-    grid-template-rows: 1fr 9fr;
-    grid-template-areas: "search" "video";
-    //grid-column-gap: 30px;
+    overflow: hidden;
 
-    .search{
-      grid-area: search;
+    .side{
+      flex: 0 1 240px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+
+      .channels {
+        //min-height: 0;
+        flex-direction: column;
+        display: flex;
+        grid-area: channels;
+      }
     }
 
     .video {
-      grid-area: video;
+      padding: 48px 80px;
+      flex: 1;
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      background: @colorBg1;
     }
   }
 
