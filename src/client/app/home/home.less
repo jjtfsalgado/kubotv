@@ -5,10 +5,9 @@
 
 .home{
   flex: 1;
-  justify-content: center;
-  overflow: auto;
-
   display: flex;
+  overflow: auto;
+  justify-content: center;
   flex-direction: column;
 
   & > * {
@@ -16,76 +15,82 @@
   }
 
   main{
-    grid-area: body;
-    display: grid;
-    grid-template-areas: "intro" "info" "demo" "footer";
-    grid-template-columns: minmax(auto, @maxWidth);
-    grid-template-rows: auto;
-    margin: auto;
+    flex: 1;
+    display: flex;
+    //margin: auto;
     padding-top: @headerHeight;
+    justify-content: center;
 
-    .intro{
-      position: relative;
-      grid-area: intro;
+    .content{
+      max-width: @maxWidth;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+      flex-direction: column;
+      flex: 1;
 
-      &:after{
-        position: absolute;
-        content: "";
-        //background-image: url("./src/assets/intro.gif");
-        background-repeat: no-repeat;
-        background-position: center;
-        opacity: 0.3;
-        background-size: cover;
-        filter: blur(2px);
-        top: 0; bottom: 0; right: 0; left: 0;
-      }
-
-      .content{
+      .intro{
+        position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
-        flex-direction: column;
-        margin: 20px;
-        z-index: 1;
+        height: 100vh;
 
-        h1{
-          margin: unset;
-          font-size: 80px;
-          line-height: 1.05;
-          font-weight: 700;
+        &:after{
+          position: absolute;
+          content: "";
+          //background-image: url("./src/assets/intro.gif");
+          background-repeat: no-repeat;
+          background-position: center;
+          opacity: 0.3;
+          background-size: cover;
+          filter: blur(2px);
+          top: 0; bottom: 0; right: 0; left: 0;
         }
 
-        h4{
-          margin: unset;
-        }
+        .content{
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          margin: 20px;
+          z-index: 1;
 
-        .links{
-          padding: 16px 0;
-
-          * > {
-            padding: 8px;
-
+          h1{
+            margin: unset;
+            font-size: 80px;
+            line-height: 1.05;
+            font-weight: 700;
           }
-        }
 
+          h4{
+            margin: unset;
+          }
+
+          .links{
+            padding: 16px 0;
+
+            * > {
+              padding: 8px;
+
+            }
+          }
+
+        }
+      }
+
+      .info{
+        background: #888888;
+        height: 90vh;
+      }
+
+      .demo{
+        grid-area: demo;
+        background: #888888;
+        height: 90vh;
+        flex: 0 0 @maxWidth;
       }
     }
 
-    .info{
-      grid-area: info;
-      background: #888888;
-      height: 90vh;
-    }
 
-    .demo{
-      grid-area: demo;
-      background: #888888;
-      height: 90vh;
-    }
   }
 
   footer{

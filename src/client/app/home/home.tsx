@@ -1,12 +1,19 @@
 import * as React from "react";
 import css from "./home.less"
-import {HashRouter, Link, Route, Switch} from "react-router-dom";
+import {HashRouter, Link, Route, Switch, useLocation} from "react-router-dom";
 import {SignUp} from "../register/signup";
 import {Login} from "../login/login";
 import {Privacy} from "../privacy/privacy";
 import {Terms} from "../terms/terms";
+import {useEffect} from "react";
 
 export function HomeRouter () {
+    const { pathname } = useLocation();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
+
     return (
         <div className={css.home}>
             <header>
@@ -20,19 +27,21 @@ export function HomeRouter () {
                 </div>
             </header>
             <main>
-                <HashRouter>
-                    <Switch>
-                        <Route path="/register" children={<SignUp/>}/>
-                        <Route path="/login" children={<Login/>}/>
-                        <Route path="/privacy" children={<Privacy/>}/>
-                        <Route path="/terms" children={<Terms/>}/>
-                        <Route path="/" children={<Home/>}/>
-                    </Switch>
-                </HashRouter>
+                <div className={css.content}>
+                    <HashRouter>
+                        <Switch>
+                            <Route path="/register" children={<SignUp/>}/>
+                            <Route path="/login" children={<Login/>}/>
+                            <Route path="/privacy" children={<Privacy/>}/>
+                            <Route path="/terms" children={<Terms/>}/>
+                            <Route path="/" children={<Home/>}/>
+                        </Switch>
+                    </HashRouter>
+                </div>
             </main>
             <footer>
                 <div className={css.content}>
-                    <span>Copyright © 2020 | Plus  Net tv | All rights reserved.</span>
+                    <span>Copyright © 2020 | +NetTV | All rights reserved</span>
 
                     <div className={css.links}>
                         <Link to={"/privacy"}>Privacy policy</Link>
@@ -49,7 +58,7 @@ export const Home = () => {
         <>
             <div className={css.intro}>
                 <div className={css.content}>
-                    <h4>+Net tv</h4>
+                    <h4>+NetTV</h4>
                     <h1>Your tv, everywhere.</h1>
 
                     <div className={css.links}>
