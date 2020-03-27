@@ -1,44 +1,50 @@
 import * as React from "react";
-import {useReducer} from "react";
+import {useReducer, useState} from "react";
 import {Button, TextField} from "@material-ui/core";
 import axios from "axios";
 import css from "./login.less"
-import {useHistory} from "react-router-dom";
+import {withRouter} from "react-router-dom";
 import * as H from "history";
 import {_HEADER_AUTH_} from "../../../../global";
 import localStorageCtrl from "../../controllers/localhost";
+import {Dialog} from "../../ui/dialog/dialog";
 
-interface IAction<T>{
-    property: string,
-    value: T
-}
-
-//todo find a better place for this
-export function reducer(state, action: IAction<any>) {
-    return {...state, [action.property]: action.value}
-}
 
 export function Login() {
-    const [state, dispatch] = useReducer(reducer, {});
+    return (
+        <div className={css.login}>
+            <Dialog title={"Login"}>
+                <LoginForm/>
+            </Dialog>
+        </div>
+    )
+}
+
+interface ILoginState {
+    email: string;
+    password: string;
+}
+
+const LoginForm = withRouter((props) => {
+    const {history} = props;
+
+    const [state, setState] = useState<ILoginState>({} as any);
     const {email, password} = state;
 
     const onChange = (e) => {
         const {name, value} = e.target;
-        dispatch({property: name, value});
+        setState({...state, [name]: value});
     };
 
-    const history = useHistory();
-
     return (
-        <div className={css.login}>
-            <div className={css.form}>
-                <TextField label={"Email"} value={email} name={"email"} onChange={onChange}/>
-                <TextField label={"Password"} value={password} name="password" onChange={onChange}/>
-                <Button type={"submit"} onClick={() => onLogin(email, password, history)}>Submit</Button>
-            </div>
+        <div className={css.form}>
+            <TextField label={"Email"} value={email} name={"email"} onChange={onChange}/>
+            <TextField label={"Password"} value={password} name="password" onChange={onChange}/>
+            <Button type={"submit"} onClick={() => onLogin(email, password, history)}>Submit</Button>
         </div>
     )
-}
+});
+
 
 async function onLogin(email: string, password: string, history: H.History<any>){
     const res = await axios.post("/login", {email, password});

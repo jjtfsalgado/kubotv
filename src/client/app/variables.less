@@ -1,8 +1,11 @@
 @colorBg1:#181818;
-@colorBg2:#4b4b4b;
+@colorBg2:#0E0E0E;
+@colorBg3:#313132;
+@colorBg4:#F5F5F7;
 @colorBgHover: rgba(255,255,255,0.1);
 
 @colorText1: #fff;
+@colorTextDark: #000;
 @colorTextSecondary: #888;
 
 
@@ -16,4 +19,15 @@
     &::-webkit-scrollbar-thumb{
         background: hsla(0, 0%, 53.3%, 0.4);
     }
+}
+
+
+//fixme change this for h1/2/3 etc
+#title(@color){
+    color: @color;
+    height: 33px;
+    font-weight: 500;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
 }

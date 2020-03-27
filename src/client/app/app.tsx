@@ -5,12 +5,11 @@ import {Player} from "./player/player";
 import {HomeRouter} from "./home/home";
 import {Login} from "./login/login";
 import css from "./app.less";
-import {SignUp} from "./register/signup";
+import {Register} from "./register/register";
 import localStorageCtrl from "../controllers/localhost";
 import axios from "axios";
 import {_HEADER_AUTH_} from "../../../global";
-import {Privacy} from "./privacy/privacy";
-import {Terms} from "./terms/terms";
+
 
 export function App() {
     useEffect(() => {

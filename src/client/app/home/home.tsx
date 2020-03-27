@@ -1,7 +1,7 @@
 import * as React from "react";
 import css from "./home.less"
 import {HashRouter, Link, Route, Switch, useLocation} from "react-router-dom";
-import {SignUp} from "../register/signup";
+import {Register} from "../register/register";
 import {Login} from "../login/login";
 import {Privacy} from "../privacy/privacy";
 import {Terms} from "../terms/terms";
@@ -30,10 +30,10 @@ export function HomeRouter () {
                 <div className={css.content}>
                     <HashRouter>
                         <Switch>
-                            <Route path="/register" children={<SignUp/>}/>
-                            <Route path="/login" children={<Login/>}/>
                             <Route path="/privacy" children={<Privacy/>}/>
                             <Route path="/terms" children={<Terms/>}/>
+                            <Route path="/register" children={<Register/>}/>
+                            <Route path="/login" children={<Login/>}/>
                             <Route path="/" children={<Home/>}/>
                         </Switch>
                     </HashRouter>

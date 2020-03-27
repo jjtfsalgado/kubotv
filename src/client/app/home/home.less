@@ -33,6 +33,7 @@
         align-items: center;
         justify-content: center;
         height: 100vh;
+        //background: radial-gradient(ellipse at center, #36383f 0%, #1a1d22 60%, #000 90%);
 
         &:after{
           position: absolute;
@@ -99,13 +100,16 @@
     justify-content: center;
     align-items: center;
     padding: 34px 0 21px 0;
+    z-index: 1;
+    position: relative;
 
     //background: white;
     .content{
       display: flex;
       align-items: center;
       justify-content: space-between;
-      flex: 0 0 @maxWidth;
+      flex: 1;
+      max-width: @maxWidth;
       border-top: 1px solid grey;
       padding: 8px 0;
 
@@ -140,13 +144,14 @@ header{
   top: 0;
   left: 0;
   right: 0;
-  z-index: 3;
+  z-index: 1;
 
   .content{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex: 0 0 @maxWidth;
+    flex: 1;
+    max-width: @maxWidth;
 
     .logo{
 
