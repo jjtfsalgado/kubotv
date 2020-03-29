@@ -38,10 +38,16 @@ const LoginForm = withRouter((props) => {
         setState({...state, [name]: value});
     };
 
+    const validations = [
+        {
+            condition: !email || !password
+        }
+    ];
+
     return (
         <Form className={css.form}
-              onSubmit={() => onLogin(email, password, history)}
-              successMessage={{title: "Thank you for signing up", message: `We've sent you an email to ${email} to verify your account!`}}>
+              validations={validations}
+              onSubmit={() => onLogin(email, password, history)}>
             <TextField label={"Email"} value={email} name={"email"} onChange={onChange}/>
             <TextField label={"Password"} value={password} name="password" onChange={onChange}/>
         </Form>

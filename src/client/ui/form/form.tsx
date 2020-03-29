@@ -86,8 +86,8 @@ export const Form = (props: IFormProps) => {
 };
 
 Form.defaultProps = {
-    error: {
+    errorMessage: {
         title: "Oops, something went wrong",
         message: `Please try again later`
     }
-};
+} as IFormProps;
