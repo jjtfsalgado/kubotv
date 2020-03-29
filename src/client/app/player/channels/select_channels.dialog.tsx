@@ -1,4 +1,3 @@
-import {showDialog} from "../../../ui/dialog/dialog";
 import {List} from "../../../ui/list/list";
 import * as React from "react";
 import {useState} from "react";
@@ -15,7 +14,9 @@ interface ISelectPlaylistDialog {
 export async function showSelectPlaylistDialog(props: ISelectPlaylistDialog): Promise<Array<IChannel> | false> {
     const {data} = props;
 
-    return showDialog<Array<IChannel> | false>({title: "Select playlist", children: (onSubmit, onCancel) => <SelectPlaylist onSubmit={onSubmit} onCancel={onCancel} data={data}/>});
+    // return showDialog<Array<IChannel> | false>({title: "Select playlist", children: (onSubmit, onCancel) => <SelectPlaylist onSubmit={onSubmit} onCancel={onCancel} data={data}/>});
+
+    return null
 }
 
 function SelectPlaylist(props) {

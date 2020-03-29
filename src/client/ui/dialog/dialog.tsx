@@ -4,11 +4,10 @@ import * as ReactDOM from "react-dom";
 import {createPortal} from "react-dom";
 import {cls} from "../../../utils/function";
 import css from "./dialog.less";
-
-const _MODAL_ROOT_ = document.getElementById("modal-root");
+import {_MODAL_ROOT_} from "../../../../global";
 
 function unMountDialog() {
-    ReactDOM.unmountComponentAtNode(_MODAL_ROOT_);
+    ReactDOM.unmountComponentAtNode(document.getElementById(_MODAL_ROOT_));
 }
 
 export interface IDialog<T> {
@@ -50,7 +49,7 @@ export function Dialog<T>(props: IDialogContainer<T>) {
                     </div>
                 </div>
             </div>,
-            _MODAL_ROOT_
+            document.getElementById(_MODAL_ROOT_)
         )
     )
 }

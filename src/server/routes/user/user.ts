@@ -6,6 +6,7 @@ import * as bcrypt from "bcryptjs";
 import {_HASH_} from "../../../../global";
 import {verifyToken} from "../login/login";
 import {NextFunction, Request, Response} from "express-serve-static-core";
+import {HttpStatus} from "../../../utils/http_status";
 
 interface IUser {
     insert(req: Request<any, any, any>, res: Response<any>, next: NextFunction) : Promise<any>,
@@ -15,25 +16,29 @@ interface IUser {
 class User implements IUser{
     async insert(req: Request<any, any, any>, res: Response<any>, next: NextFunction){
 
-        const {token} = req.params;
+        try{
+            const {token} = req.params;
+            const decoded: any = await verifyToken(token);
 
-        const decoded: any = await verifyToken(token);
+            console.log(decoded)
+            if(!decoded) {
+                return res.sendStatus(HttpStatus.ERROR.CLIENT.UNAUTHORIZED.code);
+            };
 
-        console.log(decoded)
-        if(!decoded) return res.sendStatus(300);
+            const {password, email} = decoded;
 
-        const {password, email} = decoded;
+            if(!password || !email) {
+                return res.sendStatus(HttpStatus.ERROR.CLIENT.UNAUTHORIZED.code);
+            };
 
-        if(!password || !email) return;
-
-        //todo hash password without salt on the frontend
-        const salt = await bcrypt.genSalt();
-        const hash = await bcrypt.hash(password, salt);
-
-        const result = await dbCtrl.pool.query(UserSql.insert(email, hash, salt));
-        if(!result) return res.sendStatus(300);
-
-        return res.redirect("/login")
+            const salt = await bcrypt.genSalt();
+            const hash = await bcrypt.hash(password, salt);
+            await dbCtrl.pool.query(UserSql.insert(email, hash, salt));
+        }catch (e) {
+            return res.sendStatus(HttpStatus.ERROR.SERVER.INTERNAL_SERVER_ERROR.code);
+        }finally {
+            res.redirect("/#/login")
+        }
     }
 
     async verifyEmail(req: Request<any, any, any>, res: Response<any>, next: NextFunction){
@@ -62,10 +67,10 @@ class User implements IUser{
         try{
             await transporter.sendMail(mailOptions)
         }catch(e){
-            return res.status(500).json({status: "error", message: JSON.stringify(e)})
+            return res.status(HttpStatus.ERROR.SERVER.INTERNAL_SERVER_ERROR.code).send(`${HttpStatus.ERROR.SERVER.INTERNAL_SERVER_ERROR.message} - ${JSON.stringify(e)}`);
         }
 
-        return res.status(201).json({ status: 'success', message: 'User created' })
+        return res.sendStatus(HttpStatus.SUCCESSFUL.OK.code);
     }
 
     //todo patch -> change password

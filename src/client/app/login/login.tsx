@@ -1,6 +1,6 @@
 import * as React from "react";
-import {useReducer, useState} from "react";
-import {Button, TextField} from "@material-ui/core";
+import {useState} from "react";
+import {TextField} from "@material-ui/core";
 import axios from "axios";
 import css from "./login.less"
 import {withRouter} from "react-router-dom";
@@ -8,6 +8,8 @@ import * as H from "history";
 import {_HEADER_AUTH_} from "../../../../global";
 import localStorageCtrl from "../../controllers/localhost";
 import {Dialog} from "../../ui/dialog/dialog";
+import {Form} from "../../ui/form/form";
+import HttpController from "../../controllers/http";
 
 
 export function Login() {
@@ -37,18 +39,18 @@ const LoginForm = withRouter((props) => {
     };
 
     return (
-        <div className={css.form}>
+        <Form className={css.form}
+              onSubmit={() => onLogin(email, password, history)}
+              successMessage={{title: "Thank you for signing up", message: `We've sent you an email to ${email} to verify your account!`}}>
             <TextField label={"Email"} value={email} name={"email"} onChange={onChange}/>
             <TextField label={"Password"} value={password} name="password" onChange={onChange}/>
-            <Button type={"submit"} onClick={() => onLogin(email, password, history)}>Submit</Button>
-        </div>
+        </Form>
     )
 });
 
 
 async function onLogin(email: string, password: string, history: H.History<any>){
-    const res = await axios.post("/login", {email, password});
-
+    const res = await HttpController.post("/login", {email, password});
     //todo handle wrong password
     if(!res) return;
 

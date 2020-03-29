@@ -5,15 +5,16 @@ import {DialogContentText} from "@material-ui/core";
 import {ToggleButtonGroup} from "@material-ui/lab";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import {hls, IChannel} from "../../../controllers/hls";
-import {showDialog} from "../../../ui/dialog/dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import {EActionTypes, renderAction} from "../../../ui/dialog/dialog.action";
 
 export async function showLoadPlaylistDialog(): Promise<Array<IChannel>> {
-    const result = await showDialog<string | FileList>({title: 'Load playlist', children: (onSubmit, onCancel) => <LoadPlaylist onSubmit={onSubmit} onCancel={onCancel}/>});
-    if(!result) return;
+    // const result = await showDialog<string | FileList>({title: 'Load playlist', children: (onSubmit, onCancel) => <LoadPlaylist onSubmit={onSubmit} onCancel={onCancel}/>});
+    // if(!result) return;
+    //
+    // return typeof result === "string" ? await hls.loadFromUrl(result) : await hls.loadFromFile(result)
 
-    return typeof result === "string" ? await hls.loadFromUrl(result) : await hls.loadFromFile(result)
+    return null
 }
 
 interface ILoadPlaylistState {
