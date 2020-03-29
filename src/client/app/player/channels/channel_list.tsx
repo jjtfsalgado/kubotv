@@ -17,12 +17,11 @@ export function ChannelList(props: IVideoProps){
 
     const onPlaylistUpdate = async (playlist: Array<IChannel>) => {
         await hls.loadChannel(playlist[0]);
-
-        setState({...state, playlist})
+        setState((prevState) => ({...prevState, playlist}))
     };
 
     const onSelectChannel = (channel: IChannel) => {
-        setState({...state, selectedChannel: playlist})
+        setState((prevState) => ({...prevState, selectedChannel: channel}))
     };
 
     useEffect(() => {
