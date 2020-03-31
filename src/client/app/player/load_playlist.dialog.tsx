@@ -1,21 +1,9 @@
 import * as React from "react";
 import {useState} from "react";
 import TextField from "@material-ui/core/TextField";
-import {DialogContentText} from "@material-ui/core";
 import {ToggleButtonGroup} from "@material-ui/lab";
 import ToggleButton from "@material-ui/lab/ToggleButton";
-import {hls, IChannel} from "../../../controllers/hls";
-import DialogContent from "@material-ui/core/DialogContent";
-import {EActionTypes, renderAction} from "../../../ui/dialog/dialog.action";
-
-export async function showLoadPlaylistDialog(): Promise<Array<IChannel>> {
-    // const result = await showDialog<string | FileList>({title: 'Load playlist', children: (onSubmit, onCancel) => <LoadPlaylist onSubmit={onSubmit} onCancel={onCancel}/>});
-    // if(!result) return;
-    //
-    // return typeof result === "string" ? await hls.loadFromUrl(result) : await hls.loadFromFile(result)
-
-    return null
-}
+import {EActionTypes, renderAction} from "../../ui/dialog/dialog.action";
 
 interface ILoadPlaylistState {
     url: string
@@ -23,7 +11,7 @@ interface ILoadPlaylistState {
     isUrl: boolean;
 };
 
-function LoadPlaylist(props : {onSubmit: (value: string | FileList) => void, onCancel: () => void}){
+export function LoadPlaylist(props : {onSubmit: (value: string | FileList) => void, onCancel: () => void}){
     const {onSubmit, onCancel} = props;
 
     const [state, setState] = useState<ILoadPlaylistState>({url:null, files: null, isUrl: true});
@@ -48,9 +36,7 @@ function LoadPlaylist(props : {onSubmit: (value: string | FileList) => void, onC
 
     return (
         <>
-            <DialogContentText>
-                Type an URL or upload your playlist (M3U)
-            </DialogContentText>
+            <div>Type an URL or upload your playlist (M3U)</div>
             <ToggleButtonGroup onChange={onChangeSelection}>
                 <ToggleButton value={"url"} selected={isUrl}>Url</ToggleButton>
                 <ToggleButton value={"file"} selected={!isUrl}>File</ToggleButton>

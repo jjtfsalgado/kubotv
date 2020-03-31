@@ -1,44 +1,39 @@
 
-type IHttpResponse = {
-    message: string,
-    status: number
-}
-
 export namespace HttpStatus {
     export const INFORMATION = {
         CONTINUE: {
             code: 100,
-            message: "Continue"
+            description: "Continue"
         }
     };
 
     export const SUCCESSFUL = {
         OK: {
             code: 200,
-            message: "Ok"
+            description: "Ok"
         },
         CREATED:{
             code: 201,
-            message: "Created"
+            description: "Created"
         },
         ACCEPTED:{
             code: 202,
-            message: "Accepted"
+            description: "Accepted"
         }
     };
 
     export const REDIRECT = {
         MULTIPLE_CHOICE:{
             code: 300,
-            message: "Multiple choice"
+            description: "Multiple choice"
         },
         MOVED_PERMANENTLY:{
             code: 301,
-            message: "Moved permanently"
+            description: "Moved permanently"
         },
         FOUND:{
             code: 302,
-            message: "Found"
+            description: "Found"
         }
     };
 
@@ -46,37 +41,41 @@ export namespace HttpStatus {
         CLIENT:{
             BAD_REQUEST: {
                 code: 400,
-                message: "Bad request"
+                description: "Bad request"
             },
             UNAUTHORIZED: {
                 code: 401,
-                message: "Unauthorized"
+                description: "Unauthorized"
             },
             FORBIDDEN: {
                 code: 403,
-                message: "Forbidden"
+                description: "Forbidden"
             },
             NOT_FOUND: {
                 code: 404,
-                message: "Not found"
+                description: "Not found"
+            },
+            CONFLICT: {
+                code: 409,
+                description: "Conflict"
             },
         },
         SERVER:{
             INTERNAL_SERVER_ERROR:{
                 code: 500,
-                message: "Internal server errorMessage"
+                description: "Internal server errorMessage"
             },
             NOT_IMPLEMENTED:{
                 code: 501,
-                message: "Not implemented"
+                description: "Not implemented"
             },
             BAD_GATEWAY:{
                 code: 502,
-                message: "Bad gateway"
+                description: "Bad gateway"
             },
             SERVICE_UNAVAILABLE:{
                 code: 503,
-                message: "Service unavailable"
+                description: "Service unavailable"
             }
         }
     };

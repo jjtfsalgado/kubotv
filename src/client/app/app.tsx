@@ -3,9 +3,7 @@ import {useEffect, useState} from 'react';
 import {HashRouter, Redirect, Route, Switch} from "react-router-dom";
 import {Player} from "./player/player";
 import {HomeRouter} from "./home/home";
-import {Login} from "./login/login";
 import css from "./app.less";
-import {Register} from "./register/register";
 import localStorageCtrl from "../controllers/localhost";
 import axios from "axios";
 import {_HEADER_AUTH_} from "../../../global";
@@ -39,9 +37,13 @@ function PrivateRoute({ children, ...rest }) {
 
     useEffect( () => {
         (async () => {
-            const token = localStorageCtrl.tokenGet;
-            const isVerified = await verifyToken(token);
-            setAuthentication(isVerified);
+            try{
+                const token = localStorageCtrl.tokenGet;
+                const isVerified = token ? await verifyToken(token) : false;
+                setAuthentication(isVerified);
+            }catch (e) {
+                setAuthentication(false);
+            }
         })()
     }, []);
 

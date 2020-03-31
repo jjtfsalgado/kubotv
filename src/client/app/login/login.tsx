@@ -48,8 +48,16 @@ const LoginForm = withRouter((props) => {
         <Form className={css.form}
               validations={validations}
               onSubmit={() => onLogin(email, password, history)}>
-            <TextField label={"Email"} value={email} name={"email"} onChange={onChange}/>
-            <TextField label={"Password"} value={password} name="password" onChange={onChange}/>
+            <TextField required={true}
+                       label={"Email"}
+                       value={email}
+                       name={"email"}
+                       onChange={onChange}/>
+            <TextField required={true}
+                       label={"Password"}
+                       value={password}
+                       name="password"
+                       onChange={onChange}/>
         </Form>
     )
 });

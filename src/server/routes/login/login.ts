@@ -44,7 +44,7 @@ class Login implements ILogin{
             const token = await jwt.sign({email, password}, _HASH_);
 
             res.header(_HEADER_AUTH_, token);
-            res.sendStatus(HttpStatus.SUCCESSFUL.OK.code).json({UserId: id});
+            res.status(HttpStatus.SUCCESSFUL.OK.code).json({UserId: id});
         }catch (e) {
             return res.sendStatus(HttpStatus.ERROR.CLIENT.UNAUTHORIZED.code)
         }

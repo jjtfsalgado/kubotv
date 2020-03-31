@@ -8,11 +8,12 @@ import {useHistory} from "react-router-dom"
 import * as H from "history";
 import localStorageCtrl from "../../controllers/localhost";
 import {hls, IChannel} from "../../controllers/hls";
-import {showLoadPlaylistDialog} from "./channels/load_playlist.dialog";
+import {LoadPlaylist, showLoadPlaylistDialog} from "./load_playlist.dialog";
 import {showSelectPlaylistDialog} from "./channels/select_channels.dialog";
 
 import css from "./player.less";
 import {Search} from "../../ui/search/search";
+import {showDialog} from "../../ui/dialog/dialog";
 
 
 interface IPlayerState {
@@ -38,18 +39,6 @@ export function Player(){
         })();
     }, []);
 
-    async function onToggleMenu(){
-        const res = await showLoadPlaylistDialog();
-
-        if(!res) return;
-
-        const selected = await showSelectPlaylistDialog({data: res});
-        if(!selected) return;
-
-        const p: Array<IChannel> = selected.map(i => ({...i, user_account_id: localStorageCtrl.userIdGet, channel_name: i.description}));
-        axios.post("/channel", {channels: p})
-    }
-
     const onSearch = (value: string) => {
         hls.search(value);
     };
@@ -68,7 +57,9 @@ export function Player(){
                     <Search placeholder={"Search"}
                             onChange={onSearch}/>
                 </div>
+
                 <div className={css.user}>
+                    <button onClick={onAddChannelsDialog}>Channels</button>
                     <button onClick={() => onLogout(history)}>Logout</button>
                 </div>
             </div>
@@ -81,6 +72,16 @@ export function Player(){
         </div>
     )
 }
+
+const onAddChannelsDialog = async () => {
+    const res = await showDialog<string | FileList>({title: 'Load playlist', children: (onSubmit, onCancel) => <LoadPlaylist onSubmit={onSubmit} onCancel={onCancel}/>});
+    if(!res) return;
+
+    const data = typeof res === "string" ? await hls.loadFromUrl(res) : await hls.loadFromFile(res);
+    const channels: Array<IChannel> = data.map(i => ({...i, user_account_id: localStorageCtrl.userIdGet, channel_name: i.description}));
+    await axios.post("/channel", {channels})
+};
+
 
 async function onLogout(history: H.History<any>){
     const res = await axios.delete("/login");

@@ -26,9 +26,7 @@ export namespace db{
         const val = values[0];
 
         const parsedValues = values.map(i => Object.values(i));
-        const f = pgFormat(`INSERT INTO ${tableName} (${Object.keys(val).join(",")}) VALUES %L`, parsedValues);
-
-        return f;
+        return pgFormat(`INSERT INTO ${tableName} (${Object.keys(val).join(",")}) VALUES %L`, parsedValues);
     }
 }
 

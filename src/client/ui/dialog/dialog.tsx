@@ -10,31 +10,37 @@ function unMountDialog() {
     ReactDOM.unmountComponentAtNode(document.getElementById(_MODAL_ROOT_));
 }
 
-export interface IDialog<T> {
+export interface IShowDialog<T> {
     title?: string;
-    // children: (onSubmit: (value: T) => void, onCancel: () => void) => ReactNode;
+    children: (onSubmit: (value: T) => void, onCancel: () => void) => ReactNode;
 }
 
-// export function showDialog<T>({children, title}: IDialog<T>): Promise<T | false> {
-//
-//     return new Promise((res) => {
-//         const onSubmit = (value?: T) => res(value);
-//         const onCancel = () => res(false);
-//
-//         ReactDOM.render(<Dialog children={children}
-//                                  title={title}
-//                                  onSubmit={onSubmit}
-//                                  onCancel={onCancel}/>, _MODAL_ROOT_);
-//     });
-// }
+export function showDialog<T>({children, title}: IShowDialog<T>): Promise<T | false> {
+    return new Promise((res) => {
+        const onSubmit = (value?: T) => {
+            res(value);
+            unMountDialog()
+        };
+        const onCancel = () => {
+            res(false);
+            unMountDialog()
+        };
 
-interface IDialogContainer<T>{
+        ReactDOM.render(
+            <Dialog title={title}>
+                {children(onSubmit, onCancel)}
+            </Dialog>
+        , document.getElementById(_MODAL_ROOT_));
+    });
+}
+
+interface IDialog<T>{
     isModal?: boolean;
     title: string;
     children: ReactNode;
 }
 
-export function Dialog<T>(props: IDialogContainer<T>) {
+export function Dialog<T>(props: IDialog<T>) {
     const {title, isModal, children} = props;
 
     return (

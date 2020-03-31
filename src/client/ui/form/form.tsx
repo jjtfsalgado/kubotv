@@ -1,14 +1,15 @@
-import {ReactNode, useState} from "react";
+import {ReactNode, useEffect, useState} from "react";
 import * as React from "react";
 import {Button} from "@material-ui/core";
 
-interface IFormInfo{
+export interface IFormInfo{
     title: string,
     message: ReactNode
 }
 
 interface IFormValidation{
     condition: boolean,
+    trigger?: "onblur" | "onchange"
     message?: string
 }
 
@@ -16,7 +17,7 @@ interface IFormProps {
     onSubmit: () => Promise<any>;
     validations?: Array<IFormValidation>;
     successMessage?: IFormInfo;
-    errorMessage?: IFormInfo;
+    errorMessage?: (error) => IFormInfo;
     submitLabel?: string;
     children: ReactNode;
     className?: string;
@@ -26,27 +27,41 @@ interface IFormState {
     isBusy: boolean;
     error: IFormInfo;
     success: IFormInfo;
+    errors: Array<IFormValidation>;
 }
 
 export const Form = (props: IFormProps) => {
     const {className, children, onSubmit, submitLabel, errorMessage, successMessage, validations} = props;
     const [state, setState] = useState<IFormState>({} as any);
-    const {isBusy} = state;
+    const {isBusy, errors} = state;
+    
+    const canSubmit = !errors || errors.length === 0;
 
-    const _onSubmit = async () => {
+    useEffect(() => {
+        runValidations()
+    }, [validations]);
+
+    const runValidations = () => {
+        const errors = validations.filter(i => i.condition);
+        setState((prevState) => ({...prevState, errors}))
+    };
+
+    const _onSubmit = async (ev) => {
+        ev.preventDefault();
+
+        if(!canSubmit) return;
+
         try {
             setState((prevState) => ({...prevState, isBusy: true}));
             await onSubmit();
         } catch (e) {
-            setState((prevState) => ({...prevState, isBusy: false, error: errorMessage}));
-        } finally {
-            setState((prevState) => ({...prevState, isBusy: false, success: successMessage}));
+            return setState((prevState) => ({...prevState, isBusy: false, error: errorMessage(e.response) || defaultErrorMessage(e.response)}));
         }
+
+        setState((prevState) => ({...prevState, isBusy: false, success: successMessage}));
     };
 
     const renderChildren = () => {
-        const canSubmit = !validations || !validations.some(i => i.condition);
-
         return (
             <>
                 {children}
@@ -61,7 +76,7 @@ export const Form = (props: IFormProps) => {
     };
 
     const renderValidations = () => {
-        const v = validations && validations.filter(i => i.condition && i.message);
+        const v = errors && errors.filter(i => i.condition && i.message);
         return v && v.map(k => <span>{k.message}</span>)
     };
 
@@ -75,19 +90,22 @@ export const Form = (props: IFormProps) => {
     };
 
     return (
-        <div className={className}>
+        <form className={className}
+              onSubmit={_onSubmit}>
             {isBusy && (
                 <div>Loading</div>
             )}
             {!isBusy && !(state.success || state.error) && renderChildren()}
             {!isBusy && (state.success || state.error) && renderInfo(state.error || state.success)}
-        </div>
+        </form>
     )
 };
 
+const defaultErrorMessage = (e) => ({
+    title: "Oops, something went wrong",
+    message: `Please try again later`
+});
+
 Form.defaultProps = {
-    errorMessage: {
-        title: "Oops, something went wrong",
-        message: `Please try again later`
-    }
+    errorMessage: defaultErrorMessage
 } as IFormProps;

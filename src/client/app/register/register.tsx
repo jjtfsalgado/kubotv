@@ -6,7 +6,9 @@ import * as H from "history";
 import css from "./register.less"
 import {Dialog} from "../../ui/dialog/dialog";
 import HttpController from "../../controllers/http";
-import {Form} from "../../ui/form/form";
+import {Form, IFormInfo} from "../../ui/form/form";
+import {HttpStatus} from "../../../utils/http_status";
+import {AxiosResponse} from "axios";
 
 export function Register() {
     return (
@@ -39,17 +41,45 @@ const RegisterForm = withRouter((props) => {
         {
             condition: password && password2 && password !== password2,
             message: "Your passwords don't match"
+        },
+        {
+            condition: email && !(/\S+@\S+\.\S+/.test(email)),
+            message: "Your email is not valid"
         }
     ];
+
+    const onErrorMessage = (e: AxiosResponse): IFormInfo => {
+        if (e.status === HttpStatus.ERROR.CLIENT.CONFLICT.code) {
+            return {
+                message: "This email is already registered",
+                title: "Please login"
+            }
+        }
+    };
 
     return (
         <Form className={css.register}
               onSubmit={() => onSignUp(email, password, history)}
               validations={validations}
+              errorMessage={onErrorMessage}
               successMessage={{title: "Thank you for signing up", message: `We've sent you an email to ${email} to verify your account!`}}>
-            <TextField required={true}  label={"Email"} value={email} name={"email"} onChange={onChange}/>
-            <TextField required={true} type={"password"} label={"Password"} value={password} name="password" onChange={onChange}/>
-            <TextField required={true} type={"password"} label={"Confirm password"} value={password2} name="password2" onChange={onChange}/>
+            <TextField required={true}
+                       label={"Email"}
+                       value={email}
+                       name={"email"}
+                       onChange={onChange}/>
+            <TextField required={true}
+                       type={"password"}
+                       label={"Password"}
+                       value={password}
+                       name="password"
+                       onChange={onChange}/>
+            <TextField required={true}
+                       type={"password"}
+                       label={"Confirm password"}
+                       value={password2}
+                       name="password2"
+                       onChange={onChange}/>
         </Form>
     );
 });
