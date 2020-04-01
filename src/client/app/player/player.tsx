@@ -8,7 +8,7 @@ import {useHistory} from "react-router-dom"
 import * as H from "history";
 import localStorageCtrl from "../../controllers/localhost";
 import {hls, IChannel} from "../../controllers/hls";
-import {LoadPlaylist, showLoadPlaylistDialog} from "./load_playlist.dialog";
+import {LoadPlaylist} from "./load_playlist.dialog";
 import {showSelectPlaylistDialog} from "./channels/select_channels.dialog";
 
 import css from "./player.less";
