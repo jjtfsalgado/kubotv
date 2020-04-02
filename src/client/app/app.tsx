@@ -24,13 +24,12 @@ export function App() {
             </HashRouter>
         </div>
     )
-};
-
+}
 
 async function verifyToken(token: string): Promise<boolean>{
     const response = await axios.post(`/verify/${token}`);
     return response.data
-};
+}
 
 function PrivateRoute({ children, ...rest }) {
     const [isAuthenticated, setAuthentication] = useState(null);

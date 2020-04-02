@@ -41,7 +41,7 @@ export function HomeRouter () {
             </main>
             <footer>
                 <div className={css.content}>
-                    <span>Copyright © 2020 | +NetTV | All rights reserved</span>
+                    <span>Copyright © 2020 | KuboTV | All rights reserved</span>
 
                     <div className={css.links}>
                         <Link to={"/privacy"}>Privacy policy</Link>
@@ -58,7 +58,7 @@ export const Home = () => {
         <>
             <div className={css.intro}>
                 <div className={css.content}>
-                    <h4>+NetTV</h4>
+                    <h4>kubo TV</h4>
                     <h1>Your tv, everywhere.</h1>
 
                     <div className={css.links}>

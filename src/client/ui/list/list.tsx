@@ -1,5 +1,5 @@
 import * as React from "react";
-import {ReactNode} from "react";
+import {CSSProperties, ReactNode} from "react";
 import {cls} from "../../../utils/function";
 import {BusyRender} from "../busy/busy";
 
@@ -11,14 +11,15 @@ export interface IListProps<T> {
     itemRender: (item: T) => ReactNode;
     onItemClick?: (item: T) => void;
     className?: string;
+    style?: Partial<CSSProperties>;
 }
 
 export function List<T>(props: IListProps<T>) {
-    const {data, itemRender, onItemClick, className, title} = props;
+    const {data, itemRender, onItemClick, className, title, style} = props;
     const promise = Array.isArray(data) ? () => Promise.resolve(data) : data;
 
     return (
-        <div className={cls(css.list, className)}>
+        <div className={cls(css.list, className)} style={style}>
             {title && (
                 <span className={css.title}>
                     {title}

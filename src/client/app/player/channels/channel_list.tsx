@@ -1,82 +1,66 @@
 import * as React from "react";
-import {useEffect, useState} from "react";
+import {CSSProperties, useEffect} from "react";
 import {hls, IChannel} from "../../../controllers/hls";
-import {eventDispatcher, EVENTS} from "../../../controllers/pub_sub";
 import {List} from "../../../ui/list/list";
 import css from "./channel_list.less";
+import {cls} from "../../../../utils/function";
+import {useDispatch, useSelector} from "react-redux";
+import {IRootState} from "../../../reducers";
+import {channelSlice, IChannelState} from "../../../reducers/channel";
+import localStorageCtrl from "../../../controllers/localhost";
 
-interface IVideoProps {
-    showControls?: boolean;
+interface IChannelListProps {
     className?: string;
+    style?: Partial<CSSProperties>;
 }
 
-export function ChannelList(props: IVideoProps){
-    const {showControls, className} = props;
-    const [state, setState] = useState<any>({playlist: []});
-    const {playlist, selectedChannel} = state;
+export const ChannelList = (props: IChannelListProps) => {
+    const {className, style} = props;
 
-    const onPlaylistUpdate = async (playlist: Array<IChannel>) => {
-        await hls.loadChannel(playlist[0]);
-        setState((prevState) => ({...prevState, playlist}))
-    };
-
-    const onSelectChannel = (channel: IChannel) => {
-        setState((prevState) => ({...prevState, selectedChannel: channel}))
-    };
+    const {data, selected} = useSelector<IRootState, IChannelState>(state => {
+        return state?.channel
+    });
 
     useEffect(() => {
-        const eventListener = eventDispatcher.subscribe(EVENTS.PLAYLIST_UPDATE, onPlaylistUpdate);
-        const eventListener2 = eventDispatcher.subscribe(EVENTS.CHANNEL_UPDATE, onSelectChannel);
-
-        return () => {
-            eventListener.delete();
-            eventListener2.delete();
-        }
+        (async () => {
+            await hls.getUserChannels(localStorageCtrl.userIdGet);
+        })();
     }, []);
 
-    const onClickChannel = async (channel: IChannel) => {
-        await hls.loadChannel(channel);
-    };
-
-    const onItemRender = (item) => (
-        <Channel key={item.id}
-                 selected={selectedChannel ? (selectedChannel.id === item.id) : null}
-                 onClick={onClickChannel}
-                 item={item}/>
+    const itemRender = (item: IChannel) => (
+        <ChannelItem key={item.id}
+                     isSelected={item.id === selected?.id}
+                     item={item}/>
     );
 
     return (
-        <List className={css.list}
-              title={"Channels"}
-              data={playlist}
-              itemRender={onItemRender}/>
+        <List className={cls(css.list, className)}
+              title={"ChannelList"}
+              style={style}
+              data={data}
+              itemRender={itemRender}/>
     );
+};
+
+interface IChannelItemProps {
+    item: IChannel;
+    isSelected?: boolean;
 }
 
-
-function Channel(props) {
-    const {item, selected} = props;
+const ChannelItem = (props: IChannelItemProps) => {
+    const {item, isSelected} = props;
+    const dispatch = useDispatch();
 
     const onClick = () => {
-        const {onClick, item} = props;
-        onClick(item)
-    };
-
-    const onDelete = () => {
-        const {item} = props;
-        hls.deleteChannel(item)
-    };
-
-    const onClickFavorite = (ev) => {
-        ev.stopPropagation();
-        const {item} = props;
-        hls.toggleFavorite(item)
+        dispatch(channelSlice.actions.select(item));
     };
 
     return (
         <div className={css.channel}
+             // style={{background: isSelected ? "red" : "white"}}
              onClick={onClick}>
             <span>{item && item.description}</span>
         </div>
     )
-}
+};
+

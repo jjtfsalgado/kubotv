@@ -45,18 +45,14 @@
     grid-area: body;
     overflow: hidden;
 
-    .side{
+
+    .channels {
       flex: 0 1 240px;
       overflow: hidden;
-      display: flex;
+      //min-height: 0;
       flex-direction: column;
-
-      .channels {
-        //min-height: 0;
-        flex-direction: column;
-        display: flex;
-        grid-area: channels;
-      }
+      display: flex;
+      grid-area: channels;
     }
 
     .video {

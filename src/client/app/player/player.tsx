@@ -4,44 +4,22 @@ import * as React from "react";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {useHistory} from "react-router-dom"
-
 import * as H from "history";
 import localStorageCtrl from "../../controllers/localhost";
 import {hls, IChannel} from "../../controllers/hls";
 import {LoadPlaylist} from "./load_playlist.dialog";
-import {showSelectPlaylistDialog} from "./channels/select_channels.dialog";
-
 import css from "./player.less";
 import {Search} from "../../ui/search/search";
 import {showDialog} from "../../ui/dialog/dialog";
-
 
 interface IPlayerState {
     showSidepanel: boolean;
 }
 
-export function Player(){
+export const Player = () => {
     const history = useHistory();
     const [state, setState] = useState<IPlayerState>({showSidepanel: true});
     const {showSidepanel} = state;
-
-    useEffect(() => {
-        (async () => {
-            let data;
-            try {
-                const res = await axios.get(`/channel/${localStorageCtrl.userIdGet}`);
-                data = res.data;
-            }catch (e) {
-                //fixme add a better error handling for unauthorised requests. create an http abstraction that captures this errors and handles them
-                return history.push("/")
-            }
-            await hls.updateView(data.channels, true);
-        })();
-    }, []);
-
-    const onSearch = (value: string) => {
-        hls.search(value);
-    };
 
     const onToggleSidePanel = () => setState({showSidepanel: !showSidepanel});
 
@@ -55,7 +33,7 @@ export function Player(){
                 </div>
                 <div className={css.search}>
                     <Search placeholder={"Search"}
-                            onChange={onSearch}/>
+                            onChange={() => null}/>
                 </div>
 
                 <div className={css.user}>
@@ -64,14 +42,13 @@ export function Player(){
                 </div>
             </div>
             <div className={css.body}>
-                <div className={css.side} style={{display: showSidepanel ? "flex" : "none"}}>
-                    <ChannelList className={css.channels}/>
-                </div>
+                <ChannelList className={css.channels}
+                             style={{display: showSidepanel ? "flex" : "none"}}/>
                 <VideoContainer className={css.video}/>
             </div>
         </div>
     )
-}
+};
 
 const onAddChannelsDialog = async () => {
     const res = await showDialog<string | FileList>({title: 'Load playlist', children: (onSubmit, onCancel) => <LoadPlaylist onSubmit={onSubmit} onCancel={onCancel}/>});
