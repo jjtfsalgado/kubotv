@@ -29,7 +29,43 @@ export const Player = () => {
     const onToggleSidePanel = () => setState({showSidepanel: !showSidepanel});
 
     useEffect(() => {
-        showNotification({children: <div>test</div>, title: "yey"})
+        const prom = {
+            description: "First",
+            promise: () => new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve()
+                }, 1000)
+            })
+        };
+
+        const prom2 = {
+            description: "Second",
+            promise: () => new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve()
+                }, 2000)
+            })
+        };
+
+        const prom3 = {
+            description: "Third",
+            promise: () => new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve()
+                }, 1000)
+            })
+        };
+
+        const prom4 = {
+            description: "Fourth",
+            promise: () => new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve()
+                }, 1000)
+            })
+        };
+
+        showNotification({children: "Please wait", title: "yey", promises: [prom, prom2, prom3, prom4]})
     }, []);
 
     return (

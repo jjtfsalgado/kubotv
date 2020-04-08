@@ -68,7 +68,7 @@ export const Notification= <T extends unknown>(props: INotification<T>) => {
     const {title, children, onClose, promises} = props;
 
     useEffect(() => {
-        //if there's a progress bar dont trigger the timeout immediately
+        //if there's promises to be resolved dont trigger the timeout immediately
         !promises && onCloseTimeout()
     }, []);
 

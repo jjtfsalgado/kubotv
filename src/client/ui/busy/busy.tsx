@@ -73,32 +73,42 @@ interface IProgressBarProps {
     onResolve?: () => void;
 }
 
+interface IProgressBarState {
+    progress: number;
+    description: string;
+    isComplete?: boolean;
+}
+
 export const ProgressBar = (props: IProgressBarProps) => {
     const {promises, onResolve} = props;
     const length = promises.length;
-    const [state, setState] = useState({progress: 0, description: "Loading"});
+    const [state, setState] = useState<IProgressBarState>({progress: 0, description: "Loading", isComplete: false});
+    const {progress, isComplete} = state;
 
-    const tick = (i) => {
-        const p = i.promise();
-
-        p.then(j => {
-           setState((prevState) => ({description: i.description, progress: prevState.progress + 1}))
-        });
-
-        return p;
+    const setProgress = (promise) => {
+        setState(prevState => ({description: promise.description, progress: prevState.progress + 1}))
     };
 
     useEffect(() => {
         (async () => {
-            await Promise.all(promises.map(tick));
-            onResolve && onResolve()
+            try{
+                for (let i = 0; i < length; i++) {
+                    const p = promises[i];
+                    await p.promise().then(() => setProgress(p));
+                }
+
+                setState({...state, isComplete: true});
+            } finally {
+                onResolve && onResolve()
+            }
         })()
     }, [promises]);
 
     return (
-       <div>
-           {state.progress}
-           {state.description}
+       <div className={css.progress}>
+           <span>{state.description}</span>
+           {!isComplete && <div className={css.bar} style={{width: `${(progress/length) * 100}%` }}/>}
+           {isComplete && <span>Complete</span>}
        </div>
     )
 };

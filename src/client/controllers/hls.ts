@@ -30,7 +30,7 @@ export const hls = new class{
     }
 
     public async getUserChannels(userId: string){
-        const res = await HttpController.get(`/channel/${userId}`, {promptError: true});
+        const res = await HttpController.get<Array<IChannel>>(`/channel/${userId}`, {promptError: true});
         if(!res){
             return
         }

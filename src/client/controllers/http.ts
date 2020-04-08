@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, {AxiosPromise, AxiosResponse} from "axios";
 import {showDialog} from "../ui/dialog/dialog";
 
 
@@ -9,7 +9,7 @@ export default class HttpController {
         return await errorHandler(async () => await axios.post(url, body), promptError)
     };
 
-    static get = async <T>(url: string, opts: {promptError: boolean} = {} as any): Promise<T> => {
+    static get = async <T>(url: string, opts: {promptError: boolean} = {} as any): Promise<AxiosResponse<T>> => {
         const {promptError} = opts;
         return await errorHandler(async () => await axios.get(url), promptError)
     };
