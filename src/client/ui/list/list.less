@@ -6,6 +6,7 @@
   overflow: auto;
   padding: unset;
   flex: 1;
+  position: relative;
 
   #scrollbar();
 
@@ -18,12 +19,15 @@
   .item {
     list-style-type: none;
     min-height: 40px;
-    padding: 0 24px;
     display: flex;
     cursor: pointer;
     //&:hover {
     //  background: #f796;
     //}
+
+    & > div {
+      padding: 0 24px;
+    }
 
     &:hover{
       background: @colorBgHover;

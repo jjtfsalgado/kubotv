@@ -1,5 +1,5 @@
 import * as React from "react";
-import {CSSProperties, useEffect} from "react";
+import {CSSProperties, useEffect, useState} from "react";
 import {hls, IChannel} from "../../../controllers/hls";
 import {List} from "../../../ui/list/list";
 import css from "./channel_list.less";
@@ -17,6 +17,7 @@ interface IChannelListProps {
 export const ChannelList = (props: IChannelListProps) => {
     const {className, style} = props;
 
+    const [state, setState] = useState({busy: true});
     const {data, selected} = useSelector<IRootState, IChannelState>(state => {
         return state?.channel
     });
@@ -24,6 +25,7 @@ export const ChannelList = (props: IChannelListProps) => {
     useEffect(() => {
         (async () => {
             await hls.getUserChannels(localStorageCtrl.userIdGet);
+            setState({busy: false})
         })();
     }, []);
 
@@ -35,8 +37,10 @@ export const ChannelList = (props: IChannelListProps) => {
 
     return (
         <List className={cls(css.list, className)}
-              title={"ChannelList"}
+              title={"Channels"}
+              emptyView={<span>No channels</span>}
               style={style}
+              busy={state?.busy}
               data={data}
               itemRender={itemRender}/>
     );
@@ -56,8 +60,7 @@ const ChannelItem = (props: IChannelItemProps) => {
     };
 
     return (
-        <div className={css.channel}
-             // style={{background: isSelected ? "red" : "white"}}
+        <div className={cls(css.channel, isSelected && css.selected)}
              onClick={onClick}>
             <span>{item && item.description}</span>
         </div>

@@ -11,6 +11,11 @@ import {LoadPlaylist} from "./load_playlist.dialog";
 import css from "./player.less";
 import {Search} from "../../ui/search/search";
 import {showDialog} from "../../ui/dialog/dialog";
+import {ACTIONS, store} from "../../reducers";
+import {showNotification} from "../../ui/notification/notification";
+import {delay} from "../../../utils/function";
+import HttpController from "../../controllers/http";
+import {IProgressBarPromise, ProgressBar} from "../../ui/busy/busy";
 
 interface IPlayerState {
     showSidepanel: boolean;
@@ -22,6 +27,10 @@ export const Player = () => {
     const {showSidepanel} = state;
 
     const onToggleSidePanel = () => setState({showSidepanel: !showSidepanel});
+
+    useEffect(() => {
+        showNotification({children: <div>test</div>, title: "yey"})
+    }, []);
 
     return (
         <div className={css.player}>
@@ -51,12 +60,27 @@ export const Player = () => {
 };
 
 const onAddChannelsDialog = async () => {
-    const res = await showDialog<string | FileList>({title: 'Load playlist', children: (onSubmit, onCancel) => <LoadPlaylist onSubmit={onSubmit} onCancel={onCancel}/>});
+    const res = await showDialog.async<string | FileList>({title: 'Load playlist', children: (onSubmit, onCancel) => <LoadPlaylist onSubmit={onSubmit} onCancel={onCancel}/>});
     if(!res) return;
 
-    const data = typeof res === "string" ? await hls.loadFromUrl(res) : await hls.loadFromFile(res);
+    const data =  typeof res === "string" ? await hls.loadFromUrl(res) : await hls.loadFromFile(res);
     const channels: Array<IChannel> = data.map(i => ({...i, user_account_id: localStorageCtrl.userIdGet, channel_name: i.description}));
-    await axios.post("/channel", {channels})
+    const sliceSize = 300;
+
+    const channelsChunks = [];
+    for (let i = 0; i < channels.length; i+= sliceSize) {
+        const arr = channels.slice(i, i + sliceSize);
+        channelsChunks.push(arr);
+    }
+
+    const channelsChunksProms = channelsChunks.map(i => ({
+        description: "Uploading channels",
+        promise: async () => await HttpController.post("/channel", {channels: i})
+    }));
+    const loadChannels = {description: "Refreshing channel list", promise: async () => await hls.getUserChannels(localStorageCtrl.userIdGet)};
+
+    const promises: Array<IProgressBarPromise> = [...channelsChunksProms, loadChannels];
+    showNotification({title: "Loading playlist", children: "Please wait", promises});
 };
 
 
@@ -64,6 +88,8 @@ async function onLogout(history: H.History<any>){
     const res = await axios.delete("/login");
     if(!res) return;
 
+    //clear redux store data
+    store.dispatch(ACTIONS.Reset);
     localStorageCtrl.tokenDelete();
     history.push("/")
 }

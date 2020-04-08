@@ -93,3 +93,9 @@ export function sortByMany<T>(arr: Array<T>, ...sorts: Array<(i: T) => any>): vo
 export function undefault(val, def) {
     return val === undefined ? def : val;
 }
+
+export async function delay(ms): Promise<void> {
+    return new Promise(resolve => {
+        setTimeout(resolve, ms);
+    });
+}

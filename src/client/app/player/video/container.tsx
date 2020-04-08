@@ -4,6 +4,10 @@ import {cls} from "../../../../utils/function";
 import {Video} from "./video";
 import {Typography} from "@material-ui/core";
 import {eventDispatcher, EVENTS} from "../../../controllers/pub_sub";
+import {useSelector} from "react-redux";
+import {IRootState} from "../../../reducers";
+import {IChannelState} from "../../../reducers/channel";
+import {IChannel} from "../../../controllers/hls";
 
 interface IVideoProps {
     showControls?: boolean;
@@ -12,24 +16,18 @@ interface IVideoProps {
 
 export function VideoContainer(props: IVideoProps) {
     const {className} = props;
-    const [state, setState] = useState<any>({});
-    const {selectedChannel} = state;
 
-    useEffect( () => {
-        let even = eventDispatcher.subscribe(EVENTS.CHANNEL_UPDATE, (value) => {
-            setState({selectedChannel: value})
-        });
-
-        return () => even.delete();
-    }, []);
+    const selected = useSelector<IRootState, IChannel>(state => {
+        return state?.channel?.selected
+    });
 
     return (
         <div className={cls(className)}>
-            <Video showControls={true} url={selectedChannel && selectedChannel.url}/>
+            <Video showControls={true} url={selected && selected.url}/>
             <div style={{flex: "0 0 40px"}}>
-                {selectedChannel && (
+                {selected && (
                     <Typography variant="h6" color="secondary">
-                        {selectedChannel.title}
+                        {selected.description}
                     </Typography>)}
             </div>
         </div>

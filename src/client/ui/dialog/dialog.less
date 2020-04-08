@@ -6,7 +6,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0,0,0,0.6);
+
+    &.modeless{
+        pointer-events: none;
+    }
+
+    &:not(.modeless){
+        background: rgba(0,0,0,0.6);
+        pointer-events: unset;
+    }
 }
 
 .dialog{
@@ -14,6 +22,7 @@
     position: relative;
     color:@colorTextDark;
     min-width: 496px;
+    pointer-events: all;
 
     .title{
         #title(@colorTextDark);

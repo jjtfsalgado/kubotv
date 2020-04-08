@@ -1,8 +1,10 @@
 import axios from "axios";
 import {m3uToJson} from "../../utils/m3u_json_parser";
-import {readFile} from "../../utils/function";
+import {delay, readFile} from "../../utils/function";
 import {store} from "../reducers";
 import {channelSlice} from "../reducers/channel";
+import localStorageCtrl from "./localhost";
+import HttpController from "./http";
 
 export interface IChannel {
     description: string;
@@ -28,7 +30,10 @@ export const hls = new class{
     }
 
     public async getUserChannels(userId: string){
-        const res = await axios.get(`/channel/${userId}`);
+        const res = await HttpController.get(`/channel/${userId}`, {promptError: true});
+        if(!res){
+            return
+        }
         store.dispatch(channelSlice.actions.load(res.data));
     }
 }();

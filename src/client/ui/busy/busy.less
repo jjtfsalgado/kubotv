@@ -1,34 +1,49 @@
-
-.busy-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #fff0;
+.busyPromise{
+  position: relative;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .spinner {
+  #spinner(@size: 12px, @thickness: 1px, @color: currentColor);
+}
+
+#spinner(@size: 32px, @thickness: 4px, @speed: 0.15s, @color: #aaa) {
+  width: @size;
+  height: @size;
+  border: solid @thickness @color;
+  border-right-color: transparent;
+  border-radius: 100%;
+  animation: ani-spinner 0.8s linear infinite, ani-delay-show @speed;
+  flex: 0 0 auto;
+
   position: absolute;
   top: 50%;
   left: 50%;
+  transform: translate(-50%, -50%);
 
-  &:after {
-    content: '';
-    position: absolute;
-    border: solid 8px #f90;
-    border-radius: 8px;
-    margin: 4px -16px;
-    animation: ani-play 1s infinite ease-out;
+  z-index: 3;
 
-    //@keyframes ani-play {
-    //  width: 16px;
-    //  height: 24px;
-    //  0% { transform: translate(0, $h) }
-    //  25% { transform: translate($w, 0) }
-    //  50% { transform: translate($w*2, $h) }
-    //  75% { transform: translate($w, 0) }
-    //  100% { transform: translate(0, $h) }
-    //}
+  @keyframes ani-spinner {
+    from {
+      transform: translate(-50%, -50%) rotate(0);
+    }
+    to {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
+  }
+
+  @keyframes ani-delay-show {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
   }
 }

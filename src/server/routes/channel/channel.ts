@@ -14,7 +14,6 @@ class Channel implements IChannel{
             const {userId} = req.params;
             const result = await dbCtrl.pool.query(ChannelSql.getAll(userId));
             if(!result) return res.sendStatus(HttpStatus.ERROR.SERVER.INTERNAL_SERVER_ERROR.code);
-
             return res.status(HttpStatus.SUCCESSFUL.OK.code).json(result.rows)
         }catch (e) {
             return res.sendStatus(HttpStatus.ERROR.SERVER.INTERNAL_SERVER_ERROR.code);

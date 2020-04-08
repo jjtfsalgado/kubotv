@@ -1,6 +1,7 @@
 import {IChannel} from "../client/controllers/hls";
 
-const regex = /#EXTINF:(.+?)[,]\s?(.+?)[\r\n]+?((?:https?|rtmp):\/\/(?:\S*?\.\S*?)(?:[\s)\[\]{};"\'<]|\.\s|$))/gm;
+const regex = /#EXTINF:(.+?)(")[,]\s?(.+?)[\r\n]+?((?:https?|rtmp):\/\/(?:\S*?\.\S*?)(?:[\s)\[\]{};"\'<]|\.\s|$))/gm;
+
 const regexAttr = /([a-zA-Z0-9\-\_]+?)="([^"]*)"/gm;
 
 export function m3uToJson(str: string) {
@@ -9,8 +10,8 @@ export function m3uToJson(str: string) {
 
     while(match = regex.exec(str)){
         const obj: Partial<IChannel> = {
-            description: match[2],
-            url: match[3].trim()
+            description: match[3],
+            url: match[4].trim()
         };
 
         // const attrs = match[1].match(regexAttr);

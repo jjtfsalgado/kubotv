@@ -1,17 +1,27 @@
 import axios from "axios";
-import {showToast} from "../ui/toast/toast";
-
-
+import {showDialog} from "../ui/dialog/dialog";
 
 
 export default class HttpController {
 
-    static post = async (url: string, body: Object, opts: {silentError: boolean} = {} as any): Promise<any> => {
-        return axios.post(url, body);
+    static post = async (url: string, body: Object, opts: {promptError: boolean} = {} as any): Promise<any> => {
+        const {promptError} = opts;
+        return await errorHandler(async () => await axios.post(url, body), promptError)
+    };
 
-        // try{
-        // }catch (e) {
-        //     !silentError && showToast({message: "Ups, something went wrong. Please try again.", type: "errorMessage"})
-        // }
+    static get = async <T>(url: string, opts: {promptError: boolean} = {} as any): Promise<T> => {
+        const {promptError} = opts;
+        return await errorHandler(async () => await axios.get(url), promptError)
     };
 }
+
+const errorHandler = async <T extends unknown>(callBack: () => Promise<any>, promptError?: boolean): Promise<T> => {
+    try{
+        return await callBack()
+    }catch (e) {
+        console.error(e);
+        promptError && showDialog.sync({title:"Something went wrong", children: "Ups, something went wrong. Please try again."})
+    }
+};
+
+
