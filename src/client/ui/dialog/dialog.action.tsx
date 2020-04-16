@@ -1,5 +1,3 @@
-import DialogActions from "@material-ui/core/DialogActions";
-import {Button} from "@material-ui/core";
 import * as React from "react";
 
 export type TAction<T> = IDialogActionsNoneProps | IDialogActionsOkCancelProps<T>;
@@ -23,14 +21,10 @@ export function DialogActionsOkCancel<T>(props: IDialogActionsOkCancelProps<T>){
     const {onSubmit, onCancel} = props;
 
     return (
-        <DialogActions>
-            <Button onClick={onSubmit} color="primary">
-                Ok
-            </Button>
-            <Button onClick={onCancel} color="primary">
-                Cancel
-            </Button>
-        </DialogActions>
+        <>
+            <button onClick={onSubmit}>Ok</button>
+            <button onClick={onCancel}> Cancel </button>
+        </>
     )
 }
 

@@ -1,12 +1,8 @@
 import * as React from "react";
-import {useEffect, useState} from "react";
 import {cls} from "../../../../utils/function";
 import {Video} from "./video";
-import {Typography} from "@material-ui/core";
-import {eventDispatcher, EVENTS} from "../../../controllers/pub_sub";
 import {useSelector} from "react-redux";
 import {IRootState} from "../../../reducers";
-import {IChannelState} from "../../../reducers/channel";
 import {IChannel} from "../../../controllers/playerCtrl";
 
 interface IVideoProps {
@@ -26,9 +22,8 @@ export function VideoContainer(props: IVideoProps) {
             <Video showControls={true} url={selected && selected.url}/>
             <div style={{flex: "0 0 40px"}}>
                 {selected && (
-                    <Typography variant="h6" color="secondary">
-                        {selected.description}
-                    </Typography>)}
+                    <h2>{selected.description}</h2>
+                )}
             </div>
         </div>
     )

@@ -1,6 +1,5 @@
 import * as React from "react";
 import {useState} from "react";
-import {TextField} from "@material-ui/core";
 import {withRouter} from "react-router-dom";
 import * as H from "history";
 import css from "./register.less"
@@ -63,23 +62,27 @@ const RegisterForm = withRouter((props) => {
               validations={validations}
               errorMessage={onErrorMessage}
               successMessage={{title: "Thank you for signing up", message: `We've sent you an email to ${email} to verify your account!`}}>
-            <TextField required={true}
-                       label={"Email"}
+            <label htmlFor={"email"} title={"Email"}>
+                <input required={true}
                        value={email}
+                       id={"email"}
                        name={"email"}
                        onChange={onChange}/>
-            <TextField required={true}
-                       type={"password"}
-                       label={"Password"}
+            </label>
+            <label htmlFor={"password"} title={"Password"}>
+                <input required={true}
                        value={password}
-                       name="password"
+                       id={"password"}
+                       name={"password"}
                        onChange={onChange}/>
-            <TextField required={true}
-                       type={"password"}
-                       label={"Confirm password"}
-                       value={password2}
-                       name="password2"
+            </label>
+            <label htmlFor={"password2"} title={"Confirm password"}>
+                <input required={true}
+                       value={password}
+                       id={"password2"}
+                       name={"password2"}
                        onChange={onChange}/>
+            </label>
         </Form>
     );
 });

@@ -1,6 +1,5 @@
 import * as React from "react";
 import {useState} from "react";
-import {TextField} from "@material-ui/core";
 import axios from "axios";
 import css from "./login.less"
 import {withRouter} from "react-router-dom";
@@ -48,16 +47,23 @@ const LoginForm = withRouter((props) => {
         <Form className={css.form}
               validations={validations}
               onSubmit={() => onLogin(email, password, history)}>
-            <TextField required={true}
-                       label={"Email"}
+            <label htmlFor={"email"}>
+                Email
+                <input type={"text"}
+                       id={"email"}
+                       required={true}
                        value={email}
                        name={"email"}
                        onChange={onChange}/>
-            <TextField required={true}
-                       label={"Password"}
+            </label>
+            <label htmlFor={"password"}>
+                Password
+                <input required={true}
+                       id={"password"}
                        value={password}
                        name="password"
                        onChange={onChange}/>
+            </label>
         </Form>
     )
 });

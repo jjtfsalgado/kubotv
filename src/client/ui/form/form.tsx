@@ -1,6 +1,5 @@
 import {ReactNode, useEffect, useState} from "react";
 import * as React from "react";
-import {Button} from "@material-ui/core";
 
 export interface IFormInfo{
     title: string,
@@ -66,11 +65,11 @@ export const Form = (props: IFormProps) => {
             <>
                 {children}
                 {renderValidations()}
-                <Button type={"submit"}
+                <button type={"submit"}
                         disabled={!canSubmit}
                         onClick={_onSubmit}>
                     {submitLabel || "Submit"}
-                </Button>
+                </button>
             </>
         )
     };

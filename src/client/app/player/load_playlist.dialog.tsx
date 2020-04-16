@@ -1,8 +1,5 @@
 import * as React from "react";
 import {useState} from "react";
-import TextField from "@material-ui/core/TextField";
-import {ToggleButtonGroup} from "@material-ui/lab";
-import ToggleButton from "@material-ui/lab/ToggleButton";
 import {EActionTypes, renderAction} from "../../ui/dialog/dialog.action";
 
 interface ILoadPlaylistState {
@@ -37,32 +34,25 @@ export function LoadPlaylist(props : {onSubmit: (value: string | FileList) => vo
     return (
         <>
             <div>Type an URL or upload your playlist (M3U)</div>
-            <ToggleButtonGroup onChange={onChangeSelection}>
-                <ToggleButton value={"url"} selected={isUrl}>Url</ToggleButton>
-                <ToggleButton value={"file"} selected={!isUrl}>File</ToggleButton>
-            </ToggleButtonGroup>
+            <button onClick={(ev) => onChangeSelection(ev, "url")} aria-pressed={"true"}>Url</button>
+            <button onClick={(ev) => onChangeSelection(ev, "file")}>File</button>
+
             {isUrl && (
-                <TextField
-                    autoFocus
-                    margin="dense"
-                    value={state.url}
-                    onChange={onChange}
-                    id="url"
-                    label="Url"
-                    fullWidth
-                />
+                <label htmlFor="url" title="Url">
+                    <input  value={state.url}
+                            type={"text"}
+                            onChange={onChange}
+                            id="url"/>
+                </label>
             )}
             {!isUrl && (
-                <TextField
-                    autoFocus
-                    margin="dense"
-                    onChange={onChange}
-                    id="file"
-                    label="File"
-                    type="file"
-                    fullWidth
-                />
+                <label htmlFor="file" title={"File"}>
+                    <input onChange={onChange}
+                           id="file"
+                           type="file"/>
+                </label>
             )}
+
             {renderAction({type: EActionTypes.okCancel, onSubmit: () => onSubmit(isUrl ? url : files), onCancel})}
         </>
     )

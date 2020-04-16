@@ -132,7 +132,7 @@ async function onLogout(history: H.History<any>){
     if(!res) return;
 
     //clear redux store data
-    store.dispatch(ACTIONS.Reset);
+    store.dispatch(ACTIONS.Reset());
     localStorageCtrl.tokenDelete();
     history.push("/")
 }
