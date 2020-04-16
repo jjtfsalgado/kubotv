@@ -50,7 +50,6 @@ class ExpressCtrl{
         this.app.get('/user/:token', User.insert);
 
         this.app.get('/channel/:userId', this._authenticate, Channel.get);
-        this.app.get('/channel/:userId/total', this._authenticate, Channel.getTotal);
         this.app.post('/channel', this._authenticate, Channel.insert);
 
         this.app.post('/login', Login.login);

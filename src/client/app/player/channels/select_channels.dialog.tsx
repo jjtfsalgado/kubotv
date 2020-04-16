@@ -1,7 +1,7 @@
 import {List} from "../../../ui/list/list";
 import * as React from "react";
 import {useState} from "react";
-import {IChannel} from "../../../controllers/hls";
+import {IChannel} from "../../../controllers/playerCtrl";
 import {Checkbox, DialogContent} from "@material-ui/core";
 import ListItemText from "@material-ui/core/ListItemText";
 import {EActionTypes, renderAction} from "../../../ui/dialog/dialog.action";

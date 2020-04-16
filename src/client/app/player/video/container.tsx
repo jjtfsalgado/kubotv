@@ -7,7 +7,7 @@ import {eventDispatcher, EVENTS} from "../../../controllers/pub_sub";
 import {useSelector} from "react-redux";
 import {IRootState} from "../../../reducers";
 import {IChannelState} from "../../../reducers/channel";
-import {IChannel} from "../../../controllers/hls";
+import {IChannel} from "../../../controllers/playerCtrl";
 
 interface IVideoProps {
     showControls?: boolean;

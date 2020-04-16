@@ -6,7 +6,7 @@ import axios from "axios";
 import {useHistory} from "react-router-dom"
 import * as H from "history";
 import localStorageCtrl from "../../controllers/localhost";
-import {hls, IChannel} from "../../controllers/hls";
+import {playerCtrl, IChannel} from "../../controllers/playerCtrl";
 import {LoadPlaylist} from "./load_playlist.dialog";
 import css from "./player.less";
 import {Search} from "../../ui/search/search";
@@ -15,6 +15,8 @@ import {ACTIONS, store} from "../../reducers";
 import {showNotification} from "../../ui/notification/notification";
 import HttpController from "../../controllers/http";
 import {IProgressBarPromise} from "../../ui/busy/busy";
+import {channelSlice} from "../../reducers/channel";
+import {useDispatch} from "react-redux";
 
 interface IPlayerState {
     showSidepanel: boolean;
@@ -25,6 +27,7 @@ export const Player = () => {
     const [state, setState] = useState<IPlayerState>({showSidepanel: true});
     const {showSidepanel} = state;
 
+    const dispatch = useDispatch();
     const onToggleSidePanel = () => setState({showSidepanel: !showSidepanel});
 
     useEffect(() => {
@@ -67,6 +70,11 @@ export const Player = () => {
         showNotification({children: "Please wait", title: "yey", promises: [prom, prom2, prom3, prom4]})
     }, []);
 
+
+    const onSearch = (value: string) => {
+        dispatch(channelSlice.actions.filter(value?.toLowerCase()));
+    };
+
     return (
         <div className={css.player}>
             <div className={css.header}>
@@ -77,7 +85,7 @@ export const Player = () => {
                 </div>
                 <div className={css.search}>
                     <Search placeholder={"Search"}
-                            onChange={() => null}/>
+                            onChange={onSearch}/>
                 </div>
 
                 <div className={css.user}>
@@ -98,7 +106,7 @@ const onAddChannelsDialog = async () => {
     const res = await showDialog.async<string | FileList>({title: 'Load playlist', children: (onSubmit, onCancel) => <LoadPlaylist onSubmit={onSubmit} onCancel={onCancel}/>});
     if(!res) return;
 
-    const data =  typeof res === "string" ? await hls.loadFromUrl(res) : await hls.loadFromFile(res);
+    const data =  typeof res === "string" ? await playerCtrl.loadFromUrl(res) : await playerCtrl.loadFromFile(res);
     const channels: Array<IChannel> = data.map(i => ({...i, user_account_id: localStorageCtrl.userIdGet, channel_name: i.description}));
     const sliceSize = 300;
 
@@ -112,7 +120,7 @@ const onAddChannelsDialog = async () => {
         description: "Uploading channels",
         promise: async () => await HttpController.post("/channel", {channels: i})
     }));
-    const loadChannels = {description: "Refreshing channel list", promise: async () => await hls.getUserChannels(localStorageCtrl.userIdGet)};
+    const loadChannels = {description: "Refreshing channel list", promise: async () => await playerCtrl.getUserChannels(localStorageCtrl.userIdGet)};
 
     const promises: Array<IProgressBarPromise> = [...channelsChunksProms, loadChannels];
     showNotification({title: "Loading playlist", children: "Please wait", promises});

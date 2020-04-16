@@ -1,4 +1,4 @@
-import {IChannel} from "../client/controllers/hls";
+import {IChannel} from "../client/controllers/playerCtrl";
 
 const regex = /#EXTINF:(.+?)(")[,]\s?(.+?)[\r\n]+?((?:https?|rtmp):\/\/(?:\S*?\.\S*?)(?:[\s)\[\]{};"\'<]|\.\s|$))/gm;
 

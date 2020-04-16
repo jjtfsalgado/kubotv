@@ -1,6 +1,6 @@
 import * as React from "react";
-import {CSSProperties, useEffect, useState} from "react";
-import {hls, IChannel} from "../../../controllers/hls";
+import {CSSProperties, useEffect, useRef, useState} from "react";
+import {playerCtrl, IChannel} from "../../../controllers/playerCtrl";
 import css from "./channel_list.less";
 import {cls} from "../../../../utils/function";
 import {useDispatch, useSelector} from "react-redux";
@@ -26,22 +26,25 @@ interface IChannelListState {
 
 export const ChannelList = (props: IChannelListProps) => {
     const {className, style} = props;
-
-    const [state, setState] = useState<IChannelListState>({items: [], busy: true});
-    const {selected} = useSelector<IRootState, IChannelState>(state => {
+    const infiniteLoaderRef = useRef(null);
+    const [state, setState] = useState<IChannelListState>({items: [], total: 200});
+    const {selected, filter} = useSelector<IRootState, IChannelState>(state => {
         return state?.channel
     });
 
-    const {items, total, busy} = state;
-    
     useEffect(() => {
-        (async () => {
-            const total = await hls.getUserChannelsTotal(localStorageCtrl.userIdGet);
-            setState({...state, total, busy: false});
-        })();
-    }, []);
+        if (infiniteLoaderRef?.current) {
+            infiniteLoaderRef.current.resetloadMoreItemsCache();
 
-    const Item = ({ index, style }) => {
+            (async () => {
+                await loadItems(0, 200, filter)
+            })()
+        }
+    }, [filter]);
+
+    const {items, total, busy} = state;
+
+    const onRenderItem = ({ index, style }) => {
         if (!isItemLoaded(index)) {
             return <span style={style}/>
         }
@@ -53,24 +56,24 @@ export const ChannelList = (props: IChannelListProps) => {
                             item={item}/>;
     };
 
-    const loadItems = async (startIndex, stopIndex) => {
+    const loadItems = async (startIndex, stopIndex, filter) => {
         setState((prevState) => ({...prevState, busy: true}));
 
-        const data = await hls.getUserChannels(localStorageCtrl.userIdGet, (stopIndex + 1) - startIndex, startIndex);
+        const data = await playerCtrl.getUserChannels(localStorageCtrl.userIdGet, (stopIndex + 1) - startIndex, startIndex, filter);
         const itemsCopy = [...state.items];
 
         for (let i = startIndex, j = 0; i <= stopIndex; i++, j++) {
             itemsCopy[i] = data[j];
         }
 
-        setState((prevState) => ({...prevState, items: itemsCopy, busy: false}));
+        setState((prevState) => ({...prevState, items: itemsCopy, busy: false, total: data[0]?.count}));
     };
 
     let timer;
     const requestLoadItems = async (startIndex, stopIndex) => {
-        clearTimeout(timer);
+        timer && clearTimeout(timer);
         timer = setTimeout(async () => {
-            await loadItems(startIndex, stopIndex)
+            await loadItems(startIndex, stopIndex, filter)
         }, 100)
     };
 
@@ -86,6 +89,7 @@ export const ChannelList = (props: IChannelListProps) => {
                 <AutoSizer>
                     {({height, width}) => (
                         <InfiniteLoader
+                            ref={infiniteLoaderRef}
                             isItemLoaded={isItemLoaded}
                             itemCount={total}
                             minimumBatchSize={500}
@@ -99,7 +103,7 @@ export const ChannelList = (props: IChannelListProps) => {
                                                itemSize={40}
                                                onItemsRendered={onItemsRendered}
                                                itemCount={total}>
-                                    {Item}
+                                    {onRenderItem}
                                 </FixedSizeList>
                             )}
                         </InfiniteLoader>
@@ -113,7 +117,7 @@ export const ChannelList = (props: IChannelListProps) => {
 interface IChannelItemProps {
     item: IChannel;
     isSelected?: boolean;
-    style?: Partial<CSSProperties>
+    style?: Partial<CSSProperties>;
 }
 
 const ChannelItem = (props: IChannelItemProps) => {

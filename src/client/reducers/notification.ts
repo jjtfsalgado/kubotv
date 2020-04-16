@@ -1,5 +1,5 @@
 // import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-// import {IChannel} from "../controllers/hls";
+// import {IChannel} from "../controllers/playerCtrl";
 //
 // export interface INotifications  {
 //     components: Array<any>;
