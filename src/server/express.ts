@@ -8,8 +8,6 @@ import Login, {verifyToken} from "./routes/login/login";
 import {NextFunction, Request, Response} from "express-serve-static-core";
 import * as request from "request";
 
-//todo review status codes
-
 class ExpressCtrl{
     private readonly _app: Express;
 

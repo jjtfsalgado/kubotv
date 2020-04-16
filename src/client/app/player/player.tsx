@@ -9,7 +9,7 @@ import localStorageCtrl from "../../controllers/localhost";
 import {playerCtrl, IChannel} from "../../controllers/playerCtrl";
 import {LoadPlaylist} from "./load_playlist.dialog";
 import css from "./player.less";
-import {Search} from "../../ui/search/search";
+import {SearchField} from "../../ui/search/search";
 import {showDialog} from "../../ui/dialog/dialog";
 import {ACTIONS, store} from "../../reducers";
 import {showNotification} from "../../ui/notification/notification";
@@ -84,8 +84,8 @@ export const Player = () => {
                     </button>
                 </div>
                 <div className={css.search}>
-                    <Search placeholder={"Search"}
-                            onChange={onSearch}/>
+                    <SearchField placeholder={"Search"}
+                                 onSearch={onSearch}/>
                 </div>
 
                 <div className={css.user}>

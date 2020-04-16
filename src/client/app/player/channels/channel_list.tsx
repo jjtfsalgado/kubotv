@@ -1,6 +1,6 @@
 import * as React from "react";
 import {CSSProperties, useEffect, useRef, useState} from "react";
-import {playerCtrl, IChannel} from "../../../controllers/playerCtrl";
+import {IChannel, playerCtrl} from "../../../controllers/playerCtrl";
 import css from "./channel_list.less";
 import {cls} from "../../../../utils/function";
 import {useDispatch, useSelector} from "react-redux";
@@ -21,28 +21,27 @@ interface IChannelListState {
     items: Array<IChannel>;
     total?: number;
     busy?: boolean;
-    isNextPageLoading?: boolean;
 }
 
 export const ChannelList = (props: IChannelListProps) => {
     const {className, style} = props;
     const infiniteLoaderRef = useRef(null);
-    const [state, setState] = useState<IChannelListState>({items: [], total: 200});
+    const [state, setState] = useState<IChannelListState>({} as any);
     const {selected, filter} = useSelector<IRootState, IChannelState>(state => {
         return state?.channel
     });
 
+    const {items, total, busy} = state;
+
     useEffect(() => {
         if (infiniteLoaderRef?.current) {
             infiniteLoaderRef.current.resetloadMoreItemsCache();
-
-            (async () => {
-                await loadItems(0, 200, filter)
-            })()
         }
-    }, [filter]);
 
-    const {items, total, busy} = state;
+
+        loadItems(0, 200, [])
+
+    }, [filter]);
 
     const onRenderItem = ({ index, style }) => {
         if (!isItemLoaded(index)) {
@@ -56,14 +55,18 @@ export const ChannelList = (props: IChannelListProps) => {
                             item={item}/>;
     };
 
-    const loadItems = async (startIndex, stopIndex, filter) => {
+    const loadItems = async (startIndex, stopIndex, items = state.items) => {
         setState((prevState) => ({...prevState, busy: true}));
 
         const data = await playerCtrl.getUserChannels(localStorageCtrl.userIdGet, (stopIndex + 1) - startIndex, startIndex, filter);
-        const itemsCopy = [...state.items];
+        const hasData = data?.length;
 
-        for (let i = startIndex, j = 0; i <= stopIndex; i++, j++) {
-            itemsCopy[i] = data[j];
+        let itemsCopy = [...items];
+        if (hasData) {
+
+            for (let i = startIndex, j = 0; i <= stopIndex; i++, j++) {
+                itemsCopy[i] = data[j];
+            }
         }
 
         setState((prevState) => ({...prevState, items: itemsCopy, busy: false, total: data[0]?.count}));
@@ -73,7 +76,7 @@ export const ChannelList = (props: IChannelListProps) => {
     const requestLoadItems = async (startIndex, stopIndex) => {
         timer && clearTimeout(timer);
         timer = setTimeout(async () => {
-            await loadItems(startIndex, stopIndex, filter)
+            await loadItems(startIndex, stopIndex)
         }, 100)
     };
 
@@ -81,12 +84,15 @@ export const ChannelList = (props: IChannelListProps) => {
         return !!items[index];
     };
 
+    const hasItems = items && !!items.length;
+
     return (
         <div className={cls(className)} style={style}>
             <div className={css.title}>Channels</div>
             <div className={css.channels}>
                 {busy && <Spinner/>}
-                <AutoSizer>
+                {!hasItems && <div>No data</div>}
+                {hasItems && <AutoSizer>
                     {({height, width}) => (
                         <InfiniteLoader
                             ref={infiniteLoaderRef}
@@ -108,7 +114,7 @@ export const ChannelList = (props: IChannelListProps) => {
                             )}
                         </InfiniteLoader>
                     )}
-                </AutoSizer>
+                </AutoSizer>}
             </div>
         </div>
     );

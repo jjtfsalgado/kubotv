@@ -2,10 +2,9 @@ import axios from "axios";
 import {m3uToJson} from "../../utils/m3u_json_parser";
 import {readFile} from "../../utils/function";
 import HttpController from "./http";
-import {channelSlice} from "../reducers/channel";
 
 export interface IChannel {
-    count?: number;
+    count?: number; //fixme
     description: string;
     url: string;
     is_favourite?: boolean;
