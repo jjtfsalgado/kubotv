@@ -1,33 +1,34 @@
-.channel{
-  flex: 1;
-  align-items: center;
-  justify-items: center;
-  display: flex;
+@import "../../variables.less";
 
-  &.selected{
-    background-color: #292929;
-  }
+.title{
+  #title(@colorTextSecondary);
+  padding: 8px 24px;
+  text-transform: uppercase;
 }
 
+.channels{
+  flex: 1;
+  position: relative;
 
-//
-//.list{
-//
-//
-//
-//
-//
-//  //.item{
-//  //  cursor: pointer;
-//  //
-//  //  .primary{
-//  //    span{
-//  //      color: #E1E1E1;
-//  //    }
-//  //  }
-//  //
-//  //  &.selected{
-//  //
-//  //  }
-//  //}
-//}
+  .list{
+    #scrollbar();
+    .channel{
+      flex: 1;
+      align-items: center;
+      justify-items: center;
+      display: flex;
+      cursor: pointer;
+      & > * {
+        padding: 0 24px;
+      }
+
+      &:hover{
+        background: @colorBgHover;
+      }
+
+      &.selected{
+        background-color: #292929;
+      }
+    }
+  }
+}

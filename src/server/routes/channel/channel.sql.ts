@@ -1,11 +1,15 @@
 import {db} from "../../db";
 
 const ChannelSql = {
-    getAll: (id: string) => ({
-        text: "select * from db.user_channel uc where uc.user_account_id = $1",
+    get: (id: string, opts: {limit, offset}) => ({
+        text: `select * from db.user_channel uc where uc.user_account_id = $1 order by uc.description limit ${opts.limit} offset ${opts.offset}`,
         values: [id]
     }),
-    insertAll: <T>(values) => db.insert<T>("db.user_channel", values)
+    getTotal: (id: string) => ({
+        text: `select count(*) from db.user_channel uc where uc.user_account_id = $1`,
+        values: [id]
+    }),
+    insert: <T>(values) => db.insert<T>("db.user_channel", values)
 };
 
 export default ChannelSql;

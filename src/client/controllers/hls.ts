@@ -29,11 +29,19 @@ export const hls = new class{
         return m3uToJson(response)
     }
 
-    public async getUserChannels(userId: string){
-        const res = await HttpController.get<Array<IChannel>>(`/channel/${userId}`, {promptError: true});
+    public async getUserChannels(userId: string, limit?: number, offset?: number, filter?: string): Promise<Array<IChannel>>{
+        const res = await HttpController.get<Array<IChannel>>(`/channel/${userId}/?offset=${offset}&limit=${limit}&filter=${filter}`, {promptError: true});
         if(!res){
             return
         }
-        store.dispatch(channelSlice.actions.load(res.data));
+        return res.data;
+    }
+
+    public async getUserChannelsTotal(userId: string): Promise<number>{
+        const res = await HttpController.get<number>(`/channel/${userId}/total`, {promptError: true});
+        if(!res){
+            return
+        }
+        return res.data;
     }
 }();

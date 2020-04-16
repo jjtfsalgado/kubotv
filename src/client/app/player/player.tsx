@@ -13,9 +13,8 @@ import {Search} from "../../ui/search/search";
 import {showDialog} from "../../ui/dialog/dialog";
 import {ACTIONS, store} from "../../reducers";
 import {showNotification} from "../../ui/notification/notification";
-import {delay} from "../../../utils/function";
 import HttpController from "../../controllers/http";
-import {IProgressBarPromise, ProgressBar} from "../../ui/busy/busy";
+import {IProgressBarPromise} from "../../ui/busy/busy";
 
 interface IPlayerState {
     showSidepanel: boolean;
