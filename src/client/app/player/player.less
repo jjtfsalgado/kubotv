@@ -3,36 +3,29 @@
 .player {
   height: 100vh;
   width: 100vw;
-  display: grid;
-  grid-template-columns: 240px auto;
-  grid-template-rows: 56px auto;
+  display: flex;
   overflow: hidden;
-  grid-template-areas: "header header""body body";
 
-  .header{
-    grid-area: header;
-    display: grid;
-    grid-template-columns: 240px auto 225px;
-    grid-template-areas: "logo search user";
+  .sidebar{
+    flex: 0 1 72px;
+    //background: #888888;
+  }
 
-    .logo{
-      grid-area: logo;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+  .channels {
+    flex: 0 1 280px;
+    //min-height: 0;
+    flex-direction: column;
+    display: flex;
 
     .search{
       grid-area: search;
       display: flex;
       justify-content: center;
+      flex: 0 1 auto;
     }
 
-    .user{
-      grid-area: user;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .list{
+      flex: 1;
     }
   }
 
@@ -41,23 +34,34 @@
   }
 
   .body {
-    display: flex;
+    flex: 1;
     grid-area: body;
     overflow: hidden;
+    display: grid;
+    grid-template-rows: 56px auto;
+    grid-template-areas: "header" "video";
+
+    .header{
+      grid-area: header;
+      display: grid;
+      grid-template-columns: auto 225px;
+      grid-template-areas: "search user";
 
 
-    .channels {
-      flex: 0 1 280px;
-      //min-height: 0;
-      flex-direction: column;
-      display: flex;
-      grid-area: channels;
+
+      .user{
+        grid-area: user;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
 
     .video {
       padding: 48px 80px;
       flex: 1;
       display: flex;
+      grid-area: video;
       flex-direction: column;
       overflow: hidden;
       background: @colorBg1;

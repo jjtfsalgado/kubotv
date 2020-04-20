@@ -1,34 +1,51 @@
 import {VideoContainer} from "./video/container";
-import {ChannelList} from "./channels/channel_list";
+import {ChannelList} from "./channel/channel_list";
 import * as React from "react";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {useHistory} from "react-router-dom"
 import * as H from "history";
 import localStorageCtrl from "../../controllers/localhost";
-import {playerCtrl, IChannel} from "../../controllers/playerCtrl";
+import {IChannel, playerCtrl} from "../../controllers/playerCtrl";
 import {LoadPlaylist} from "./load_playlist.dialog";
 import css from "./player.less";
 import {SearchField} from "../../ui/search/search";
 import {showDialog} from "../../ui/dialog/dialog";
-import {ACTIONS, store} from "../../reducers";
+import {ACTIONS, IRootState, store} from "../../reducers";
 import {showNotification} from "../../ui/notification/notification";
 import HttpController from "../../controllers/http";
 import {IProgressBarPromise} from "../../ui/busy/busy";
-import {channelSlice} from "../../reducers/channel";
-import {useDispatch} from "react-redux";
+import {channelSlice, IChannelState} from "../../reducers/channel";
+import {useDispatch, useSelector} from "react-redux";
+import {GroupBar, IGroup} from "./group/group";
 
-interface IPlayerState {
-    showSidepanel: boolean;
-}
+
+const Groups: Array<IGroup> = [
+    {
+        description: "Home",
+        icon: "H",
+        onClick: () => store.dispatch(channelSlice.actions.view("all"))
+    },
+    {
+        description: "Favourites",
+        icon: "F",
+        onClick: () => store.dispatch(channelSlice.actions.view("favourites"))
+    },
+    {
+        description: "New",
+        icon: "N",
+        onClick: () => store.dispatch(channelSlice.actions.view("new"))
+    }
+];
 
 export const Player = () => {
     const history = useHistory();
-    const [state, setState] = useState<IPlayerState>({showSidepanel: true});
-    const {showSidepanel} = state;
+
+    const {show} = useSelector<IRootState, IChannelState>(state => {
+        return state?.channel
+    });
 
     const dispatch = useDispatch();
-    const onToggleSidePanel = () => setState({showSidepanel: !showSidepanel});
 
     useEffect(() => {
         const prom = {
@@ -70,32 +87,23 @@ export const Player = () => {
         showNotification({children: "Please wait", title: "yey", promises: [prom, prom2, prom3, prom4]})
     }, []);
 
-
-    const onSearch = (value: string) => {
-        dispatch(channelSlice.actions.filter(value?.toLowerCase()));
-    };
+    const onSearch = (value: string) => dispatch(channelSlice.actions.filter(value?.toLowerCase()));
 
     return (
         <div className={css.player}>
-            <div className={css.header}>
-                <div className={css.logo}>
-                    <button onClick={() => onToggleSidePanel()}>
-                        Toggle
-                    </button>
-                </div>
-                <div className={css.search}>
-                    <SearchField placeholder={"Search"}
-                                 onSearch={onSearch}/>
-                </div>
-
+            <GroupBar data={Groups}
+                      className={css.sidebar}/>
+            <div className={css.channels} style={{display: show ? "flex" : "none"}}>
+                <SearchField placeholder={"Search"}
+                             className={css.search}
+                             onSearch={onSearch}/>
+                <ChannelList className={css.list}/>
+            </div>
+            <div className={css.body}>
                 <div className={css.user}>
                     <button onClick={onAddChannelsDialog}>Channels</button>
                     <button onClick={() => onLogout(history)}>Logout</button>
                 </div>
-            </div>
-            <div className={css.body}>
-                <ChannelList className={css.channels}
-                             style={{display: showSidepanel ? "flex" : "none"}}/>
                 <VideoContainer className={css.video}/>
             </div>
         </div>

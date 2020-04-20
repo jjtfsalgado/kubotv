@@ -1,6 +1,6 @@
 import css from "./search.less"
 import * as React from "react";
-import {useState} from "react";
+import {CSSProperties, useState} from "react";
 
 import {cls} from "../../../utils/function";
 
@@ -8,6 +8,7 @@ interface ISearchProps {
     placeholder: string;
     onSearch: (value: string) => void;
     className?: string;
+    style?: Partial<CSSProperties>;
 }
 
 interface ISearchState {
@@ -15,7 +16,7 @@ interface ISearchState {
 }
 
 export const SearchField = (props: ISearchProps) =>  {
-    const {placeholder, className, onSearch} = props;
+    const {placeholder, className, onSearch, style} = props;
     const [state, setState] = useState<ISearchState>({} as any);
     const {value} = state;
 
@@ -32,7 +33,7 @@ export const SearchField = (props: ISearchProps) =>  {
     };
 
     return (
-        <div className={cls(css.search, className)}>
+        <div className={cls(css.search, className)} style={style}>
             <label htmlFor={"search"} title={"Search"}>
                 <input value={value}
                        className={css.input}

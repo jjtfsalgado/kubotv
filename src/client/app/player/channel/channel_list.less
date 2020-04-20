@@ -1,0 +1,24 @@
+@import "../../variables.less";
+
+.channel{
+    flex: 1;
+    align-items: center;
+    justify-items: center;
+    display: flex;
+    cursor: pointer;
+
+    //border-bottom: 1px solid grey;
+    //border-top: 1px solid grey;
+
+    & > * {
+        padding: 0 24px;
+    }
+
+    &:hover{
+        background: @colorBgHover;
+    }
+
+    &.selected{
+        background-color: #292929;
+    }
+}

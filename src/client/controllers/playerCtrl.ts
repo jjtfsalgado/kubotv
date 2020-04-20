@@ -2,9 +2,10 @@ import axios from "axios";
 import {m3uToJson} from "../../utils/m3u_json_parser";
 import {readFile} from "../../utils/function";
 import HttpController from "./http";
+import {IChannelView} from "../reducers/channel";
 
 export interface IChannel {
-    count?: number; //fixme
+    count?: number; //fixme;
     description: string;
     url: string;
     is_favourite?: boolean;
@@ -27,8 +28,16 @@ export const playerCtrl = new class{
         return m3uToJson(response)
     }
 
-    public async getUserChannels(userId: string, limit?: number, offset?: number, filter?: string): Promise<Array<IChannel>>{
-        const res = await HttpController.get<Array<IChannel>>(`/channel/${userId}/?offset=${offset}&limit=${limit}${filter ? `&filter=${filter}` : ""}`, {promptError: true});
+    public async getUserChannels(userId: string, limit?: number, offset?: number, filter?: string, view?: IChannelView): Promise<Array<IChannel>>{
+        const res = await HttpController.get<Array<IChannel>>(`/channel/${userId}/?offset=${offset}&limit=${limit}${filter ? `&filter=${filter}` : ""}${view ? `&view=${view}` : ""}`, {promptError: true});
+        if(!res){
+            return
+        }
+        return res.data;
+    }
+
+    public async getUserChannelsTotal(userId: string, filter?: string, view?: IChannelView): Promise<number>{
+        const res = await HttpController.get<number>(`/channel/total/${userId}/?${filter ? `&filter=${filter}` : ""}${view ? `&view=${view}` : ""}`, {promptError: true});
         if(!res){
             return
         }
