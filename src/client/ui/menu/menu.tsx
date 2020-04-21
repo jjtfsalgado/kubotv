@@ -10,32 +10,34 @@ interface IMenuItemSeparator{
     type: "separator"
 }
 
-interface IMenuItemAction {
+interface IMenuItemAction<T> {
     description: string;
     icon?: string;
-    type: "action"
+    type: "action";
+    onClick: (ev, item: T) => void;
 }
 
-export type IMenuItem = IMenuItemAction | IMenuItemSeparator;
+export type IMenuItem<T> = IMenuItemAction<T> | IMenuItemSeparator;
 
-interface IMenuProps {
-    items: Array<IMenuItem>
+interface IMenuProps<T> {
+    items: Array<IMenuItem<T>>
+    entry: T;
 }
 
-const Menu = (props: IMenuProps) => {
-    const {items} = props;
+const Menu = <T extends unknown>(props: IMenuProps<T>) => {
+    const {items, entry} = props;
 
-    const renderItem = (item: IMenuItem) => {
+    const renderItem = (item: IMenuItem<T>) => {
         switch (item.type) {
             case "action": {
                 return (
-                    <span className={css.item}>
+                    <span className={css.item} onClick={(ev) => item.onClick(ev, entry)}>
                         {item.icon}
                         {item.description}
                     </span>
                 )
             } case "separator": {
-                return <br/>
+                return <hr style={{flex: 1}}/>
             }
         }
     };
@@ -48,7 +50,7 @@ const Menu = (props: IMenuProps) => {
 };
 
 
-interface IContextMenuProps extends IMenuProps{
+interface IContextMenuProps<T> extends IMenuProps<T>{
     eventType?: string; //default is 'contextmenu';
     children: (ref) => ReactNode;
 }
@@ -59,14 +61,13 @@ interface IContextMenuState {
     visible: boolean;
 }
 
-export const ContextMenu = (props: IContextMenuProps) => {
-    const {eventType, items, children} = props;
+export const ContextMenu = <T extends unknown>(props: IContextMenuProps<T>) => {
+    const {eventType, items, children, entry} = props;
     const [state, setState] = useState<IContextMenuState>({visible: false} as any);
     const {visible, x, y} = state;
     const anchorRef = useRef(null);
 
     const handleEvent = (ev) => {
-        console.log(ev, anchorRef.current);
         ev.stopPropagation();
         ev.preventDefault();
         const bounds = anchorRef.current?.getBoundingClientRect();
@@ -88,8 +89,8 @@ export const ContextMenu = (props: IContextMenuProps) => {
         <>
             {children(anchorRef)}
             {createPortal(
-                <div style={{position: "absolute", display: visible ? "unset" : "none", top: `${y}px`, left: `${x}px`}}>
-                    <Menu items={items}/>
+                <div style={{position: "absolute", display: visible ? "unset" : "none", top: `${y}px`, left: `${x}px`}} onClick={(e) => e.stopPropagation()}>
+                    <Menu items={items} entry={entry}/>
                 </div>,
                 getModalRoot()
             )}

@@ -1,5 +1,5 @@
 import * as React from "react";
-import {CSSProperties, useCallback, useRef, useState} from "react";
+import {CSSProperties, useState} from "react";
 import {IChannel, playerCtrl} from "../../../controllers/playerCtrl";
 import css from "./channel_list.less";
 import {cls} from "../../../../utils/function";
@@ -50,11 +50,10 @@ interface IChannelItemProps {
     index: number;
 }
 
-
-const ChannelItemMenu: Array<IMenuItem> = [
-    {description: "Add to favourites", type: "action"},
+const ChannelItemMenu: Array<IMenuItem<IChannel>> = [
+    {description: "Add to favourites", type: "action", onClick: (item) => alert("hey do something")},
     {type: "separator"},
-    {description: "Delete channel", type: "action"}
+    {description: "Delete channel", type: "action", onClick: (item) => null}
 ];
 
 const ChannelItem = (props: IChannelItemProps) => {
@@ -67,16 +66,15 @@ const ChannelItem = (props: IChannelItemProps) => {
     const onMouseEnter = () => showButton(true);
     const onMouseLeave = () => showButton(false);
 
-
     return (
-        <div className={cls(css.channel, isSelected && css.selected)}
-             style={style}
-             onMouseEnter={onMouseEnter}
-             onMouseLeave={onMouseLeave}
-             onClick={onClick}>
+            <div className={cls(css.channel, isSelected && css.selected)}
+                 style={style}
+                 onMouseEnter={onMouseEnter}
+                 onMouseLeave={onMouseLeave}
+                 onClick={onClick}>
             <span>{index}  {item?.description}  {item?.is_favourite}</span>
             {show && (
-                <ContextMenu items={ChannelItemMenu} eventType={"click"}>
+                <ContextMenu<IChannel> items={ChannelItemMenu} eventType={"click"} entry={item}>
                     {(ref) => (
                         <button ref={ref} className={css.button}>
                             <img src={MenuIcon} style={{width: 15, height: 15}}/>
@@ -84,6 +82,6 @@ const ChannelItem = (props: IChannelItemProps) => {
                     )}
                 </ContextMenu>
             )}
-        </div>
+            </div>
     )
 };
