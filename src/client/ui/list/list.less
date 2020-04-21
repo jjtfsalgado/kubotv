@@ -2,8 +2,8 @@
 
 .list {
   flex: 1;
-  position: relative;
-
+  flex-direction: column;
+  
   #scrollbar();
 
   .title{
@@ -14,10 +14,9 @@
 
   .item {
     list-style-type: none;
-    min-height: 40px;
     display: flex;
     cursor: pointer;
-
+    align-items: center;
 
     &:hover{
       background: @colorBgHover;

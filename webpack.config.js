@@ -8,6 +8,15 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /\.(png|jp(e*)g|svg|gif)$/,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {},
+                    },
+                ],
+            },
+            {
                 test: /\.(ts|tsx)$/,
                 loader: 'awesome-typescript-loader',
                 exclude: /node_modules/
