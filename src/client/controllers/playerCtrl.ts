@@ -28,7 +28,7 @@ export const playerCtrl = new class{
         return m3uToJson(response)
     }
 
-    public async getUserChannels(userId: string, limit?: number, offset?: number, filter?: string, view?: IChannelView): Promise<Array<IChannel>>{
+    public async getUserChannels(userId: string, limit: number, offset: number, filter?: string, view?: IChannelView): Promise<Array<IChannel>>{
         const res = await HttpController.get<Array<IChannel>>(`/channel/${userId}/?offset=${offset}&limit=${limit}${filter ? `&filter=${filter}` : ""}${view ? `&view=${view}` : ""}`, {promptError: true});
         if(!res){
             return

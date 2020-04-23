@@ -1,7 +1,7 @@
 import {VideoContainer} from "./video/container";
 import {ChannelList} from "./channel/channel_list";
 import * as React from "react";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import axios from "axios";
 import {useHistory} from "react-router-dom"
 import * as H from "history";
@@ -40,14 +40,15 @@ const Groups: Array<IGroup> = [
 
 export const Player = () => {
     const history = useHistory();
+    const dispatch = useDispatch();
 
     const {show} = useSelector<IRootState, IChannelState>(state => {
         return state?.channel
     });
 
-    const dispatch = useDispatch();
-
     useEffect(() => {
+        store.dispatch(channelSlice.actions.view("all"));
+
         const prom = {
             description: "First",
             promise: () => new Promise((resolve, reject) => {
@@ -124,13 +125,11 @@ const onAddChannelsDialog = async () => {
         channelsChunks.push(arr);
     }
 
-    const channelsChunksProms = channelsChunks.map(i => ({
+    const promises: Array<IProgressBarPromise> = channelsChunks.map(i => ({
         description: "Uploading channels",
         promise: async () => await HttpController.post("/channel", {channels: i})
     }));
-    const loadChannels = {description: "Refreshing channel list", promise: async () => await playerCtrl.getUserChannels(localStorageCtrl.userIdGet)};
 
-    const promises: Array<IProgressBarPromise> = [...channelsChunksProms, loadChannels];
     showNotification({title: "Loading playlist", children: "Please wait", promises});
 };
 

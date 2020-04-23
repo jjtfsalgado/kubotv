@@ -24,6 +24,12 @@ interface IListVirtualState<T> {
     busy?: boolean;
 }
 
+const cleanCache = (ref) => {
+    if (ref?.current) {
+        ref.current.resetloadMoreItemsCache();
+    }
+};
+
 export const ListVirtual = <T extends unknown>(props: IListVirtualProps<T>) => {
     const {className, style, renderer, loadItemsTotal, dependencies} = props;
     const infiniteLoaderRef = useRef(null);
@@ -32,16 +38,12 @@ export const ListVirtual = <T extends unknown>(props: IListVirtualProps<T>) => {
     const {items, total, busy} = state;
 
     useEffect(() => {
-        if (infiniteLoaderRef?.current) {
-            infiniteLoaderRef.current.resetloadMoreItemsCache();
-        }
-
+        cleanCache(infiniteLoaderRef);
         let total;
         (async () => {
             total = await loadItemsTotal();
             await loadItems(0, 200, [], total)
         })();
-
     }, dependencies || []);
 
     const onRenderItem = ({ index, style }) => {
@@ -55,14 +57,13 @@ export const ListVirtual = <T extends unknown>(props: IListVirtualProps<T>) => {
     };
 
     const loadItems = async (startIndex, stopIndex, items = state.items, total = state.total) => {
-        setState((prevState) => ({...prevState, total, busy: true}));
+        setState((prevState) => ({...prevState, total, busy: true, items}));
 
         const data = await props.loadItems(startIndex, stopIndex) as any;
         const hasData = data?.length;
 
         let itemsCopy = [...items];
         if (hasData) {
-
             for (let i = startIndex, j = 0; i <= stopIndex; i++, j++) {
                 itemsCopy[i] = data[j];
             }

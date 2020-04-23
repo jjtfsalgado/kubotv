@@ -13,6 +13,11 @@ export default class HttpController {
         const {promptError} = opts;
         return await errorHandler(async () => await axios.get(url), promptError)
     };
+
+    static patch = async <T>(url: string, body: Object, opts: {promptError: boolean} = {} as any): Promise<AxiosResponse<T>> => {
+        const {promptError} = opts;
+        return await errorHandler(async () => await axios.patch(url, body), promptError)
+    };
 }
 
 const errorHandler = async <T extends unknown>(callBack: () => Promise<any>, promptError?: boolean): Promise<T> => {

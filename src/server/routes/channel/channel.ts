@@ -7,6 +7,8 @@ import {IChannelView} from "../../../client/reducers/channel";
 interface IChannel {
     get(req: Request<any, any, any>, res: Response<any>, next: NextFunction) : Promise<any>
     insert(req: Request<any, any, any>, res: Response<any>, next: NextFunction) : Promise<any>
+    getTotal(req: Request<any, any, any>, res: Response<any>, next: NextFunction) : Promise<any>
+    update(req: Request<any, any, any>, res: Response<any>, next: NextFunction) : Promise<any>
 }
 
 class Channel implements IChannel{
@@ -40,6 +42,16 @@ class Channel implements IChannel{
         const {channels} = req.body;
         try{
             await dbCtrl.pool.query(ChannelSql.insert(channels));
+            return res.sendStatus(HttpStatus.SUCCESSFUL.CREATED.code);
+        } catch (e) {
+            return res.sendStatus(HttpStatus.ERROR.SERVER.INTERNAL_SERVER_ERROR.code);
+        }
+    }
+
+    async update(req: Request<any, any, any>, res: Response<any>, next: NextFunction){
+        try{
+            const {channels} = req.body;
+            await dbCtrl.pool.query(ChannelSql.update(channels));
             return res.sendStatus(HttpStatus.SUCCESSFUL.CREATED.code);
         } catch (e) {
             return res.sendStatus(HttpStatus.ERROR.SERVER.INTERNAL_SERVER_ERROR.code);

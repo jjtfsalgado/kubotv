@@ -20,19 +20,32 @@ class DbCtrl {
     }
 };
 
-
 export namespace db{
     export function insert<T>(tableName: string, values: Array<T>){
         const val = values[0];
-
         const parsedValues = values.map(i => Object.values(i));
-        return pgFormat(`INSERT INTO ${tableName} (${Object.keys(val).join(",")}) VALUES %L`, parsedValues);
+        const columns = Object.keys(val);
+        const q = pgFormat(`INSERT INTO %s (%2$s) VALUES %3$L`, tableName, columns, parsedValues);
+
+        // console.log(q);
+
+        return q;
+    }
+
+    export function update<T>(tableName: string, values: Array<T>, primaryColumn = 'id'){
+        const val = values[0];
+        const setValues: Array<Array<any>> = [values.map(i => Object.values(i))];
+        const setColumns: Array<string> = Object.keys(val).map(i => `${i} = x.${i}`);
+        const columns: Array<string> = Object.keys(val);
+        const q = pgFormat(`UPDATE %s AS y set %2$s FROM (VALUES %3$L) as x(%4$s) where x.%5$s = y.%5$s::text`, tableName, setColumns, setValues, columns, primaryColumn);
+
+        console.log(q);
+
+        return q;
     }
 }
 
-
 export const dbCtrl = new DbCtrl();
-
 
 (async () => {
     const {pool} = dbCtrl;

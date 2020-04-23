@@ -10,6 +10,7 @@ import localStorageCtrl from "../../../controllers/localhost";
 import {ListVirtual} from "../../../ui/list/list_virtual";
 import MenuIcon from '../../../assets/icons/menu.svg';
 import {ContextMenu, IMenuItem} from "../../../ui/menu/menu";
+import HttpController from "../../../controllers/http";
 
 interface IChannelListProps {
     className?: string;
@@ -51,7 +52,10 @@ interface IChannelItemProps {
 }
 
 const ChannelItemMenu: Array<IMenuItem<IChannel>> = [
-    {description: "Add to favourites", type: "action", onClick: (item) => alert("hey do something")},
+    {description: "Add to favourites", type: "action", onClick: async (ev, item) => {
+        item.is_favourite = 'true';
+        await HttpController.patch("/channel", {channels: [item]})
+    }},
     {type: "separator"},
     {description: "Delete channel", type: "action", onClick: (item) => null}
 ];
