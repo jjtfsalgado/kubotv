@@ -47,7 +47,7 @@ export const ChannelList = (props: IChannelListProps) => {
     return (
         <ListVirtual<IChannel> renderer={onRenderItem}
                                className={className}
-                               dependencies={[filter, view]}
+                               dependencies={[filter, view, refreshIndex]}
                                selected={selected}
                                totalItems={state.total}
                                loadItems={loadItems}/>
@@ -71,11 +71,13 @@ const ChannelItemMenu: Array<IMenuItem<IChannel>> = [
 
             const i: Partial<IChannel> = {id: item.id, is_favourite: item.is_favourite};
             await HttpController.patch("/channel/favourites", {channels: [i]});
-            store.dispatch(channelSlice.actions.requestUpdate());
         }
     },
     {type: "separator"},
-    {description: (item) => "Delete channel", type: "action", onClick: (item) => null}
+    {description: (item) => "Delete channel", type: "action", onClick: async (item) => {
+            await HttpController.delete(`/channel/${item.id}`);
+            store.dispatch(channelSlice.actions.requestUpdate());
+    }}
 ];
 
 

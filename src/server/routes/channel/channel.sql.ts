@@ -10,8 +10,12 @@ const ChannelSql = {
         text: `select db.getUserChannelsTotal($1, $2, $3, $4) as count`,
         values: [id, opts.filter, opts.isFavourite, opts.isRecent]
     }),
+    delete: (channelId: string) => ({
+        text: `delete from db.user_channel uc where uc.id = $1`,
+        values: [channelId]
+    }),
     insert: <T>(values) => db.insert<T>("db.user_channel", values),
-    updateFavourites: <T>(values) =>  {
+    updateFavourites: (values) =>  {
         const setValues: Array<Array<any>> = values.map(i => Object.values(i));
         return pgFormat(`UPDATE %s AS y set is_favourite = x.is_favourite::boolean FROM (VALUES %2$L) as x(id, is_favourite) where x.id = y.id::text`, 'db.user_channel', setValues)
     }

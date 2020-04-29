@@ -38,6 +38,17 @@ class Channel implements IChannel{
         }
     }
 
+    async delete(req: Request<any, any, any>, res: Response<any>, next: NextFunction): Promise<any> {
+        const {channelId} = req.params;
+
+        try{
+            await dbCtrl.pool.query(ChannelSql.delete(channelId));
+            return res.sendStatus(HttpStatus.SUCCESSFUL.CREATED.code);
+        } catch (e) {
+            return res.sendStatus(HttpStatus.ERROR.SERVER.INTERNAL_SERVER_ERROR.code);
+        }
+    }
+
     async insert(req: Request<any, any, any>, res: Response<any>, next: NextFunction): Promise<any> {
         const {channels} = req.body;
         try{
