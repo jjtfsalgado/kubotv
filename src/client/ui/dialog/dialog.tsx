@@ -8,13 +8,14 @@ import {_MODAL_ROOT_} from "../../../../global";
 
 export interface IShowDialog<T> {
     title?: string;
+    isModeless?: boolean;
     children: (onSubmit: (value: T) => void, onCancel: () => void) => ReactNode;
 }
 
 export const getModalRoot = () => document.getElementById(_MODAL_ROOT_);
 
 export namespace showDialog {
-    export const async = async <T extends unknown>({children, title}: IShowDialog<T>): Promise<T | false> => {
+    export const async = async <T extends unknown>({children, title, isModeless}: IShowDialog<T>): Promise<T | false> => {
         return new Promise((res) => {
             const div = document.createElement("div");
 
@@ -29,7 +30,7 @@ export namespace showDialog {
             };
 
             ReactDOM.render(
-                <Dialog title={title} onClose={onCancel}>
+                <Dialog title={title} onClose={onCancel} isModeless={isModeless}>
                     {children(onSubmit, onCancel)}
                 </Dialog>
                 , div);

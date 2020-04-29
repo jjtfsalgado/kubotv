@@ -2,7 +2,7 @@ import * as React from "react";
 import {CSSProperties, useEffect, useState} from "react";
 import {IChannel, playerCtrl} from "../../../controllers/playerCtrl";
 import css from "./channel_list.less";
-import {cls} from "../../../../utils/function";
+import {cls, throttle} from "../../../../utils/function";
 import {useDispatch, useSelector} from "react-redux";
 import {IRootState, store} from "../../../reducers";
 import {channelSlice, IChannelState} from "../../../reducers/channel";
@@ -11,6 +11,8 @@ import {ListVirtual} from "../../../ui/list/list_virtual";
 import MenuIcon from '../../../assets/icons/menu.svg';
 import {ContextMenu, IMenuItem} from "../../../ui/menu/menu";
 import HttpController from "../../../controllers/http";
+import {showDialog} from "../../../ui/dialog/dialog";
+import {ConfirmDialog} from "../../../ui/dialog/variants/confirm";
 
 interface IChannelListProps {
     className?: string;
@@ -65,32 +67,50 @@ const ChannelItemMenu: Array<IMenuItem<IChannel>> = [
     {
         description: (item) => `${item.is_favourite ? "Remove from" : "Add to"} favourites`,
         type: "action",
-        onClick: async (item, ev) => {
+        onClick: throttle(async (item, ev) => {
 
             item.is_favourite = !item.is_favourite;
 
             const i: Partial<IChannel> = {id: item.id, is_favourite: item.is_favourite};
             await HttpController.patch("/channel/favourites", {channels: [i]});
-        }
+        }, this, 1000)
     },
     {type: "separator"},
-    {description: (item) => "Delete channel", type: "action", onClick: async (item) => {
+    {
+        description: (item) => "Delete channel",
+        type: "action",
+        onClick: async (item) => {
+            const res = await showDialog.async({title: "Delete channel", children: (onSubmit, onCancel) => <ConfirmDialog onSubmit={onSubmit} onCancel={onCancel} message={"Are you sure you wan't to delete this channel?"}/>});
+            if(!res) return;
+
             await HttpController.delete(`/channel/${item.id}`);
             store.dispatch(channelSlice.actions.requestUpdate());
     }}
 ];
 
 
+
+
 const ChannelItem = (props: IChannelItemProps) => {
     const {item, isSelected, style, index} = props;
 
+    const handler = {
+        set: (obj, prop, value) => {
+            obj[prop] = value;
+            setState((prevState) => ({...prevState, entry: {...obj, [prop]: value}}));
+            return true;
+        }
+    };
+
     const dispatch = useDispatch();
-    const [state, setState] = useState({show: false});
-    const {show} = state;
+    const [state, setState] = useState({show: false, entry: {...item}});
+    const {show, entry} = state;
 
     const onClick = (ev) => dispatch(channelSlice.actions.select(item));
     const onMouseEnter = () => setState((prevState) => ({...prevState, show: true}));
     const onMouseLeave = () => setState((prevState) => ({...prevState, show: false}));
+
+    const proxy = new Proxy(entry, handler);
 
     return (
             <div className={cls(css.channel, isSelected && css.selected)}
@@ -98,9 +118,9 @@ const ChannelItem = (props: IChannelItemProps) => {
                  onMouseEnter={onMouseEnter}
                  onMouseLeave={onMouseLeave}
                  onClick={onClick}>
-            <span>{index}  {item?.description}  {item?.is_favourite ? "True" : "False"}</span>
+            <span>{index}  {entry?.description}  {entry?.is_favourite ? "True" : "False"}</span>
             {show && (
-                <ContextMenu<IChannel> items={ChannelItemMenu} eventType={"click"} entry={item}>
+                <ContextMenu<IChannel> items={ChannelItemMenu} eventType={"click"} entry={proxy}>
                     {(ref) => (
                         <button ref={ref} className={css.button}>
                             <img src={MenuIcon} style={{width: 15, height: 15}}/>

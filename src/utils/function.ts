@@ -54,6 +54,25 @@ export function debounce(func, context?, ms = 50, immediate = false): any {
     };
 }
 
+export function throttle(func, context, ms = 50) {
+    let to;
+    let wait = false;
+
+    return (...args) => {
+        const later = () => {
+            func.apply(context, args);
+        };
+
+        if (!wait) {
+            later();
+            wait = true;
+            to = setTimeout(() => {
+                wait = false;
+            }, ms);
+        }
+    };
+}
+
 export async function readFile(file: any): Promise<any>{
     return new Promise((res, rej) => {
         const reader = new FileReader();
