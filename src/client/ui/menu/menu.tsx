@@ -11,10 +11,10 @@ interface IMenuItemSeparator{
 }
 
 interface IMenuItemAction<T> {
-    description: string;
-    icon?: string;
     type: "action";
-    onClick: (ev, item: T) => void;
+    description: (entry: T) => string;
+    icon?: (entry: T) => string;
+    onClick: (entry: T, ev) => void;
 }
 
 export type IMenuItem<T> = IMenuItemAction<T> | IMenuItemSeparator;
@@ -30,10 +30,11 @@ const Menu = <T extends unknown>(props: IMenuProps<T>) => {
     const renderItem = (item: IMenuItem<T>) => {
         switch (item.type) {
             case "action": {
+                const {onClick, description, icon} = item;
                 return (
-                    <span className={css.item} onClick={(ev) => item.onClick(ev, entry)}>
-                        {item.icon}
-                        {item.description}
+                    <span className={css.item} onClick={(ev) => onClick(entry, ev)}>
+                        {icon && icon(entry)}
+                        {description(entry)}
                     </span>
                 )
             } case "separator": {

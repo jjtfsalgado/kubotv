@@ -4,17 +4,19 @@ import {IChannel} from "../controllers/playerCtrl";
 export type IChannelView = "favourites" | "all" | "new";
 
 export interface IChannelState  {
-    selected: IChannel;
-    filter: string;
+    selected?: IChannel;
+    filter?: string;
     view?: IChannelView;
     show?: boolean;
+    refreshIndex: number;
 };
 
 export const channelSlice = createSlice({
     name: "channel",
     initialState: {
-        selected: null
-    } as Partial<IChannelState>,
+        // selected: null,
+        refreshIndex: 0
+    } as IChannelState,
     reducers: {
         select: (state, action: PayloadAction<IChannel>) => {
             state.selected = action.payload;
@@ -28,6 +30,9 @@ export const channelSlice = createSlice({
         },
         toggle: (state) => {
             state.show = !state.show;
+        },
+        requestUpdate: (state) => {
+            state.refreshIndex += 1;
         }
     }
 });

@@ -25,17 +25,14 @@ export namespace db{
         const val = values[0];
         const parsedValues = values.map(i => Object.values(i));
         const columns = Object.keys(val);
-        const q = pgFormat(`INSERT INTO %s (%2$s) VALUES %3$L`, tableName, columns, parsedValues);
-
-        // console.log(q);
-
-        return q;
+        return pgFormat(`INSERT INTO %s (%2$s) VALUES %3$L`, tableName, columns, parsedValues);
     }
 
     export function update<T>(tableName: string, values: Array<T>, primaryColumn = 'id'){
         const val = values[0];
-        const setValues: Array<Array<any>> = [values.map(i => Object.values(i))];
-        const setColumns: Array<string> = Object.keys(val).map(i => `${i} = x.${i}`);
+        const vals = Object.values(val).map(i => i);
+        const setValues: Array<Array<any>> = values.map(i => Object.values(i));
+        const setColumns: Array<string> = Object.keys(val).filter(i => i != primaryColumn).map((i, ix) => `${i} = x.${i}`);
         const columns: Array<string> = Object.keys(val);
         const q = pgFormat(`UPDATE %s AS y set %2$s FROM (VALUES %3$L) as x(%4$s) where x.%5$s = y.%5$s::text`, tableName, setColumns, setValues, columns, primaryColumn);
 

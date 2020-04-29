@@ -1,10 +1,10 @@
 import * as React from "react";
-import {CSSProperties, useState} from "react";
+import {CSSProperties, useEffect, useState} from "react";
 import {IChannel, playerCtrl} from "../../../controllers/playerCtrl";
 import css from "./channel_list.less";
 import {cls} from "../../../../utils/function";
 import {useDispatch, useSelector} from "react-redux";
-import {IRootState} from "../../../reducers";
+import {IRootState, store} from "../../../reducers";
 import {channelSlice, IChannelState} from "../../../reducers/channel";
 import localStorageCtrl from "../../../controllers/localhost";
 import {ListVirtual} from "../../../ui/list/list_virtual";
@@ -16,30 +16,40 @@ interface IChannelListProps {
     className?: string;
 }
 
+interface IChannelListState {
+    total: number;
+}
+
 export const ChannelList = (props: IChannelListProps) => {
     const {className} = props;
-
-    const {selected, filter, view} = useSelector<IRootState, IChannelState>(state => {
+    const [state, setState] = useState<IChannelListState>({} as any);
+    const {selected, filter, view, refreshIndex} = useSelector<IRootState, IChannelState>(state => {
         return state?.channel
     });
 
+    useEffect(() => {
+        (async () => {
+            const total = await playerCtrl.getUserChannelsTotal(localStorageCtrl.userIdGet, filter, view);
+            setState({total});
+        })();
+    }, [filter, view]);
+
     const onRenderItem = (item, style, index) => (
             <ChannelItem key={item?.id}
-                            index={index + 1}
-                            style={style}
-                            isSelected={item?.id === selected?.id}
-                            item={item}/>
+                        index={index + 1}
+                        style={style}
+                        isSelected={item?.id === selected?.id}
+                        item={item}/>
     );
 
     const loadItems = async (start, stop) => await playerCtrl.getUserChannels(localStorageCtrl.userIdGet, (stop + 1) - start, start, filter, view);
-    const loadItemsTotal = async () => await playerCtrl.getUserChannelsTotal(localStorageCtrl.userIdGet, filter, view);
 
     return (
         <ListVirtual<IChannel> renderer={onRenderItem}
                                className={className}
                                dependencies={[filter, view]}
                                selected={selected}
-                               loadItemsTotal={loadItemsTotal}
+                               totalItems={state.total}
                                loadItems={loadItems}/>
     );
 };
@@ -52,23 +62,33 @@ interface IChannelItemProps {
 }
 
 const ChannelItemMenu: Array<IMenuItem<IChannel>> = [
-    {description: "Add to favourites", type: "action", onClick: async (ev, item) => {
-        item.is_favourite = 'true';
-        await HttpController.patch("/channel", {channels: [item]})
-    }},
+    {
+        description: (item) => `${item.is_favourite ? "Remove from" : "Add to"} favourites`,
+        type: "action",
+        onClick: async (item, ev) => {
+
+            item.is_favourite = !item.is_favourite;
+
+            const i: Partial<IChannel> = {id: item.id, is_favourite: item.is_favourite};
+            await HttpController.patch("/channel/favourites", {channels: [i]});
+            store.dispatch(channelSlice.actions.requestUpdate());
+        }
+    },
     {type: "separator"},
-    {description: "Delete channel", type: "action", onClick: (item) => null}
+    {description: (item) => "Delete channel", type: "action", onClick: (item) => null}
 ];
+
 
 const ChannelItem = (props: IChannelItemProps) => {
     const {item, isSelected, style, index} = props;
 
     const dispatch = useDispatch();
-    const [show, showButton] = useState(false);
+    const [state, setState] = useState({show: false});
+    const {show} = state;
 
     const onClick = (ev) => dispatch(channelSlice.actions.select(item));
-    const onMouseEnter = () => showButton(true);
-    const onMouseLeave = () => showButton(false);
+    const onMouseEnter = () => setState((prevState) => ({...prevState, show: true}));
+    const onMouseLeave = () => setState((prevState) => ({...prevState, show: false}));
 
     return (
             <div className={cls(css.channel, isSelected && css.selected)}
@@ -76,7 +96,7 @@ const ChannelItem = (props: IChannelItemProps) => {
                  onMouseEnter={onMouseEnter}
                  onMouseLeave={onMouseLeave}
                  onClick={onClick}>
-            <span>{index}  {item?.description}  {item?.is_favourite}</span>
+            <span>{index}  {item?.description}  {item?.is_favourite ? "True" : "False"}</span>
             {show && (
                 <ContextMenu<IChannel> items={ChannelItemMenu} eventType={"click"} entry={item}>
                     {(ref) => (

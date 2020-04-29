@@ -125,11 +125,13 @@ const onAddChannelsDialog = async () => {
         channelsChunks.push(arr);
     }
 
-    const promises: Array<IProgressBarPromise> = channelsChunks.map(i => ({
+    const channelsChunksProms = channelsChunks.map(i => ({
         description: "Uploading channels",
         promise: async () => await HttpController.post("/channel", {channels: i})
     }));
 
+    const loadChannels = {description: "Refreshing channel list", promise: async () => await Promise.resolve(store.dispatch(channelSlice.actions.requestUpdate()))};
+    const promises: Array<IProgressBarPromise> = [...channelsChunksProms, loadChannels];
     showNotification({title: "Loading playlist", children: "Please wait", promises});
 };
 
