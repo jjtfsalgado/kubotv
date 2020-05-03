@@ -8,24 +8,41 @@
 
   .sidebar{
     flex: 0 1 72px;
-    //background: #888888;
+    padding: 8px;
+    background: #474747;
+    display: flex;
   }
 
   .channels {
-    flex: 0 1 280px;
+    flex: 0 1 300px;
     //min-height: 0;
     flex-direction: column;
     display: flex;
+    background: #565656;
+    position: relative;
 
     .search{
       grid-area: search;
       display: flex;
       justify-content: center;
       flex: 0 1 auto;
+      //height: 56px;
+      padding: 8px;
+      align-items: center;
     }
 
     .list{
       flex: 1;
+      //background: @colorBg1;
+    }
+
+    .hide{
+      position: absolute;
+      background: #565656;
+      right: -24px;
+      top: 0;
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
     }
   }
 

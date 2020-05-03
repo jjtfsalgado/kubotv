@@ -13,6 +13,7 @@ import {ContextMenu, IMenuItem} from "../../../ui/menu/menu";
 import HttpController from "../../../controllers/http";
 import {showDialog} from "../../../ui/dialog/dialog";
 import {ConfirmDialog} from "../../../ui/dialog/variants/confirm";
+import Favorite from '../../../assets/icons/favorite.svg';
 
 interface IChannelListProps {
     className?: string;
@@ -88,9 +89,6 @@ const ChannelItemMenu: Array<IMenuItem<IChannel>> = [
     }}
 ];
 
-
-
-
 const ChannelItem = (props: IChannelItemProps) => {
     const {item, isSelected, style, index} = props;
 
@@ -118,16 +116,14 @@ const ChannelItem = (props: IChannelItemProps) => {
                  onMouseEnter={onMouseEnter}
                  onMouseLeave={onMouseLeave}
                  onClick={onClick}>
-            <span>{index}  {entry?.description}  {entry?.is_favourite ? "True" : "False"}</span>
-            {show && (
-                <ContextMenu<IChannel> items={ChannelItemMenu} eventType={"click"} entry={proxy}>
-                    {(ref) => (
-                        <button ref={ref} className={css.button}>
-                            <img src={MenuIcon} style={{width: 15, height: 15}}/>
-                        </button>
-                    )}
-                </ContextMenu>
-            )}
+            <span>{index}  {entry?.description}  {entry?.is_favourite && <img src={Favorite} style={{width: 20, height: 20, marginLeft: "auto"}}/>}</span>
+            <ContextMenu<IChannel> items={ChannelItemMenu} eventType={"click"} entry={proxy}>
+                {(ref) => (
+                    <div ref={ref} className={cls(css.button, show && css.show)}>
+                        <img src={MenuIcon} style={{width: 15, height: 15}}/>
+                    </div>
+                )}
+            </ContextMenu>
             </div>
     )
 };

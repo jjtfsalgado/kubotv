@@ -7,11 +7,39 @@
     display: flex;
     cursor: pointer;
     justify-content: space-between;
-    //border-bottom: 1px solid grey;
-    //border-top: 1px solid grey;
+
+    //background: @colorBg1;
+    border-radius: 2px;
+    //border-bottom: 0.5px solid black;
+    //border-top: 0.5px solid black;
 
     & > span {
-        padding: 0 24px;
+        padding-left: 16px;
+        font-size: 0.8em;
+        //color: black;
+        display: flex;
+        flex: 1;
+    }
+
+    .button{
+        margin: 4px;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &:hover{
+            background: @colorBgHover;
+        }
+
+        &:not(.show){
+            visibility: hidden;
+        }
+
+        &.show{
+            visibility: visible;
+        }
     }
 
     &:hover{

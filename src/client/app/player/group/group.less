@@ -1,17 +1,32 @@
 @import "../../variables.less";
 
-.group{
-    flex: 1;
-    margin: 12px 0;
+.groups{
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
 
-    .circle{
-        background: white;
-        border-radius: 50%;
-        height: 3em;
-        width: 3em;
-        color: @colorTextSecondary;
+    .group{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        height: 56px;
+
+        img{
+            max-height: 100%;
+            max-width: 100%;
+        }
+
+        &:hover{
+            background: @colorBgHover;
+        }
+
+        &.end{
+            margin-top: auto;
+        }
+
+        &.selected{
+            background: @colorBgHover;
+        }
     }
 }
+
