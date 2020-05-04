@@ -13,15 +13,16 @@ import {ACTIONS, IRootState, store} from "../../reducers";
 import {showNotification} from "../../ui/notification/notification";
 import HttpController from "../../controllers/http";
 import {IProgressBarPromise} from "../../ui/busy/busy";
-import {channelSlice, IChannelState} from "../../reducers/channel";
-import {useDispatch, useSelector} from "react-redux";
+import {channelSlice, IChannelState, IChannelView} from "../../reducers/channel";
+import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import {GroupBar, IGroup} from "./group/group";
 import Logo from '../../assets/icons/logo.png';
-import Star from '../../assets/icons/star.svg';
-import Recent from '../../assets/icons/history.svg';
-import Plus from '../../assets/icons/plus.svg';
-import Exit from '../../assets/icons/exit.svg';
 import Arrow from '../../assets/icons/arrow_left.svg';
+import {StarSvg} from "../../assets/icons/star";
+import {RecentSvg} from "../../assets/icons/history";
+import {PlusSvg} from "../../assets/icons/plus";
+import {ExitSvg} from "../../assets/icons/exit";
+import {ArrowLeft} from "../../assets/icons/arrow_left";
 
 const groups: Array<IGroup> = [
     {
@@ -33,26 +34,26 @@ const groups: Array<IGroup> = [
     {
         id: "favourites",
         description: "Favourites",
-        icon: <img alt={"star"} src={Star} style={{width: 28}}/>,
+        icon: <StarSvg size={28} color={"#b3b3b3"}/>,
         onClick: () => store.dispatch(channelSlice.actions.view("favourites"))
     },
     {
         id: "new",
         description: "New",
-        icon: <img alt={"recent"} src={Recent} style={{width: 28}}/>,
+        icon: <RecentSvg size={28} color={"#b3b3b3"}/>,
         onClick: () => store.dispatch(channelSlice.actions.view("new"))
     },
     {
         id: "create",
         description: "Add channels",
-        icon: <img alt={"plus"} src={Plus} style={{width: 28}}/>,
+        icon: <PlusSvg size={28} color={"#b3b3b3"}/>,
         position: "end",
         onClick: () => addChannelsDialog()
     },
     {
         id: "logout",
         description: "Logout",
-        icon: <img alt={"exit"} src={Exit} style={{width: 28}}/>,
+        icon: <ExitSvg size={28} color={"#b3b3b3"}/>,
         onClick: onLogout
     }
 ];
@@ -60,9 +61,8 @@ const groups: Array<IGroup> = [
 export const Player = () => {
     const dispatch = useDispatch();
 
-    const {show, view} = useSelector<IRootState, IChannelState>(state => {
-        return state?.channel
-    });
+    const show = useSelector<IRootState, Partial<boolean>>(state => state?.channel?.show);
+    const view = useSelector<IRootState, Partial<IChannelView>>(state => state?.channel?.view);
 
     useEffect(() => {
         store.dispatch(channelSlice.actions.view("all"));
@@ -119,8 +119,8 @@ export const Player = () => {
                              onSearch={onSearch}/>
                 <ChannelList className={css.list}/>
                 {show && (
-                    <div className={css.hide} onClick={() => dispatch(channelSlice.actions.toggle())}>
-                        <img alt={"arrow"} src={Arrow} style={{width: 24}}/>
+                    <div className={css.hide} onClick={() => dispatch(channelSlice.actions.show(false))}>
+                        <ArrowLeft color={"#b3b3b3"}/>
                     </div>
                 )}
             </div>

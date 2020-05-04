@@ -1,19 +1,19 @@
 import * as React from "react";
-import {CSSProperties, useEffect, useState} from "react";
+import {CSSProperties, useCallback, useEffect, useState} from "react";
 import {IChannel, playerCtrl} from "../../../controllers/playerCtrl";
 import css from "./channel_list.less";
 import {cls, throttle} from "../../../../utils/function";
 import {useDispatch, useSelector} from "react-redux";
 import {IRootState, store} from "../../../reducers";
-import {channelSlice, IChannelState} from "../../../reducers/channel";
+import {channelSlice, IChannelState, IChannelView} from "../../../reducers/channel";
 import localStorageCtrl from "../../../controllers/localhost";
 import {ListVirtual} from "../../../ui/list/list_virtual";
-import MenuIcon from '../../../assets/icons/menu.svg';
 import {ContextMenu, IMenuItem} from "../../../ui/menu/menu";
 import HttpController from "../../../controllers/http";
 import {showDialog} from "../../../ui/dialog/dialog";
 import {ConfirmDialog} from "../../../ui/dialog/variants/confirm";
-import Favorite from '../../../assets/icons/favorite.svg';
+import {MenuSvg} from "../../../assets/icons/menu";
+import {FavoriteSvg} from "../../../assets/icons/favorite";
 
 interface IChannelListProps {
     className?: string;
@@ -26,9 +26,10 @@ interface IChannelListState {
 export const ChannelList = (props: IChannelListProps) => {
     const {className} = props;
     const [state, setState] = useState<IChannelListState>({} as any);
-    const {selected, filter, view, refreshIndex} = useSelector<IRootState, IChannelState>(state => {
-        return state?.channel
-    });
+
+    const filter = useSelector<IRootState, string>(state => state?.channel?.filter);
+    const view = useSelector<IRootState, IChannelView>(state => state?.channel?.view);
+    const refreshIndex = useSelector<IRootState, number>(state => state?.channel?.refreshIndex);
 
     useEffect(() => {
         (async () => {
@@ -41,7 +42,6 @@ export const ChannelList = (props: IChannelListProps) => {
             <ChannelItem key={item?.id}
                         index={index + 1}
                         style={style}
-                        isSelected={item?.id === selected?.id}
                         item={item}/>
     );
 
@@ -51,7 +51,6 @@ export const ChannelList = (props: IChannelListProps) => {
         <ListVirtual<IChannel> renderer={onRenderItem}
                                className={className}
                                dependencies={[filter, view, refreshIndex]}
-                               selected={selected}
                                totalItems={state.total}
                                loadItems={loadItems}/>
     );
@@ -74,7 +73,7 @@ const ChannelItemMenu: Array<IMenuItem<IChannel>> = [
 
             const i: Partial<IChannel> = {id: item.id, is_favourite: item.is_favourite};
             await HttpController.patch("/channel/favourites", {channels: [i]});
-        }, this, 1000)
+        }, this, 500)
     },
     {type: "separator"},
     {
@@ -89,26 +88,37 @@ const ChannelItemMenu: Array<IMenuItem<IChannel>> = [
     }}
 ];
 
+
+interface IChannelItemState {
+    proxy?: IChannel;
+    entry: IChannel;
+    show: boolean;
+}
+
 const ChannelItem = (props: IChannelItemProps) => {
-    const {item, isSelected, style, index} = props;
-
-    const handler = {
-        set: (obj, prop, value) => {
-            obj[prop] = value;
-            setState((prevState) => ({...prevState, entry: {...obj, [prop]: value}}));
-            return true;
-        }
-    };
-
+    const {item, style, index} = props;
+    const selected = useSelector<IRootState, IChannel>(state => state?.channel?.selected);
     const dispatch = useDispatch();
-    const [state, setState] = useState({show: false, entry: {...item}});
-    const {show, entry} = state;
+    const [state, setState] = useState<IChannelItemState>({show: false, entry: item});
+    const {show, entry, proxy} = state;
+    const isSelected = selected?.id === item?.id;
 
-    const onClick = (ev) => dispatch(channelSlice.actions.select(item));
+    useEffect(() => {
+        const proxy = new Proxy(item,{
+            set: (obj, prop, value) => {
+                obj[prop] = value;
+                setState((prevState) => ({...prevState, entry: {...obj, [prop]: value}}));
+                return true;
+            }
+        });
+
+        setState((prevState) => ({...prevState, proxy}));
+    }, []);
+
+
+    const onClick = (ev) => dispatch(channelSlice.actions.select({...item}));
     const onMouseEnter = () => setState((prevState) => ({...prevState, show: true}));
     const onMouseLeave = () => setState((prevState) => ({...prevState, show: false}));
-
-    const proxy = new Proxy(entry, handler);
 
     return (
             <div className={cls(css.channel, isSelected && css.selected)}
@@ -116,14 +126,14 @@ const ChannelItem = (props: IChannelItemProps) => {
                  onMouseEnter={onMouseEnter}
                  onMouseLeave={onMouseLeave}
                  onClick={onClick}>
-            <span>{index}  {entry?.description}  {entry?.is_favourite && <img src={Favorite} style={{width: 20, height: 20, marginLeft: "auto"}}/>}</span>
-            <ContextMenu<IChannel> items={ChannelItemMenu} eventType={"click"} entry={proxy}>
-                {(ref) => (
-                    <div ref={ref} className={cls(css.button, show && css.show)}>
-                        <img src={MenuIcon} style={{width: 15, height: 15}}/>
-                    </div>
-                )}
-            </ContextMenu>
+                <div className={css.content}>{index}  <span>{entry?.description}</span>  {entry?.is_favourite && <FavoriteSvg size={16} style={{marginLeft: "auto"}} color={"#b3b3b3"}/>}</div>
+                <ContextMenu<IChannel> items={ChannelItemMenu} eventType={"click"} entry={proxy}>
+                    {(ref) => (
+                        <div ref={ref} className={cls(css.button, show && css.show)}>
+                            <MenuSvg color={"#b3b3b3"} size={16}/>
+                        </div>
+                    )}
+                </ContextMenu>
             </div>
     )
 };

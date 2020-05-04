@@ -8,8 +8,7 @@
 
   .sidebar{
     flex: 0 1 72px;
-    padding: 8px;
-    background: #474747;
+    //padding: 8px;
     display: flex;
   }
 
@@ -18,8 +17,8 @@
     //min-height: 0;
     flex-direction: column;
     display: flex;
-    background: #565656;
     position: relative;
+    background: linear-gradient(45deg, @colorBg2 10%, @colorBg1 100%);
 
     .search{
       grid-area: search;
@@ -38,11 +37,15 @@
 
     .hide{
       position: absolute;
-      background: #565656;
+      background: @colorBg2;
+      height: 32px;
       right: -24px;
-      top: 0;
+      bottom: 24px;
       border-top-right-radius: 5px;
       border-bottom-right-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
 
@@ -56,15 +59,13 @@
     overflow: hidden;
     display: grid;
     grid-template-rows: 56px auto;
-    grid-template-areas: "header" "video";
+    grid-template-areas: "video" "video";
 
     .header{
       grid-area: header;
       display: grid;
       grid-template-columns: auto 225px;
       grid-template-areas: "search user";
-
-
 
       .user{
         grid-area: user;
