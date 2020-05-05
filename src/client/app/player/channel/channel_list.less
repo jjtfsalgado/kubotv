@@ -7,11 +7,43 @@
     display: flex;
     cursor: pointer;
     justify-content: space-between;
-    //border-bottom: 1px solid grey;
-    //border-top: 1px solid grey;
+    user-select: none;
 
-    & > span {
-        padding: 0 24px;
+    .content {
+        padding-left: 16px;
+        font-size: 0.8em;
+        display: flex;
+        flex: 1;
+        font-weight: bold;
+        overflow: hidden;
+        align-items: center;
+
+        span{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+
+    .button{
+        margin: 4px;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &:hover{
+            background: @colorBgHover;
+        }
+
+        &:not(.show){
+            visibility: hidden;
+        }
+
+        &.show{
+            visibility: visible;
+        }
     }
 
     &:hover{
@@ -19,6 +51,11 @@
     }
 
     &.selected{
-        background-color: #292929;
+        background-color: @colorSelected;
+        box-shadow: 0 0 8px 0 @colorSelected;
+
+        span{
+            color: @colorTextPrimary;
+        }
     }
 }

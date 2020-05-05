@@ -3,8 +3,6 @@ import {ChannelList} from "./channel/channel_list";
 import * as React from "react";
 import {useEffect} from "react";
 import axios from "axios";
-import {useHistory} from "react-router-dom"
-import * as H from "history";
 import localStorageCtrl from "../../controllers/localhost";
 import {IChannel, playerCtrl} from "../../controllers/playerCtrl";
 import {LoadPlaylist} from "./load_playlist.dialog";
@@ -15,36 +13,56 @@ import {ACTIONS, IRootState, store} from "../../reducers";
 import {showNotification} from "../../ui/notification/notification";
 import HttpController from "../../controllers/http";
 import {IProgressBarPromise} from "../../ui/busy/busy";
-import {channelSlice, IChannelState} from "../../reducers/channel";
-import {useDispatch, useSelector} from "react-redux";
+import {channelSlice, IChannelState, IChannelView} from "../../reducers/channel";
+import {shallowEqual, useDispatch, useSelector} from "react-redux";
 import {GroupBar, IGroup} from "./group/group";
+import Logo from '../../assets/icons/logo.png';
+import Arrow from '../../assets/icons/arrow_left.svg';
+import {StarSvg} from "../../assets/icons/star";
+import {RecentSvg} from "../../assets/icons/history";
+import {PlusSvg} from "../../assets/icons/plus";
+import {ExitSvg} from "../../assets/icons/exit";
+import {ArrowLeft} from "../../assets/icons/arrow_left";
 
-
-const Groups: Array<IGroup> = [
+const groups: Array<IGroup> = [
     {
+        id: "all",
         description: "Home",
-        icon: "H",
+        icon: <img alt={"logo"} src={Logo} style={{width: 28}}/>,
         onClick: () => store.dispatch(channelSlice.actions.view("all"))
     },
     {
+        id: "favourites",
         description: "Favourites",
-        icon: "F",
+        icon: <StarSvg size={28} color={"#b3b3b3"}/>,
         onClick: () => store.dispatch(channelSlice.actions.view("favourites"))
     },
     {
+        id: "new",
         description: "New",
-        icon: "N",
+        icon: <RecentSvg size={28} color={"#b3b3b3"}/>,
         onClick: () => store.dispatch(channelSlice.actions.view("new"))
+    },
+    {
+        id: "create",
+        description: "Add channels",
+        icon: <PlusSvg size={28} color={"#b3b3b3"}/>,
+        position: "end",
+        onClick: () => addChannelsDialog()
+    },
+    {
+        id: "logout",
+        description: "Logout",
+        icon: <ExitSvg size={28} color={"#b3b3b3"}/>,
+        onClick: onLogout
     }
 ];
 
 export const Player = () => {
-    const history = useHistory();
     const dispatch = useDispatch();
 
-    const {show} = useSelector<IRootState, IChannelState>(state => {
-        return state?.channel
-    });
+    const show = useSelector<IRootState, Partial<boolean>>(state => state?.channel?.show);
+    const view = useSelector<IRootState, Partial<IChannelView>>(state => state?.channel?.view);
 
     useEffect(() => {
         store.dispatch(channelSlice.actions.view("all"));
@@ -92,26 +110,28 @@ export const Player = () => {
 
     return (
         <div className={css.player}>
-            <GroupBar data={Groups}
+            <GroupBar data={groups}
+                      selected={view}
                       className={css.sidebar}/>
             <div className={css.channels} style={{display: show ? "flex" : "none"}}>
                 <SearchField placeholder={"Search"}
                              className={css.search}
                              onSearch={onSearch}/>
                 <ChannelList className={css.list}/>
+                {show && (
+                    <div className={css.hide} onClick={() => dispatch(channelSlice.actions.show(false))}>
+                        <ArrowLeft color={"#b3b3b3"}/>
+                    </div>
+                )}
             </div>
             <div className={css.body}>
-                <div className={css.user}>
-                    <button onClick={onAddChannelsDialog}>Channels</button>
-                    <button onClick={() => onLogout(history)}>Logout</button>
-                </div>
                 <VideoContainer className={css.video}/>
             </div>
         </div>
     )
 };
 
-const onAddChannelsDialog = async () => {
+const addChannelsDialog = async () => {
     const res = await showDialog.async<string | FileList>({title: 'Load playlist', children: (onSubmit, onCancel) => <LoadPlaylist onSubmit={onSubmit} onCancel={onCancel}/>});
     if(!res) return;
 
@@ -136,12 +156,12 @@ const onAddChannelsDialog = async () => {
 };
 
 
-async function onLogout(history: H.History<any>){
+async function onLogout(){
     const res = await axios.delete("/login");
     if(!res) return;
 
     //clear redux store data
     store.dispatch(ACTIONS.Reset());
     localStorageCtrl.tokenDelete();
-    history.push("/")
+    window.location.href = "/#/"
 }

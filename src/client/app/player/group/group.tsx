@@ -1,47 +1,36 @@
 import * as React from "react";
-import {List} from "../../../ui/list/list";
 import {cls} from "../../../../utils/function";
 import css from "./group.less";
-import {Link} from "react-router-dom";
-import {useDispatch} from "react-redux";
-import {channelSlice} from "../../../reducers/channel";
+import {ReactNode} from "react";
 
 export interface IGroup{
-    icon?: string;
+    id: string;
+    icon?: ReactNode;
     description: string;
     onClick: () => void;
+    position?: "end";
 }
 
 interface IGroupBar {
     className?: string;
-    data: Array<IGroup>
+    data: Array<IGroup>;
+    selected?: string;
 }
 
 export const GroupBar = (props: IGroupBar) => {
-    const {data, className} = props;
+    const {data, className, selected} = props;
 
-    const dispatch = useDispatch();
-
-    const onGroupRender = (item) => {
+    const onGroupRender = (item, ix) => {
         return (
-            <div className={css.group} onClick={item.onClick}>
-                <div className={css.circle}>
-                    {item.description}
-                </div>
+            <div key={ix} className={cls(css.group, item.position === "end" && css.end, selected === item.id && css.selected)} onClick={item.onClick}>
+                {item.icon}
             </div>
         )
     };
 
-    const onToggleSidePanel = () => dispatch(channelSlice.actions.toggle());
-
     return (
-        <div className={cls(className)}>
-            <Link to={"/player"}>Logo</Link>
-            <button onClick={onToggleSidePanel}>
-                Toggle
-            </button>
-            <List data={data}
-                  itemRender={onGroupRender}/>
+        <div className={cls(css.groups, className)}>
+            {data.map(onGroupRender)}
         </div>
     )
 };

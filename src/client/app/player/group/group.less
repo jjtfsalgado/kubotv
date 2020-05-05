@@ -1,17 +1,53 @@
 @import "../../variables.less";
 
-.group{
-    flex: 1;
-    margin: 12px 0;
+.groups{
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    //padding: 8px;
 
-    .circle{
-        background: white;
-        border-radius: 50%;
-        height: 3em;
-        width: 3em;
-        color: @colorTextSecondary;
+    .group{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        height: 56px;
+        position: relative;
+
+        img, svg{
+            max-height: 100%;
+            max-width: 100%;
+            //z-index: 1;
+        }
+
+        &:hover{
+            background: @colorBgHover;
+        }
+
+        &.end{
+            margin-top: auto;
+        }
+
+        &.selected{
+            &:after{
+                content: "";
+                position: absolute;
+                background: @colorSelected;
+                top: 0; bottom: 0; left: 0;
+                margin: auto;
+                z-index: 2;
+                width: 2px;
+                height: 50%;
+                animation: glow 2s ease-in-out infinite alternate;
+            }
+        }
+    }
+}
+
+@keyframes glow{
+    from{
+        box-shadow: 0 0 20px 3px @colorSelected;
+    }
+    to{
+        box-shadow: 1px 1px 25px 3px @colorSelected;
     }
 }

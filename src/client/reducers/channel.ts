@@ -28,8 +28,12 @@ export const channelSlice = createSlice({
             state.view = action.payload;
             state.show = true;
         },
-        toggle: (state) => {
-            state.show = !state.show;
+        show: (state, action: PayloadAction<boolean>) => {
+            state.show = action.payload;
+
+            if(!state.show){
+                state.view = null;
+            }
         },
         requestUpdate: (state) => {
             state.refreshIndex += 1;

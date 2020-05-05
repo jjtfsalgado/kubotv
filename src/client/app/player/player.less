@@ -8,24 +8,44 @@
 
   .sidebar{
     flex: 0 1 72px;
-    //background: #888888;
+    //padding: 8px;
+    display: flex;
   }
 
   .channels {
-    flex: 0 1 280px;
+    flex: 0 1 300px;
     //min-height: 0;
     flex-direction: column;
     display: flex;
+    position: relative;
+    background: linear-gradient(45deg, @colorFg 20%, @colorBg 100%);
 
     .search{
       grid-area: search;
       display: flex;
       justify-content: center;
       flex: 0 1 auto;
+      //height: 56px;
+      padding: 8px;
+      align-items: center;
     }
 
     .list{
       flex: 1;
+      //background: @colorBg1;
+    }
+
+    .hide{
+      position: absolute;
+      background: @colorFg;
+      height: 32px;
+      right: -24px;
+      bottom: 24px;
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
 
@@ -39,15 +59,13 @@
     overflow: hidden;
     display: grid;
     grid-template-rows: 56px auto;
-    grid-template-areas: "header" "video";
+    grid-template-areas: "video" "video";
 
     .header{
       grid-area: header;
       display: grid;
       grid-template-columns: auto 225px;
       grid-template-areas: "search user";
-
-
 
       .user{
         grid-area: user;
@@ -64,7 +82,7 @@
       grid-area: video;
       flex-direction: column;
       overflow: hidden;
-      background: @colorBg1;
+      background: @colorBg;
     }
   }
 

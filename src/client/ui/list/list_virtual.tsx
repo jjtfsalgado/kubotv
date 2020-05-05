@@ -15,7 +15,6 @@ interface IListVirtualProps<T> {
     loadItems: (start, stop) => Promise<Array<T>>;
     totalItems: number;
     dependencies?: Array<any>;
-    selected?: T;
     updateIndexes?: Array<number>;
 }
 
@@ -27,14 +26,13 @@ interface IListVirtualState<T> {
 export const ListVirtual = <T extends unknown>(props: IListVirtualProps<T>) => {
     const {className, style, renderer, totalItems, dependencies} = props;
     const infiniteLoaderRef = useRef(null);
-    let listRef;
+
     const [state, setState] = useState<IListVirtualState<T>>({busy: true, items: []});
     const {items, busy} = state;
 
-
     useEffect(() => {
         infiniteLoaderRef?.current?.resetloadMoreItemsCache();
-        listRef?.current?.scrollTo(0);
+        infiniteLoaderRef?.current?._listRef?.scrollTo(0);
         loadItems(0, 200, []);
     }, dependencies || []);
 
@@ -71,14 +69,14 @@ export const ListVirtual = <T extends unknown>(props: IListVirtualProps<T>) => {
         }, 100)
     };
 
-    const isItemLoaded = index => !!items[index];
+    const isItemLoaded = index => items && !!items[index];
     const hasItems = items && !!items.length;
 
     return (
         <div className={cls(className)} style={style}>
             {busy && <Spinner/>}
             {!hasItems && !busy && <div>No data</div>}
-            {hasItems && <AutoSizer>
+            <AutoSizer>
                 {({height, width}) => (
                     <InfiniteLoader
                         ref={infiniteLoaderRef}
@@ -86,26 +84,21 @@ export const ListVirtual = <T extends unknown>(props: IListVirtualProps<T>) => {
                         itemCount={totalItems}
                         minimumBatchSize={500}
                         loadMoreItems={requestLoadItems}>
-                        {({ onItemsRendered, ref }) => {
-
-                            //fixme doesn't feel right, must be a better way to get the list ref
-                            listRef = ref;
-                            return(
+                        {({ onItemsRendered, ref }) => (
                                <FixedSizeList style={style}
-                                           ref={ref}
-                                           width={width}
-                                           className={css.list}
-                                           height={height}
-                                           itemSize={40}
-                                           onItemsRendered={onItemsRendered}
-                                           itemCount={totalItems}>
+                                               ref={ref}
+                                               width={width}
+                                               className={css.list}
+                                               height={height}
+                                               itemSize={40}
+                                               onItemsRendered={onItemsRendered}
+                                               itemCount={totalItems}>
                                     {onRenderItem}
                                 </FixedSizeList>
-                           )
-                        }}
+                       )}
                     </InfiniteLoader>
                 )}
-            </AutoSizer>}
+            </AutoSizer>
         </div>
     );
 };
