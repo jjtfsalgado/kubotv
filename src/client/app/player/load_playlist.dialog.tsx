@@ -36,26 +36,28 @@ export function LoadPlaylist(props : {onSubmit: (value: string | FileList) => vo
 
     return (
         <div className={css.load}>
-            <span className={css.text}>Type an URL or upload your playlist (M3U)</span>
+            <div className={css.body}>
+                <span className={css.text}>Type an URL or upload your playlist (M3U)</span>
 
-            <div className={css.buttons}>
-                <Button onClick={(ev) => onChangeSelection(ev, "url")}
-                        type={isUrl && "selected"}>Url</Button>
-                <Button onClick={(ev) => onChangeSelection(ev, "file")}
-                        type={!isUrl && "selected"}>File</Button>
+                <div className={css.buttons}>
+                    <Button onClick={(ev) => onChangeSelection(ev, "url")}
+                            type={isUrl && "selected"}>Url</Button>
+                    <Button onClick={(ev) => onChangeSelection(ev, "file")}
+                            type={!isUrl && "selected"}>File</Button>
 
+                </div>
+
+                {isUrl && (
+                    <TextField value={state.url} placeholder={"Url"} name={"Url"} onChange={onChange}/>
+                )}
+                {!isUrl && (
+                    <label htmlFor="file" title={"File"}>
+                        <input onChange={onChange}
+                               id="file"
+                               type="file"/>
+                    </label>
+                )}
             </div>
-
-            {isUrl && (
-                <TextField value={state.url} placeholder={"Url"} name={"Url"} onChange={onChange}/>
-            )}
-            {!isUrl && (
-                <label htmlFor="file" title={"File"}>
-                    <input onChange={onChange}
-                           id="file"
-                           type="file"/>
-                </label>
-            )}
             {renderAction({type: EActionTypes.okCancel, onSubmit: () => onSubmit(isUrl ? url : files), onCancel})}
         </div>
     )
