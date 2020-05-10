@@ -13,16 +13,16 @@ import {ACTIONS, IRootState, store} from "../../reducers";
 import {showNotification} from "../../ui/notification/notification";
 import HttpController from "../../controllers/http";
 import {IProgressBarPromise} from "../../ui/busy/busy";
-import {channelSlice, IChannelState, IChannelView} from "../../reducers/channel";
-import {shallowEqual, useDispatch, useSelector} from "react-redux";
+import {channelSlice, IChannelView} from "../../reducers/channel";
+import {useDispatch, useSelector} from "react-redux";
 import {GroupBar, IGroup} from "./group/group";
 import Logo from '../../assets/icons/logo.png';
-import Arrow from '../../assets/icons/arrow_left.svg';
 import {StarSvg} from "../../assets/icons/star";
 import {RecentSvg} from "../../assets/icons/history";
 import {PlusSvg} from "../../assets/icons/plus";
 import {ExitSvg} from "../../assets/icons/exit";
 import {ArrowLeft} from "../../assets/icons/arrow_left";
+import {ConfirmDialog} from "../../ui/dialog/variants/confirm";
 
 const groups: Array<IGroup> = [
     {
@@ -157,6 +157,9 @@ const addChannelsDialog = async () => {
 
 
 async function onLogout(){
+    const confirmed = await showDialog.async({title: "Sign out", children: (onSubmit, onCancel) => <ConfirmDialog onSubmit={onSubmit} onCancel={onCancel} message={"Are you sure you wan't to leave?"}/>});
+    if(!confirmed) return;
+
     const res = await axios.delete("/login");
     if(!res) return;
 

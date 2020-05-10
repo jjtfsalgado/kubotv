@@ -1,0 +1,54 @@
+@import "../../app/variables";
+
+.button{
+    background: @colorBg;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    min-width: 32px;
+    min-height: 32px;
+    color: @colorTextSecondary;
+    outline: none;
+
+    svg{
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    &:hover{
+        &:not(.disabled){
+            background: @colorBgHover;
+        }
+    }
+
+    &.disabled{
+        opacity: 0.2;
+        cursor: inherit;
+    }
+
+    &.transparent {
+        &:not(:hover) {
+            background: transparent;
+        }
+    }
+
+    &.secondary{
+        background: @colorBg3;
+    }
+
+    &.selected{
+        background: @colorSelected;
+        color: @colorTextPrimary;
+    }
+
+    &.negative{
+        &:hover{
+            opacity: 1;
+        }
+        opacity: 0.5;
+        background: @colorNegative;
+
+        //background: @colorBg3;
+        //color: @colorTextPrimary;
+    }
+}

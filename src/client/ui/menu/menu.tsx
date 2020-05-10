@@ -62,6 +62,8 @@ interface IContextMenuState {
     visible: boolean;
 }
 
+const padding = 4;
+
 export const ContextMenu = <T extends unknown>(props: IContextMenuProps<T>) => {
     const {eventType, items, children, entry} = props;
     const [state, setState] = useState<IContextMenuState>({visible: false} as any);
@@ -77,7 +79,7 @@ export const ContextMenu = <T extends unknown>(props: IContextMenuProps<T>) => {
         if(!bounds) return;
         const {x, y, height} = bounds;
         const xx = x;
-        const yy = y + height;
+        const yy = y + height + padding;
 
         setState({ visible: true, xx, yy});
     };
@@ -97,11 +99,11 @@ export const ContextMenu = <T extends unknown>(props: IContextMenuProps<T>) => {
         const overlayRect = portalRef?.current?.getBoundingClientRect();
         const anchorRect = anchorRef.current?.getBoundingClientRect();
 
-        if((overlayRect.top + overlayRect.height) > window.innerHeight){
-            const yy = overlayRect.top - overlayRect.height - anchorRect.height;
+        if((overlayRect.top + overlayRect.height + padding) > window.innerHeight){
+            const yy = overlayRect.top - overlayRect.height - anchorRect.height - padding * 2;
             setState(prevState => ({...prevState, yy}))
-        }else if((overlayRect.left + overlayRect.width) > window.innerWidth){
-            const xx = overlayRect.left - overlayRect.width - anchorRect.width;
+        }else if((overlayRect.left + overlayRect.width + padding) > window.innerWidth){
+            const xx = overlayRect.left - overlayRect.width - anchorRect.width - padding * 2;
             setState(prevState => ({...prevState, xx}))
         }
 

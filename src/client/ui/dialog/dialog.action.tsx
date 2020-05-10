@@ -1,4 +1,6 @@
 import * as React from "react";
+import {Button} from "../button/button";
+import css from "./dialog.less";
 
 export type TAction<T> = IDialogActionsNoneProps | IDialogActionsOkCancelProps<T>;
 
@@ -12,19 +14,20 @@ export interface IDialogActionsNoneProps{
 }
 
 export interface IDialogActionsOkCancelProps<T>{
-    type: EActionTypes.okCancel
+    type: EActionTypes.okCancel;
+    disabled?: boolean;
     onSubmit: () => void;
     onCancel: () => void;
 }
 
 export function DialogActionsOkCancel<T>(props: IDialogActionsOkCancelProps<T>){
-    const {onSubmit, onCancel} = props;
+    const {onSubmit, onCancel, disabled} = props;
 
     return (
-        <>
-            <button onClick={onSubmit}>Ok</button>
-            <button onClick={onCancel}> Cancel </button>
-        </>
+        <div className={css.actions}>
+            <Button onClick={onSubmit} disabled={disabled}>Ok</Button>
+            <Button onClick={onCancel} type={"secondary"}> Cancel </Button>
+        </div>
     )
 }
 

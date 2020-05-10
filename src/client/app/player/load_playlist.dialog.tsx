@@ -1,6 +1,9 @@
 import * as React from "react";
 import {useState} from "react";
 import {EActionTypes, renderAction} from "../../ui/dialog/dialog.action";
+import {TextField} from "../../ui/fields/text/text";
+import {Button} from "../../ui/button/button";
+import css from "./load_playlist.dialog.less";
 
 interface ILoadPlaylistState {
     url: string
@@ -32,18 +35,19 @@ export function LoadPlaylist(props : {onSubmit: (value: string | FileList) => vo
     };
 
     return (
-        <>
-            <div>Type an URL or upload your playlist (M3U)</div>
-            <button onClick={(ev) => onChangeSelection(ev, "url")} aria-pressed={"true"}>Url</button>
-            <button onClick={(ev) => onChangeSelection(ev, "file")}>File</button>
+        <div className={css.load}>
+            <span className={css.text}>Type an URL or upload your playlist (M3U)</span>
+
+            <div className={css.buttons}>
+                <Button onClick={(ev) => onChangeSelection(ev, "url")}
+                        type={isUrl && "selected"}>Url</Button>
+                <Button onClick={(ev) => onChangeSelection(ev, "file")}
+                        type={!isUrl && "selected"}>File</Button>
+
+            </div>
 
             {isUrl && (
-                <label htmlFor="url" title="Url">
-                    <input  value={state.url}
-                            type={"text"}
-                            onChange={onChange}
-                            id="url"/>
-                </label>
+                <TextField value={state.url} placeholder={"Url"} name={"Url"} onChange={onChange}/>
             )}
             {!isUrl && (
                 <label htmlFor="file" title={"File"}>
@@ -52,8 +56,7 @@ export function LoadPlaylist(props : {onSubmit: (value: string | FileList) => vo
                            type="file"/>
                 </label>
             )}
-
             {renderAction({type: EActionTypes.okCancel, onSubmit: () => onSubmit(isUrl ? url : files), onCancel})}
-        </>
+        </div>
     )
 }

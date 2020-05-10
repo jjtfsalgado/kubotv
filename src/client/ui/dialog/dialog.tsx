@@ -5,6 +5,8 @@ import {createPortal} from "react-dom";
 import {cls} from "../../../utils/function";
 import css from "./dialog.less";
 import {_MODAL_ROOT_} from "../../../../global";
+import {CrossSvg} from "../../assets/icons/cross";
+import {Button} from "../button/button";
 
 export interface IShowDialog<T> {
     title?: string;
@@ -81,8 +83,14 @@ export function Dialog<T>(props: IDialog<T>) {
             <DialogContainer isModeless={isModeless}>
                 <div className={cls(css.dialog)}>
                     <div className={css.title}>
-                        {title}
-                        {onClose && <button onClick={onClose}>Close</button>}
+                        <span>{title}</span>
+                        {onClose && (
+                            <Button onClick={onClose}
+                                    className={css.close}
+                                    type={"transparent"}>
+                                <CrossSvg color={"#b3b3b3"}/>
+                            </Button>
+                        )}
                     </div>
                     <div className={css.content}>
                         {children}
