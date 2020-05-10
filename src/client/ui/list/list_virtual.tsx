@@ -33,7 +33,9 @@ export const ListVirtual = <T extends unknown>(props: IListVirtualProps<T>) => {
     useEffect(() => {
         infiniteLoaderRef?.current?.resetloadMoreItemsCache();
         infiniteLoaderRef?.current?._listRef?.scrollTo(0);
-        loadItems(0, 200, []);
+
+        (async () => await loadItems(0, 200, []))();
+
     }, dependencies || []);
 
     const onRenderItem = ({ index, style }) => {

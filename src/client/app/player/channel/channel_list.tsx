@@ -31,12 +31,14 @@ export const ChannelList = (props: IChannelListProps) => {
     const view = useSelector<IRootState, IChannelView>(state => state?.channel?.view);
     const refreshIndex = useSelector<IRootState, number>(state => state?.channel?.refreshIndex);
 
+    const dependencies = [filter, view, refreshIndex];
+
     useEffect(() => {
         (async () => {
             const total = await playerCtrl.getUserChannelsTotal(localStorageCtrl.userIdGet, filter, view);
             setState({total});
         })();
-    }, [filter, view]);
+    }, dependencies);
 
     const onRenderItem = (item, style, index) => (
             <ChannelItem key={item?.id}
@@ -50,7 +52,7 @@ export const ChannelList = (props: IChannelListProps) => {
     return (
         <ListVirtual<IChannel> renderer={onRenderItem}
                                className={className}
-                               dependencies={[filter, view, refreshIndex]}
+                               dependencies={dependencies}
                                totalItems={state.total}
                                loadItems={loadItems}/>
     );

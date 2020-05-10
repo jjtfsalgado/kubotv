@@ -1,7 +1,7 @@
 import * as React from "react";
-import {ReactNode, useEffect, useRef, useState} from "react";
+import {ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState} from "react";
 import css from "./menu.less";
-import {createPortal} from "react-dom";
+import {createPortal, findDOMNode} from "react-dom";
 import {getModalRoot} from "../dialog/dialog";
 import {List} from "../list/list";
 
@@ -57,40 +57,65 @@ interface IContextMenuProps<T> extends IMenuProps<T>{
 }
 
 interface IContextMenuState {
-    x: number;
-    y: number;
+    xx: number;
+    yy: number;
     visible: boolean;
 }
 
 export const ContextMenu = <T extends unknown>(props: IContextMenuProps<T>) => {
     const {eventType, items, children, entry} = props;
     const [state, setState] = useState<IContextMenuState>({visible: false} as any);
-    const {visible, x, y} = state;
+    const {visible, xx, yy} = state;
     const anchorRef = useRef(null);
+    const portalRef = useRef(null);
 
     const handleEvent = (ev) => {
         ev.stopPropagation();
         ev.preventDefault();
         const bounds = anchorRef.current?.getBoundingClientRect();
+
         if(!bounds) return;
         const {x, y, height} = bounds;
         const xx = x;
         const yy = y + height;
-        setState({ visible: true, x: xx, y: yy});
+
+        setState({ visible: true, xx, yy});
     };
 
-    useEffect(() => {
+    const handleClick = (ev) => {
+        const contains = portalRef?.current?.contains(ev.target);
+        if(contains) return ev.stopPropagation();
+        setState((prevState) => ({...prevState, visible: false}));
+    };
+
+    useLayoutEffect(() => {
         if(!anchorRef) return;
         const event = eventType || "contextmenu";
         anchorRef.current?.addEventListener(event, handleEvent, {capture: true});
-        return () => anchorRef.current?.removeEventListener(event, handleEvent, {capture: true});
-    }, [anchorRef]);
+        document.addEventListener("click", handleClick, {capture: true});
+
+        const overlayRect = portalRef?.current?.getBoundingClientRect();
+        const anchorRect = anchorRef.current?.getBoundingClientRect();
+
+        if((overlayRect.top + overlayRect.height) > window.innerHeight){
+            const yy = overlayRect.top - overlayRect.height - anchorRect.height;
+            setState(prevState => ({...prevState, yy}))
+        }else if((overlayRect.left + overlayRect.width) > window.innerWidth){
+            const xx = overlayRect.left - overlayRect.width - anchorRect.width;
+            setState(prevState => ({...prevState, xx}))
+        }
+
+        return () => {
+            anchorRef.current?.removeEventListener(event, handleEvent, {capture: true});
+            document.removeEventListener("click", handleClick, {capture: true});
+        }
+    }, [visible]);
 
     return (
         <>
             {children(anchorRef)}
             {createPortal(
-                <div style={{position: "absolute", display: visible ? "unset" : "none", top: `${y}px`, left: `${x}px`}} onClick={(e) => e.stopPropagation()}>
+                <div ref={portalRef} style={{position: "absolute", display: visible ? "unset" : "none", top: `${yy}px`, left: `${xx}px`}}>
                     <Menu items={items} entry={entry}/>
                 </div>,
                 getModalRoot()
