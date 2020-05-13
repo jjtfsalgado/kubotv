@@ -3,17 +3,15 @@ import {useState} from "react";
 import {withRouter} from "react-router-dom";
 import * as H from "history";
 import css from "./register.less"
-import {Dialog} from "../../ui/dialog/dialog";
 import HttpController from "../../controllers/http";
 import {Form, IFormInfo} from "../../ui/form/form";
 import {HttpStatus} from "../../../utils/http_status";
 import {AxiosResponse} from "axios";
+import {TextField} from "../../ui/fields/text";
 
 export function Register() {
     return (
-        <Dialog title={"Sign up"}>
-            <RegisterForm/>
-        </Dialog>
+        <RegisterForm/>
     )
 }
 
@@ -62,27 +60,25 @@ const RegisterForm = withRouter((props) => {
               validations={validations}
               errorMessage={onErrorMessage}
               successMessage={{title: "Thank you for signing up", message: `We've sent you an email to ${email} to verify your account!`}}>
-            <label htmlFor={"email"} title={"Email"}>
-                <input required={true}
-                       value={email}
-                       id={"email"}
+            <h3>Join us at Kubo tv</h3>
+            <TextField onChange={onChange}
+                       className={css.email}
                        name={"email"}
-                       onChange={onChange}/>
-            </label>
-            <label htmlFor={"password"} title={"Password"}>
-                <input required={true}
-                       value={password}
-                       id={"password"}
+                       label={"Email"}
+                       value={email}
+                       required={true}/>
+            <TextField onChange={onChange}
                        name={"password"}
-                       onChange={onChange}/>
-            </label>
-            <label htmlFor={"password2"} title={"Confirm password"}>
-                <input required={true}
+                       className={css.password}
+                       label={"Password"}
                        value={password}
-                       id={"password2"}
+                       required={true}/>
+            <TextField onChange={onChange}
                        name={"password2"}
-                       onChange={onChange}/>
-            </label>
+                       className={css.password}
+                       label={"Confirm password"}
+                       value={password2}
+                       required={true}/>
         </Form>
     );
 });

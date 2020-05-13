@@ -1,5 +1,8 @@
 import {ReactNode, useEffect, useState} from "react";
 import * as React from "react";
+import {Button} from "../button/button";
+
+import css from "./form.less";
 
 export interface IFormInfo{
     title: string,
@@ -65,11 +68,12 @@ export const Form = (props: IFormProps) => {
             <>
                 {children}
                 {renderValidations()}
-                <button type={"submit"}
-                        disabled={!canSubmit}
-                        onClick={_onSubmit}>
-                    {submitLabel || "Submit"}
-                </button>
+                <div className={css.actions}>
+                    <Button disabled={!canSubmit}
+                            onClick={_onSubmit}>
+                        {submitLabel || "Submit"}
+                    </Button>
+                </div>
             </>
         )
     };

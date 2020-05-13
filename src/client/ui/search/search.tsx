@@ -1,6 +1,6 @@
 import * as React from "react";
 import {CSSProperties, useState} from "react";
-import {TextField} from "../fields/text/text";
+import {TextField} from "../fields/text";
 
 import css from "./search.less";
 
@@ -35,6 +35,7 @@ export const SearchField = (props: ISearchProps) =>  {
     return (
         <TextField placeholder={"Search"}
                    className={css.search}
+                   autoComplete={"off"}
                    onChange={onChange}
                    value={value}
                    name={"search"}

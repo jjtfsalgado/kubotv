@@ -1,7 +1,7 @@
 import * as React from "react";
 import {useState} from "react";
 import {EActionTypes, renderAction} from "../../ui/dialog/dialog.action";
-import {TextField} from "../../ui/fields/text/text";
+import {TextField} from "../../ui/fields/text";
 import {Button} from "../../ui/button/button";
 import css from "./load_playlist.dialog.less";
 

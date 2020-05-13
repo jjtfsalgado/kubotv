@@ -6,18 +6,15 @@ import {withRouter} from "react-router-dom";
 import * as H from "history";
 import {_HEADER_AUTH_} from "../../../../global";
 import localStorageCtrl from "../../controllers/localhost";
-import {Dialog} from "../../ui/dialog/dialog";
 import {Form} from "../../ui/form/form";
 import HttpController from "../../controllers/http";
+import {TextField} from "../../ui/fields/text";
+import {PasswordField} from "../../ui/fields/password";
 
 
 export function Login() {
     return (
-        <div className={css.login}>
-            <Dialog title={"Login"}>
-                <LoginForm/>
-            </Dialog>
-        </div>
+        <LoginForm/>
     )
 }
 
@@ -44,35 +41,34 @@ const LoginForm = withRouter((props) => {
     ];
 
     return (
-        <Form className={css.form}
+        <Form className={css.login}
               validations={validations}
               onSubmit={() => onLogin(email, password, history)}>
-            <label htmlFor={"email"}>
-                Email
-                <input type={"text"}
-                       id={"email"}
-                       required={true}
-                       value={email}
+
+            <h3>Sign in to Kubo tv</h3>
+            <TextField label={"Email"}
+                       className={css.email}
+                       onChange={onChange}
+                       autoComplete={"username"}
                        name={"email"}
-                       onChange={onChange}/>
-            </label>
-            <label htmlFor={"password"}>
-                Password
-                <input required={true}
-                       id={"password"}
-                       value={password}
-                       name="password"
-                       onChange={onChange}/>
-            </label>
+                       required={true}
+                       value={email}/>
+            <PasswordField  label={"Password"}
+                            className={css.password}
+                            autoComplete={"current-password"}
+                            onChange={onChange}
+                            name={"password"}
+                            required={true}
+                            value={password}/>
         </Form>
     )
 });
 
 
-async function onLogin(email: string, password: string, history: H.History<any>){
+async function onLogin(email: string, password: string, history: H.History<any>) {
     const res = await HttpController.post("/login", {email, password});
     //todo handle wrong password
-    if(!res) return;
+    if (!res) return;
 
     const token = res.headers[_HEADER_AUTH_];
 

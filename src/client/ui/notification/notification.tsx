@@ -56,7 +56,7 @@ const _NOTIFICATIONS_ = "notifications";
 const NotificationsContainer = () => {
     return (
         createPortal(
-            <DialogContainer isModeless={true}>
+            <DialogContainer modal={false}>
                 <div id={_NOTIFICATIONS_} className={css.notifications}/>
             </DialogContainer>,
             getModalRoot()

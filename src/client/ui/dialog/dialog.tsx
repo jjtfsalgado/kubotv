@@ -32,7 +32,7 @@ export namespace showDialog {
             };
 
             ReactDOM.render(
-                <Dialog title={title} onClose={onCancel} isModeless={isModeless}>
+                <Dialog title={title} onClose={onCancel} modal={isModeless}>
                     {children(onSubmit, onCancel)}
                 </Dialog>
                 , div);
@@ -46,7 +46,7 @@ export namespace showDialog {
         };
 
         ReactDOM.render(
-            <Dialog title={title} onClose={onCancel} isModeless={true}>
+            <Dialog title={title} onClose={onCancel} modal={true}>
                 {children}
             </Dialog>
             , div);
@@ -54,33 +54,37 @@ export namespace showDialog {
 }
 
 interface IDialogContainerProps {
-    isModeless?: boolean; //no modal
+    modal?: boolean; //default true
     children: ReactNode;
 }
 
 export const DialogContainer = (props: IDialogContainerProps) => {
-    const {children, isModeless} = props;
+    const {children, modal} = props;
 
     return (
-        <div className={cls(css.container, isModeless && css.modeless)}>
+        <div className={cls(css.container, !modal && css.modeless)}>
             {children}
         </div>
     )
+};
+
+DialogContainer.defaultProps = {
+    modal: true
 };
 
 interface IDialog<T>{
     title: string;
     children: ReactNode;
     onClose?: () => void;
-    isModeless?: boolean;
+    modal?: boolean;
 }
 
 export function Dialog<T>(props: IDialog<T>) {
-    const {title, children, isModeless, onClose} = props;
+    const {title, children, modal, onClose} = props;
 
     return (
         createPortal(
-            <DialogContainer isModeless={isModeless}>
+            <DialogContainer modal={modal}>
                 <div className={cls(css.dialog)}>
                     <div className={css.title}>
                         <span>{title}</span>

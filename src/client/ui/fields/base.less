@@ -1,0 +1,26 @@
+@import "../../app/variables";
+
+.label{
+    display: flex;
+    flex-direction: column;
+
+    span{
+         font-size: 0.8em;
+         padding: 4px 0;
+     }
+
+    .input{
+        flex: 1;
+        min-height: 28px;
+        font-size: 1em;
+        background: @colorBg;
+        border: 1px solid @colorFg;
+        color: @colorTextPrimary;
+        padding: 0 8px;
+        outline: none;
+
+        &:focus{
+            box-shadow: 0 0 2px 0.5px @colorSelected;
+        }
+    }
+}
