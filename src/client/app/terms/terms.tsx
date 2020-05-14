@@ -5,7 +5,7 @@ import css from "./terms.less"
 
 export const Terms = () => {
     return (
-        <div id={"terms"} className={css.terms}>
+        <div className={css.terms}>
             <h2>PlusNetTV Terms of Service</h2>
             <h3>1. Terms</h3>
             <p>By accessing the website at <a href="http://plusnetv.net">http://plusnetv.net</a>, you are agreeing to be bound by these terms of service, all applicable laws and regulations, and agree that you are responsible for compliance with any applicable local laws. If you do not agree with any of these terms, you are prohibited from using or accessing this site. The materials contained in this website are protected by applicable copyright and trademark law.</p>
@@ -37,8 +37,6 @@ export const Terms = () => {
             <p>PlusNetTV may revise these terms of service for its website at any time without notice. By using this website you are agreeing to be bound by the then current version of these terms of service.</p>
             <h3>8. Governing Law</h3>
             <p>These terms and conditions are governed by and construed in accordance with the laws of London and you irrevocably submit to the exclusive jurisdiction of the courts in that State or location.</p>
-            <p><a href="https://getterms.io" title="Generate a free terms of use document">Terms of Use created with GetTerms.</a></p>
-
         </div>
     )
 }

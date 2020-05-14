@@ -1,11 +1,11 @@
 import * as React from "react";
+import {useEffect, useRef} from "react";
 import css from "./home.less"
 import {HashRouter, Link, Route, Switch, useLocation} from "react-router-dom";
 import {Register} from "../register/register";
 import {Login} from "../login/login";
 import {Privacy} from "../privacy/privacy";
 import {Terms} from "../terms/terms";
-import {useEffect, useRef} from "react";
 
 import Logo from '../../assets/icons/logo.png';
 import Favourites from '../../assets/favourites.png';
@@ -13,8 +13,6 @@ import Playlist from '../../assets/playlist.png';
 import Intro from '../../assets/intro.png';
 
 import {Button} from "../../ui/button/button";
-import {createPortal} from "react-dom";
-import {cls} from "../../../utils/function";
 
 export function HomeRouter () {
     const { pathname } = useLocation();
@@ -88,7 +86,7 @@ export const Home = () => {
                 image.src = Playlist;
             }
         }, {
-            threshold: [0, 0.25, 0.5, 0.75, 1],
+            threshold: [0, 1],
         });
 
         observer.observe(demoRef.current);
