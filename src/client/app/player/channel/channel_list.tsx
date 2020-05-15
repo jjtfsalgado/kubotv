@@ -1,11 +1,11 @@
 import * as React from "react";
-import {CSSProperties, useCallback, useEffect, useState} from "react";
+import {CSSProperties, useEffect, useState} from "react";
 import {IChannel, playerCtrl} from "../../../controllers/playerCtrl";
 import css from "./channel_list.less";
 import {cls, throttle} from "../../../../utils/function";
 import {useDispatch, useSelector} from "react-redux";
 import {IRootState, store} from "../../../reducers";
-import {channelSlice, IChannelState, IChannelView} from "../../../reducers/channel";
+import {channelSlice, IChannelView} from "../../../reducers/channel";
 import localStorageCtrl from "../../../controllers/localhost";
 import {ListVirtual} from "../../../ui/list/list_virtual";
 import {ContextMenu, IMenuItem} from "../../../ui/menu/menu";

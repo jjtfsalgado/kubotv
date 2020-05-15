@@ -61,7 +61,11 @@ class ExpressCtrl{
         this.app.get('/proxy/*', (req: Request, res: Response, next: NextFunction) => {
             const u = req.params[0];
             res.header("Access-Control-Allow-Origin", "*");
-            request.get(u).pipe(res);
+            try{
+                request.get(u).on("error", next).pipe(res);
+            }catch(e){
+                console.error(e);
+            }
         });
 
         this.app.use(express.static('dist'));
