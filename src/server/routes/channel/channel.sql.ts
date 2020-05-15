@@ -10,9 +10,21 @@ const ChannelSql = {
         text: `select db.getUserChannelsTotal($1, $2, $3, $4) as count`,
         values: [id, opts.filter, opts.isFavourite, opts.isRecent]
     }),
-    delete: (channelId: string) => ({
-        text: `delete from db.user_channel uc where uc.id = $1`,
-        values: [channelId]
+    delete: (channelId: string, userId: string) => ({
+        text: `delete from db.user_channel uc where uc.id = $1 and uc.user_account_id = $2`,
+        values: [channelId, userId]
+    }),
+    deleteFavourites: (userId: string) => ({
+        text: `delete from db.user_channel uc where uc.is_favourite = true and uc.user_account_id = $1`,
+        values: [userId]
+    }),
+    deleteRecent: (userId: string) => ({
+        text: `delete from db.user_channel uc where uc.created_date >= NOW() - INTERVAL '1 DAY' and uc.user_account_id = $1`,
+        values: [userId]
+    }),
+    deleteAll: (userId: string) => ({
+        text: `delete from db.user_channel uc where uc.user_account_id = $1`,
+        values: [userId]
     }),
     insert: <T>(values) => db.insert<T>("db.user_channel", values),
     updateFavourites: (values) =>  {

@@ -39,10 +39,34 @@ class Channel implements IChannel{
     }
 
     async delete(req: Request<any, any, any>, res: Response<any>, next: NextFunction): Promise<any> {
-        const {channelId} = req.params;
+        const {channelId, userId} = req.params;
+        if(!channelId || !userId) return;
 
         try{
-            await dbCtrl.pool.query(ChannelSql.delete(channelId));
+            await dbCtrl.pool.query(ChannelSql.delete(channelId, userId));
+            return res.sendStatus(HttpStatus.SUCCESSFUL.CREATED.code);
+        } catch (e) {
+            return res.sendStatus(HttpStatus.ERROR.SERVER.INTERNAL_SERVER_ERROR.code);
+        }
+    }
+
+    async deleteView(req: Request<any, any, any>, res: Response<any>, next: NextFunction): Promise<any> {
+        const {view, userId} = req.params;
+
+        const v: IChannelView = view;
+        if(!userId) return;
+
+        let query;
+        if(v === "favourites"){
+            query = ChannelSql.deleteFavourites(userId)
+        } else if(v === "all"){
+            query = ChannelSql.deleteAll(userId);
+        } else if (v === "new"){
+            query = ChannelSql.deleteRecent(userId)
+        }
+
+        try{
+            await dbCtrl.pool.query(query);
             return res.sendStatus(HttpStatus.SUCCESSFUL.CREATED.code);
         } catch (e) {
             return res.sendStatus(HttpStatus.ERROR.SERVER.INTERNAL_SERVER_ERROR.code);

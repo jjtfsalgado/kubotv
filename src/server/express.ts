@@ -50,7 +50,8 @@ class ExpressCtrl{
         this.app.get('/channel/:userId', this._authenticate, Channel.get);
         this.app.get('/channel/total/:userId', this._authenticate, Channel.getTotal);
         this.app.patch('/channel/favourites', this._authenticate, Channel.updateFavourites);
-        this.app.delete('/channel/:channelId', this._authenticate, Channel.delete);
+        this.app.delete('/channel/:channelId&:userId', this._authenticate, Channel.delete);
+        this.app.delete('/channel/view/:view&:userId', this._authenticate, Channel.deleteView);
         this.app.post('/channel', this._authenticate, Channel.insert);
 
         this.app.post('/login', Login.login);

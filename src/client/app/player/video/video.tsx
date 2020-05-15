@@ -18,8 +18,7 @@ export class Video extends React.Component<IVideoProps,{}>{
         super(props);
 
         this._player = new Player({
-            // source: url,
-            // poster: 'http://clappr.io/poster.png',
+            playbackNotSupportedMessage: "Oops, please select a valid channel"
         });
     }
 
@@ -33,10 +32,11 @@ export class Video extends React.Component<IVideoProps,{}>{
 
         this._player.attachTo(dom);
         this._player.resize({height: size.height, width: size.width});
+
     }
 
     componentDidUpdate(prevProps: Readonly<IVideoProps>, prevState: Readonly<{}>, snapshot?: any): void {
-        if(prevProps.url !== this.props.url){
+        if(this.props.url && prevProps.url !== this.props.url){
             this._player.load(this.props.url, "application/x-mpegURL");
             this._player.play();
         }

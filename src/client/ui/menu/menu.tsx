@@ -86,7 +86,7 @@ export const ContextMenu = <T extends unknown>(props: IContextMenuProps<T>) => {
 
     const handleClick = (ev) => {
         const contains = portalRef?.current?.contains(ev.target);
-        if(contains) return ev.stopPropagation();
+        if(contains) return;
         setState((prevState) => ({...prevState, visible: false}));
     };
 

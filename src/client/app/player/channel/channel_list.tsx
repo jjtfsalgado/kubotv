@@ -70,7 +70,7 @@ const ChannelItemMenu: Array<IMenuItem<IChannel>> = [
         description: (item) => `${item.is_favourite ? "Remove from" : "Add to"} favourites`,
         type: "action",
         onClick: throttle(async (item, ev) => {
-
+            ev.stopPropagation();
             item.is_favourite = !item.is_favourite;
 
             const i: Partial<IChannel> = {id: item.id, is_favourite: item.is_favourite};
@@ -81,11 +81,29 @@ const ChannelItemMenu: Array<IMenuItem<IChannel>> = [
     {
         description: (item) => "Delete channel",
         type: "action",
-        onClick: async (item) => {
+        onClick: async (item, ev) => {
+            ev.stopPropagation();
+
             const res = await showDialog.async({title: "Delete channel", children: (onSubmit, onCancel) => <ConfirmDialog onSubmit={onSubmit} onCancel={onCancel} message={"Are you sure you wan't to delete this channel?"}/>});
             if(!res) return;
 
-            await HttpController.delete(`/channel/${item.id}`);
+            await HttpController.delete(`/channel/${item.id}&${localStorageCtrl.userIdGet}`);
+            store.dispatch(channelSlice.actions.requestUpdate());
+    }},
+    {
+        description: (item) => {
+            const view = store?.getState()?.channel?.view;
+            return view === "all" ? "Delete all" : `Delete all ${view}`;
+        },
+        type: "action",
+        onClick: async (item, ev) => {
+            ev.stopPropagation();
+            const view = store?.getState()?.channel?.view;
+
+            const res = await showDialog.async({title: view === "all" ? "Delete all" : `Delete all ${view}`, children: (onSubmit, onCancel) => <ConfirmDialog onSubmit={onSubmit} onCancel={onCancel} message={"Are you sure you wan't to proceed?"}/>});
+            if(!res) return;
+
+            await HttpController.delete(`/channel/view/${view}&${localStorageCtrl.userIdGet}`);
             store.dispatch(channelSlice.actions.requestUpdate());
     }}
 ];
