@@ -13,13 +13,14 @@ interface IListVirtualProps<T> {
     style?: Partial<CSSProperties>;
     renderer: (item: T, style, index: number) => ReactElement;
     loadItems: (start, stop) => Promise<Array<T>>;
-    totalItems: number;
+    loadTotal: () => Promise<number>;
     dependencies?: Array<any>;
     updateIndexes?: Array<number>;
 }
 
 interface IListVirtualState<T> {
     busy?: boolean;
+    total?: number;
 }
 
 const itemsCache = (() => {
@@ -45,13 +46,17 @@ const itemsCache = (() => {
 })();
 
 export const ListVirtual = <T extends unknown>(props: IListVirtualProps<T>) => {
-    const {className, style, renderer, totalItems, dependencies} = props;
+    const {className, style, renderer, dependencies} = props;
     const infiniteLoaderRef = useRef(null);
 
     const [state, setState] = useState<IListVirtualState<T>>({busy: true});
-    const {busy} = state;
+    const {busy, total} = state;
 
     useEffect(() => {
+        (async () => {
+            const total = await props.loadTotal();
+            setState((previewState) => ({...previewState, total}));
+        })();
 
         if(infiniteLoaderRef?.current){
             itemsCache.reset();
@@ -96,18 +101,18 @@ export const ListVirtual = <T extends unknown>(props: IListVirtualProps<T>) => {
     };
 
     const isItemLoaded = index => itemsCache.data && !!itemsCache.data[index];
-    const isLoading = busy || (!itemsCache.hasData() && totalItems > 0);
+    const isLoading = busy || (!itemsCache.hasData() && total > 0);
 
     return (
         <div className={cls(className)} style={style}>
             {isLoading && <Spinner/>}
-            {!isLoading && totalItems === 0 && <div>No data</div>}
+            {!isLoading && total === 0 && <div>No data</div>}
             <AutoSizer>
                 {({height, width}) => (
                     <InfiniteLoader
                         ref={infiniteLoaderRef}
                         isItemLoaded={isItemLoaded}
-                        itemCount={totalItems}
+                        itemCount={total || 100}
                         minimumBatchSize={500}
                         loadMoreItems={requestLoadItems}>
                         {({ onItemsRendered, ref }) => (
@@ -118,7 +123,7 @@ export const ListVirtual = <T extends unknown>(props: IListVirtualProps<T>) => {
                                                height={height}
                                                itemSize={40}
                                                onItemsRendered={onItemsRendered}
-                                               itemCount={totalItems}>
+                                               itemCount={total}>
                                     {onRenderItem}
                                 </FixedSizeList>
                        )}

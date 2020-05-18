@@ -19,24 +19,12 @@ interface IChannelListProps {
     className?: string;
 }
 
-interface IChannelListState {
-    total: number;
-}
-
 export const ChannelList = (props: IChannelListProps) => {
     const {className} = props;
-    const [state, setState] = useState<IChannelListState>({} as any);
 
     const filter = useSelector<IRootState, string>(state => state?.channel?.filter);
     const view = useSelector<IRootState, IChannelView>(state => state?.channel?.view);
     const refreshIndex = useSelector<IRootState, number>(state => state?.channel?.refreshIndex);
-
-    useEffect(() => {
-        (async () => {
-            const total = await playerCtrl.getUserChannelsTotal(localStorageCtrl.userIdGet, filter, view);
-            setState({total});
-        })();
-    }, [filter, view, refreshIndex]);
 
     const onRenderItem = useCallback((item, style, index) => (
         <ChannelItem key={item?.id}
@@ -46,14 +34,20 @@ export const ChannelList = (props: IChannelListProps) => {
     ), []);
 
     const loadItems = useCallback(async (start, stop) => {
-        return await playerCtrl.getUserChannels(localStorageCtrl.userIdGet, (stop + 1) - start, start, filter, view)
+        return await playerCtrl.getUserChannels(localStorageCtrl.userIdGet, (stop + 1) - start, start, filter, view);
     }, [filter, view]);
+
+    const loadTotal = useCallback(async () => {
+        return await playerCtrl.getUserChannelsTotal(localStorageCtrl.userIdGet, filter, view)
+    }, [filter, view]);
+
+    const dependencies = [refreshIndex, loadItems, view];
 
     return (
         <ListVirtual<IChannel> renderer={onRenderItem}
                                className={className}
-                               dependencies={[refreshIndex, loadItems, state.total]}
-                               totalItems={state.total}
+                               dependencies={dependencies}
+                               loadTotal={loadTotal}
                                loadItems={loadItems}/>
     );
 };

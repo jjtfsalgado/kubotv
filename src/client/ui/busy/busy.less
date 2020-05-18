@@ -1,3 +1,5 @@
+@import "../../app/variables.less";
+
 .busyPromise{
   position: relative;
   padding: 8px;
@@ -7,7 +9,7 @@
 }
 
 .spinner {
-  #spinner(@size: 12px, @thickness: 1px, @color: currentColor);
+  #spinner(@size: 12px, @thickness: 2px, @color: @colorSelected);
 }
 
 #spinner(@size: 32px, @thickness: 4px, @speed: 0.15s, @color: #aaa) {

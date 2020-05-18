@@ -1,8 +1,6 @@
 import * as React from "react";
+import {ReactNode, useEffect, useState} from "react";
 import css from "./busy.less";
-import {ReactNode, useEffect, useState } from "react";
-import {Simulate} from "react-dom/test-utils";
-import progress = Simulate.progress;
 
 export const Spinner = () => (
     <div className={css.spinner} style={{height: 24, width: 24}}/>
@@ -37,30 +35,60 @@ export const BusyRender = <T extends unknown>(props: {promise: () => Promise<T>,
     );
 };
 
-interface IBusyPromiseProps {
-    promise: () => Promise<void>;
-    onResolve: () => void;
+
+interface IBusyImportProps {
+    load?: () => Promise<any>; //has to be a default export
+    children: (args: any) => ReactNode;
 }
 
-export const BusyPromise = (props: IBusyPromiseProps) => {
-    const {promise, onResolve} = props;
-    const [busy , setBusy ] = useState<boolean>(true);
+interface IBusyImportState {
+    component?: ReactNode;
+    busy: boolean
+}
+
+export const BusyImport = (props: IBusyImportProps) => {
+    const [state, setState] = useState<IBusyImportState>({busy: true});
+    const {component} = state;
 
     useEffect(() => {
-        if(!promise) return;
-        promise().then((data) => {
-            onResolve();
-            setBusy(false);
-        });
-    }, [promise]);
+        (async () => {
+            const c = await props.load();
+            setState({component: c.default ? c.default : c, busy: false});
+        })();
+    }, []);
 
     return (
-        <div className={css.busyPromise}>
-            {busy && <Spinner/>}
-            {!busy && <span>Completed</span>}
-        </div>
-    );
+        <>
+            {state.busy ? <Spinner/> : props.children(component)}
+        </>
+    )
 };
+
+
+// interface IBusyPromiseProps {
+//     promise: () => Promise<void>;
+//     onResolve: () => void;
+// }
+//
+// export const BusyPromise = (props: IBusyPromiseProps) => {
+//     const {promise, onResolve} = props;
+//     const [busy , setBusy ] = useState<boolean>(true);
+//
+//     useEffect(() => {
+//         if(!promise) return;
+//         promise().then((data) => {
+//             onResolve();
+//             setBusy(false);
+//         });
+//     }, [promise]);
+//
+//     return (
+//         <div className={css.busyPromise}>
+//             {busy && <Spinner/>}
+//             {!busy && <span>Completed</span>}
+//         </div>
+//     );
+// };
 
 
 export interface IProgressBarPromise{

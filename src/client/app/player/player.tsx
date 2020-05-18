@@ -58,7 +58,7 @@ const groups: Array<IGroup> = [
     }
 ];
 
-export const Player = () => {
+export default function Player () {
     const dispatch = useDispatch();
 
     const show = useSelector<IRootState, Partial<boolean>>(state => state?.channel?.show);
