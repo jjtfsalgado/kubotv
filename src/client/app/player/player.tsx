@@ -157,7 +157,7 @@ const addChannelsDialog = async () => {
 
 
 async function onLogout(){
-    const confirmed = await showDialog.async({title: "Sign out", children: (onSubmit, onCancel) => <ConfirmDialog onSubmit={onSubmit} onCancel={onCancel} message={"Are you sure you wan't to leave?"}/>});
+    const confirmed = await showDialog.async({title: "Sign out", children: (onSubmit, onCancel) => <ConfirmDialog onSubmit={onSubmit} onCancel={onCancel} message={"Are you sure you want to leave?"}/>});
     if(!confirmed) return;
 
     const res = await axios.delete("/login");

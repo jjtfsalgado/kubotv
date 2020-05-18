@@ -11,7 +11,7 @@ export interface IListProps<T> {
     emptyView?: ReactNode;
     busy?: boolean;
     itemRender: (item: T) => ReactNode;
-    onItemClick?: (item: T) => void;
+    onItemClick?: (item: T, ev) => void;
     className?: string;
     style?: Partial<CSSProperties>;
 }
@@ -34,7 +34,7 @@ export function List<T>(props: IListProps<T>) {
                     items.map((i, k) =>
                         <div key={k}
                              className={css.item}
-                             onClick={onItemClick ? () => onItemClick(i) : undefined}>
+                             onClick={onItemClick ? (ev) => onItemClick(i, ev) : undefined}>
                             {itemRender(i)}
                         </div>
                     )

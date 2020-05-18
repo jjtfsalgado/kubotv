@@ -36,7 +36,6 @@ export const BaseField = (props: IBaseFieldProps) =>  {
             {label && <span>{label}</span>}
             <input value={value || ""}
                    type={type}
-                   id={name}
                    required={required}
                    name={name}
                    autoComplete={autoComplete}

@@ -1,5 +1,5 @@
 import * as React from "react";
-import {CSSProperties, ReactElement, useEffect, useRef, useState} from "react";
+import {CSSProperties, ReactElement, ReactNode, useEffect, useLayoutEffect, useRef, useState} from "react";
 import {cls} from "../../../utils/function";
 import {Spinner} from "../busy/busy";
 import InfiniteLoader from "react-window-infinite-loader";
@@ -19,65 +19,87 @@ interface IListVirtualProps<T> {
 }
 
 interface IListVirtualState<T> {
-    items: Array<T>;
     busy?: boolean;
 }
+
+const itemsCache = (() => {
+    let data;
+
+    return ({
+        get data() {
+            return data;
+        },
+        get init(){
+            if(!data){
+                data = [];
+            }
+
+            return data;
+        },
+        reset(){
+          return data = null;
+        }
+    })
+})();
 
 export const ListVirtual = <T extends unknown>(props: IListVirtualProps<T>) => {
     const {className, style, renderer, totalItems, dependencies} = props;
     const infiniteLoaderRef = useRef(null);
 
-    const [state, setState] = useState<IListVirtualState<T>>({busy: true, items: []});
-    const {items, busy} = state;
+    const [state, setState] = useState<IListVirtualState<T>>({busy: true});
+    const {busy} = state;
 
     useEffect(() => {
-        infiniteLoaderRef?.current?.resetloadMoreItemsCache();
-        infiniteLoaderRef?.current?._listRef?.scrollTo(0);
 
-        (async () => await loadItems(0, 200, []))();
+        if(infiniteLoaderRef?.current){
+            itemsCache.reset();
+            infiniteLoaderRef?.current?.resetloadMoreItemsCache(true);
+        }
 
-    }, dependencies || []);
+        return () => {
+            itemsCache.reset();
+        }
+    }, dependencies);
 
     const onRenderItem = ({ index, style }) => {
         if (!isItemLoaded(index)) {
             return null;
         }
 
-        const item = items[index];
+        const item = itemsCache.data[index];
         return renderer(item, style, index);
     };
 
-    const loadItems = async (startIndex, stopIndex, items = state.items) => {
-        setState((prevState) => ({...prevState, items, busy: true}));
-
+    const loadItems = async (startIndex, stopIndex) => {
+        setState((prevState) => ({...prevState, busy: true}));
+        const items = itemsCache.init;
         const data = await props.loadItems(startIndex, stopIndex) as any;
         const hasData = data?.length;
-        const itemsCopy = [...items];
 
         if (hasData) {
             for (let i = startIndex, j = 0; i <= stopIndex; i++, j++) {
-                itemsCopy[i] = data[j];
+                items[i] = data[j];
             }
         }
 
-        setState((prevState) => ({...prevState, items: itemsCopy, busy: false}));
+        setState((prevState) => ({...prevState, busy: false}));
     };
 
     let timer;
     const requestLoadItems = async (startIndex, stopIndex) => {
         timer && clearTimeout(timer);
         timer = setTimeout(async () => {
-            await loadItems(startIndex, stopIndex)
+            await loadItems(startIndex, stopIndex);
         }, 100)
     };
 
-    const isItemLoaded = index => items && !!items[index];
-    const hasItems = items && !!items.length;
+    const isItemLoaded = index => itemsCache.data && !!itemsCache.data[index];
+    const isLoading = !itemsCache.data || busy;
 
     return (
         <div className={cls(className)} style={style}>
-            {busy && <Spinner/>}
-            {!hasItems && !busy && <div>No data</div>}
+            {isLoading && <Spinner/>}
+            {!isLoading && !itemsCache.data?.length && <div>No data</div>}
             <AutoSizer>
                 {({height, width}) => (
                     <InfiniteLoader

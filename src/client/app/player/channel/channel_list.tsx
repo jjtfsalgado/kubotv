@@ -1,5 +1,5 @@
 import * as React from "react";
-import {CSSProperties, useEffect, useState} from "react";
+import {CSSProperties, useCallback, useEffect, useState} from "react";
 import {IChannel, playerCtrl} from "../../../controllers/playerCtrl";
 import css from "./channel_list.less";
 import {cls, throttle} from "../../../../utils/function";
@@ -31,29 +31,29 @@ export const ChannelList = (props: IChannelListProps) => {
     const view = useSelector<IRootState, IChannelView>(state => state?.channel?.view);
     const refreshIndex = useSelector<IRootState, number>(state => state?.channel?.refreshIndex);
 
-    const dependencies = [filter, view, refreshIndex];
-
     useEffect(() => {
         (async () => {
             const total = await playerCtrl.getUserChannelsTotal(localStorageCtrl.userIdGet, filter, view);
             setState({total});
         })();
-    }, dependencies);
+    }, [filter, view, refreshIndex]);
 
-    const onRenderItem = (item, style, index) => (
-            <ChannelItem key={item?.id}
-                        index={index + 1}
-                        style={style}
-                        item={item}/>
-    );
+    const onRenderItem = useCallback((item, style, index) => (
+        <ChannelItem key={item?.id}
+                    index={index + 1}
+                    style={style}
+                    item={item}/>
+    ), []);
 
-    const loadItems = async (start, stop) => await playerCtrl.getUserChannels(localStorageCtrl.userIdGet, (stop + 1) - start, start, filter, view);
+    const loadItems = useCallback(async (start, stop) => {
+        return await playerCtrl.getUserChannels(localStorageCtrl.userIdGet, (stop + 1) - start, start, filter, view)
+    }, [filter, view]);
 
     return (
         <ListVirtual<IChannel> renderer={onRenderItem}
                                className={className}
-                               dependencies={dependencies}
-                               totalItems={state.total}
+                               dependencies={[refreshIndex, loadItems]}
+                               totalItems={state.total || 1}
                                loadItems={loadItems}/>
     );
 };
