@@ -52,8 +52,8 @@ export const ChannelList = (props: IChannelListProps) => {
     return (
         <ListVirtual<IChannel> renderer={onRenderItem}
                                className={className}
-                               dependencies={[refreshIndex, loadItems]}
-                               totalItems={state.total || 1}
+                               dependencies={[refreshIndex, loadItems, state.total]}
+                               totalItems={state.total}
                                loadItems={loadItems}/>
     );
 };

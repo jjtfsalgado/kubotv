@@ -33,11 +33,13 @@ const itemsCache = (() => {
             if(!data){
                 data = [];
             }
-
             return data;
         },
         reset(){
           return data = null;
+        },
+        hasData(){
+            return data && data.length > 0;
         }
     })
 })();
@@ -94,12 +96,12 @@ export const ListVirtual = <T extends unknown>(props: IListVirtualProps<T>) => {
     };
 
     const isItemLoaded = index => itemsCache.data && !!itemsCache.data[index];
-    const isLoading = !itemsCache.data || busy;
+    const isLoading = busy || (!itemsCache.hasData() && totalItems > 0);
 
     return (
         <div className={cls(className)} style={style}>
             {isLoading && <Spinner/>}
-            {!isLoading && !itemsCache.data?.length && <div>No data</div>}
+            {!isLoading && totalItems === 0 && <div>No data</div>}
             <AutoSizer>
                 {({height, width}) => (
                     <InfiniteLoader
