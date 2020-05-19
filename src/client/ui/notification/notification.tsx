@@ -1,15 +1,14 @@
 import * as ReactDOM from "react-dom";
 import {createPortal} from "react-dom";
-import {DialogContainer, getModalRoot} from "../dialog/dialog";
+import {Dialog, DialogContainer, getModalRoot} from "../dialog/dialogPortal";
 import * as React from "react";
 import {ReactNode, useEffect} from "react";
 import css from "./notification.less";
-import {cls} from "../../../utils/function";
 import {IProgressBarPromise, ProgressBar} from "../busy/busy";
 
 export interface IShowNotification<T>{
     title: string;
-    children: ReactNode;
+    children?: ReactNode;
     promises?: Array<IProgressBarPromise>;
 }
 
@@ -67,25 +66,32 @@ const NotificationsContainer = () => {
 export const Notification= <T extends unknown>(props: INotification<T>) => {
     const {title, children, onClose, promises} = props;
 
+    const locationCallback = (...args) => {
+        onClose()
+    };
+
     useEffect(() => {
+        document.addEventListener("location-change", locationCallback);
         //if there's promises to be resolved dont trigger the timeout immediately
-        !promises && onCloseTimeout()
+        !promises && onCloseTimeout();
+
+        return () => {
+            onClose();
+            document.removeEventListener("location-change", locationCallback);
+        }
+
     }, []);
 
     const onCloseTimeout = () => setTimeout(onClose, 5000);
 
     return (
         createPortal(
-            <div className={cls(css.notification)}>
-                <div className={css.title}>
-                    {title}
-                    <button onClick={onClose}>Close</button>
-                </div>
+            <Dialog title={title} onClose={onClose}>
                 <div className={css.content}>
                     {children}
                     {promises && <ProgressBar promises={promises} onResolve={onCloseTimeout}/>}
                 </div>
-            </div>,
+            </Dialog>,
             getNotificationContainer()
         )
     )

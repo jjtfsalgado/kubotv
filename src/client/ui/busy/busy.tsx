@@ -1,6 +1,8 @@
 import * as React from "react";
 import {ReactNode, useEffect, useState} from "react";
 import css from "./busy.less";
+import {PlusSvg} from "../../assets/icons/plus";
+import {CheckSvg} from "../../assets/icons/check";
 
 export const Spinner = () => (
     <div className={css.spinner} style={{height: 24, width: 24}}/>
@@ -133,10 +135,16 @@ export const ProgressBar = (props: IProgressBarProps) => {
     }, [promises]);
 
     return (
-       <div className={css.progress}>
-           <span>{state.description}</span>
-           {!isComplete && <div className={css.bar} style={{width: `${(progress/length) * 100}%` }}/>}
-           {isComplete && <span>Complete</span>}
-       </div>
+        <div className={css.progress}>
+            {!isComplete && (
+                <div className={css.container}>
+                    <span>{state.description}</span>
+                    <div className={css.barContainer}>
+                        <div className={css.bar} style={{width: `${(progress/length) * 100}%` }}/>
+                    </div>
+                </div>
+            )}
+            {isComplete && <CheckSvg size={32} color={"#0056FB"}/>}
+        </div>
     )
 };

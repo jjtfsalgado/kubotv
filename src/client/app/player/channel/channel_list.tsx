@@ -10,7 +10,7 @@ import localStorageCtrl from "../../../controllers/localhost";
 import {ListVirtual} from "../../../ui/list/list_virtual";
 import {ContextMenu, IMenuItem} from "../../../ui/menu/menu";
 import HttpController from "../../../controllers/http";
-import {showDialog} from "../../../ui/dialog/dialog";
+import {showDialog} from "../../../ui/dialog/dialogPortal";
 import {ConfirmDialog} from "../../../ui/dialog/variants/confirm";
 import {MenuSvg} from "../../../assets/icons/menu";
 import {FavoriteSvg} from "../../../assets/icons/favorite";

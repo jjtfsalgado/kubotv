@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {ReactNode, useEffect, useState} from 'react';
-import {HashRouter, Redirect, Route, Switch} from "react-router-dom";
+import {useEffect, useState} from 'react';
+import {Redirect, Route, Switch, useHistory} from "react-router-dom";
 import {HomeRouter} from "./home/home";
 import css from "./app.less";
 import localStorageCtrl from "../controllers/localhost";
@@ -10,6 +10,7 @@ import {BusyImport, Spinner} from "../ui/busy/busy";
 
 export function App() {
     const [busy, setBusy] = useState(true);
+    const history = useHistory();
 
     const callback = () => {
         setBusy(false)
@@ -17,6 +18,11 @@ export function App() {
 
     useEffect(() => {
         axios.defaults.headers.common[_HEADER_AUTH_] = localStorageCtrl.tokenGet;
+
+        history.listen((location, action) => {
+            const locationEvent = new CustomEvent("location-change", { detail: {location, action}});
+            document.dispatchEvent(locationEvent);
+        });
 
         window.addEventListener("load", callback);
         return () => window.removeEventListener("load", callback);
@@ -29,12 +35,10 @@ export function App() {
 
     return (
         <div className={css.app}>
-            <HashRouter>
-                <Switch>
-                    <PrivateRoute path="/player" children={<PlayerLazy/>}/>
-                    <Route path="/" children={<HomeRouter/>}/>
-                </Switch>
-            </HashRouter>
+            <Switch>
+                <PrivateRoute path="/player" children={<PlayerLazy/>}/>
+                <Route path="/" children={<HomeRouter/>}/>
+            </Switch>
         </div>
     )
 }

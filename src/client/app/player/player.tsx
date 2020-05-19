@@ -8,7 +8,7 @@ import {IChannel, playerCtrl} from "../../controllers/playerCtrl";
 import {LoadPlaylist} from "./load_playlist.dialog";
 import css from "./player.less";
 import {SearchField} from "../../ui/search/search";
-import {showDialog} from "../../ui/dialog/dialog";
+import {showDialog} from "../../ui/dialog/dialogPortal";
 import {ACTIONS, IRootState, store} from "../../reducers";
 import {showNotification} from "../../ui/notification/notification";
 import HttpController from "../../controllers/http";
@@ -103,7 +103,7 @@ export default function Player () {
             })
         };
 
-        showNotification({children: "Please wait", title: "yey", promises: [prom, prom2, prom3, prom4]})
+        showNotification({title: "Loading test", promises: [prom, prom2, prom3, prom4]})
     }, []);
 
     const onSearch = (value: string) => dispatch(channelSlice.actions.filter(value?.toLowerCase()));

@@ -32,9 +32,9 @@ export namespace showDialog {
             };
 
             ReactDOM.render(
-                <Dialog title={title} onClose={onCancel} modal={isModeless}>
+                <DialogPortal title={title} onClose={onCancel} modal={isModeless}>
                     {children(onSubmit, onCancel)}
-                </Dialog>
+                </DialogPortal>
                 , div);
         });
     };
@@ -46,9 +46,9 @@ export namespace showDialog {
         };
 
         ReactDOM.render(
-            <Dialog title={title} onClose={onCancel} modal={true}>
+            <DialogPortal title={title} onClose={onCancel} modal={true}>
                 {children}
-            </Dialog>
+            </DialogPortal>
             , div);
     };
 }
@@ -80,26 +80,34 @@ interface IDialog<T>{
 }
 
 export function Dialog<T>(props: IDialog<T>) {
-    const {title, children, modal, onClose} = props;
+    const {title, children, onClose} = props;
+
+    return (
+        <div className={cls(css.dialog)}>
+            <div className={css.title}>
+                <span>{title}</span>
+                {onClose && (
+                    <Button onClick={onClose}
+                            className={css.close}
+                            type={"transparent"}>
+                        <CrossSvg color={"#b3b3b3"}/>
+                    </Button>
+                )}
+            </div>
+            <div className={css.content}>
+                {children}
+            </div>
+        </div>
+    );
+}
+
+export function DialogPortal<T>(props: IDialog<T>) {
+    const {modal} = props;
 
     return (
         createPortal(
             <DialogContainer modal={modal}>
-                <div className={cls(css.dialog)}>
-                    <div className={css.title}>
-                        <span>{title}</span>
-                        {onClose && (
-                            <Button onClick={onClose}
-                                    className={css.close}
-                                    type={"transparent"}>
-                                <CrossSvg color={"#b3b3b3"}/>
-                            </Button>
-                        )}
-                    </div>
-                    <div className={css.content}>
-                        {children}
-                    </div>
-                </div>
+                <Dialog {...props}/>
             </DialogContainer>,
             getModalRoot()
         )

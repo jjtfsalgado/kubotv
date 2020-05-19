@@ -2,7 +2,7 @@ import * as React from "react";
 import {ReactNode, useLayoutEffect, useRef, useState} from "react";
 import css from "./menu.less";
 import {createPortal} from "react-dom";
-import {getModalRoot} from "../dialog/dialog";
+import {getModalRoot} from "../dialog/dialogPortal";
 import {List} from "../list/list";
 
 
@@ -38,7 +38,7 @@ const Menu = <T extends unknown>(props: IMenuProps<T>) => {
                     </span>
                 )
             } case "separator": {
-                return <hr style={{flex: 1}}/>
+                return <hr style={{flex: 1, pointerEvents: "none"}}/>
             }
         }
     };

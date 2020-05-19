@@ -3,10 +3,13 @@ import {render} from 'react-dom';
 import {App} from "./app/app";
 import { Provider } from 'react-redux'
 import {store} from "./reducers";
+import {HashRouter} from "react-router-dom";
 
 render(
     <Provider store={store}>
-        <App/>
+        <HashRouter>
+            <App/>
+        </HashRouter>
     </Provider>,
     document.getElementById('root')
 );
