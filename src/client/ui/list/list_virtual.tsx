@@ -7,6 +7,7 @@ import {FixedSizeList} from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 
 import css from "./list.less"
+import {TvOff} from "../../assets/icons/tv_off";
 
 interface IListVirtualProps<T> {
     className?: string;
@@ -106,7 +107,11 @@ export const ListVirtual = <T extends unknown>(props: IListVirtualProps<T>) => {
     return (
         <div className={cls(className)} style={style}>
             {isLoading && <Spinner/>}
-            {!isLoading && total === 0 && <div>No data</div>}
+            {!isLoading && total === 0 && (
+                <div className={css.nodata}>
+                    <div className={css.content}><TvOff color={"#0056FB"}/> <span>Oops, couldn't find any</span></div>
+                </div>
+            )}
             <AutoSizer>
                 {({height, width}) => (
                     <InfiniteLoader
