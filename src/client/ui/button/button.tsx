@@ -19,6 +19,7 @@ export const Button = (props: IButtonProps) => {
                 className={cls(css.button,
                     disabled && css.disabled,
                     type === "transparent" && css.transparent,
+                    type === "primary" && css.primary,
                     type === "secondary" && css.secondary,
                     type === "selected" && css.selected,
                     type === "negative" && css.negative, className)}>

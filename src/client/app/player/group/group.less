@@ -3,7 +3,7 @@
 .groups{
     display: flex;
     flex-direction: column;
-    //padding: 8px;
+    overflow: hidden;
 
     .group{
         display: flex;
@@ -12,15 +12,27 @@
         cursor: pointer;
         height: 56px;
         position: relative;
+        overflow: hidden;
 
         img, svg{
             max-height: 100%;
             max-width: 100%;
             //z-index: 1;
+
+            path{
+                fill: @colorTextSecondary;
+            }
         }
 
         &:hover{
             background: @colorBgHover;
+            path{
+                fill: @colorTextPrimary;
+            }
+        }
+
+        &:active{
+            transform: scale(1.1);
         }
 
         &.end{
@@ -40,6 +52,14 @@
                 animation: glow 2s ease-in-out infinite alternate;
             }
         }
+
+        &:not(:hover){
+            &.primary{
+                background: @colorBg3;
+                z-index: 1;
+            }
+        }
+
     }
 }
 

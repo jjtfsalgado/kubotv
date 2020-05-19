@@ -33,7 +33,7 @@ export function HomeRouter () {
 
                     <div className={css.user}>
                         <Link to={"/login"}><Button onClick={() => null} type={pathname === "/login" && "selected"}>Login</Button></Link>
-                        <Link to={"/register"}><Button onClick={() => null} type={pathname === "/register" && "selected"}>Sign up</Button></Link>
+                        <Link to={"/register"}><Button onClick={() => null} type={pathname === "/register" ? "selected" : "primary"}>Sign up</Button></Link>
                     </div>
                 </div>
             </header>

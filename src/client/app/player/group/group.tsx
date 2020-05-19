@@ -9,6 +9,7 @@ export interface IGroup{
     description: string;
     onClick: () => void;
     position?: "end";
+    type?: "primary"
 }
 
 interface IGroupBar {
@@ -22,7 +23,7 @@ export const GroupBar = (props: IGroupBar) => {
 
     const onGroupRender = (item, ix) => {
         return (
-            <div key={ix} className={cls(css.group, item.position === "end" && css.end, selected === item.id && css.selected)} onClick={item.onClick}>
+            <div key={ix} className={cls(css.group, item.position === "end" && css.end, selected === item.id && css.selected, item.type === "primary" && css.primary)} onClick={item.onClick}>
                 {item.icon}
             </div>
         )

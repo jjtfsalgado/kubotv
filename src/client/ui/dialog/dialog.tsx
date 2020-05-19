@@ -90,7 +90,7 @@ export function Dialog<T>(props: IDialog<T>) {
                     <Button onClick={onClose}
                             className={css.close}
                             type={"transparent"}>
-                        <CrossSvg color={"#b3b3b3"}/>
+                        <CrossSvg/>
                     </Button>
                 )}
             </div>

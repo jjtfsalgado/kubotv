@@ -8,7 +8,7 @@ import {IChannel, playerCtrl} from "../../controllers/playerCtrl";
 import {LoadPlaylist} from "./load_playlist.dialog";
 import css from "./player.less";
 import {SearchField} from "../../ui/search/search";
-import {showDialog} from "../../ui/dialog/dialogPortal";
+import {showDialog} from "../../ui/dialog/dialog";
 import {ACTIONS, IRootState, store} from "../../reducers";
 import {showNotification} from "../../ui/notification/notification";
 import HttpController from "../../controllers/http";
@@ -34,26 +34,27 @@ const groups: Array<IGroup> = [
     {
         id: "favourites",
         description: "Favourites",
-        icon: <StarSvg size={28} color={"#b3b3b3"}/>,
+        icon: <StarSvg size={28}/>,
         onClick: () => store.dispatch(channelSlice.actions.view("favourites"))
     },
     {
         id: "new",
         description: "New",
-        icon: <RecentSvg size={28} color={"#b3b3b3"}/>,
+        icon: <RecentSvg size={28}/>,
         onClick: () => store.dispatch(channelSlice.actions.view("new"))
     },
     {
         id: "create",
         description: "Add channels",
-        icon: <PlusSvg size={28} color={"#b3b3b3"}/>,
+        icon: <PlusSvg size={28}/>,
         position: "end",
+        type: "primary",
         onClick: () => addChannelsDialog()
     },
     {
         id: "logout",
         description: "Logout",
-        icon: <ExitSvg size={28} color={"#b3b3b3"}/>,
+        icon: <ExitSvg size={28}/>,
         onClick: onLogout
     }
 ];
@@ -152,7 +153,7 @@ const addChannelsDialog = async () => {
 
     const loadChannels = {description: "Refreshing channel list", promise: async () => await Promise.resolve(store.dispatch(channelSlice.actions.requestUpdate()))};
     const promises: Array<IProgressBarPromise> = [...channelsChunksProms, loadChannels];
-    showNotification({title: "Loading playlist", children: "Please wait", promises});
+    showNotification({title: "Loading playlist", promises});
 };
 
 

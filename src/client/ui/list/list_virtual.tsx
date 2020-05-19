@@ -112,7 +112,7 @@ export const ListVirtual = <T extends unknown>(props: IListVirtualProps<T>) => {
                     <InfiniteLoader
                         ref={infiniteLoaderRef}
                         isItemLoaded={isItemLoaded}
-                        itemCount={total || 100}
+                        itemCount={total || 1}
                         minimumBatchSize={500}
                         loadMoreItems={requestLoadItems}>
                         {({ onItemsRendered, ref }) => (
@@ -123,7 +123,7 @@ export const ListVirtual = <T extends unknown>(props: IListVirtualProps<T>) => {
                                                height={height}
                                                itemSize={40}
                                                onItemsRendered={onItemsRendered}
-                                               itemCount={total}>
+                                               itemCount={total || 1}>
                                     {onRenderItem}
                                 </FixedSizeList>
                        )}

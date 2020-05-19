@@ -25,8 +25,8 @@ export function DialogActionsOkCancel<T>(props: IDialogActionsOkCancelProps<T>){
 
     return (
         <div className={css.actions}>
-            <Button onClick={onSubmit} disabled={disabled}>Ok</Button>
-            <Button onClick={onCancel} type={"secondary"}> Cancel </Button>
+            <Button onClick={onSubmit} type={"primary"} disabled={disabled}>Ok</Button>
+            <Button onClick={onCancel}> Cancel </Button>
         </div>
     )
 }

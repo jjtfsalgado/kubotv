@@ -10,7 +10,7 @@ import localStorageCtrl from "../../../controllers/localhost";
 import {ListVirtual} from "../../../ui/list/list_virtual";
 import {ContextMenu, IMenuItem} from "../../../ui/menu/menu";
 import HttpController from "../../../controllers/http";
-import {showDialog} from "../../../ui/dialog/dialogPortal";
+import {showDialog} from "../../../ui/dialog/dialog";
 import {ConfirmDialog} from "../../../ui/dialog/variants/confirm";
 import {MenuSvg} from "../../../assets/icons/menu";
 import {FavoriteSvg} from "../../../assets/icons/favorite";
@@ -78,7 +78,7 @@ const ChannelItemMenu: Array<IMenuItem<IChannel>> = [
         onClick: async (item, ev) => {
             ev.stopPropagation();
 
-            const res = await showDialog.async({title: "Delete channel", children: (onSubmit, onCancel) => <ConfirmDialog onSubmit={onSubmit} onCancel={onCancel} message={"Are you sure you wan't to delete this channel?"}/>});
+            const res = await showDialog.async({title: "Delete channel", children: (onSubmit, onCancel) => <ConfirmDialog onSubmit={onSubmit} onCancel={onCancel} message={"Are you sure you want to delete this channel?"}/>});
             if(!res) return;
 
             await HttpController.delete(`/channel/${item.id}&${localStorageCtrl.userIdGet}`);
@@ -94,7 +94,7 @@ const ChannelItemMenu: Array<IMenuItem<IChannel>> = [
             ev.stopPropagation();
             const view = store?.getState()?.channel?.view;
 
-            const res = await showDialog.async({title: view === "all" ? "Delete all" : `Delete all ${view}`, children: (onSubmit, onCancel) => <ConfirmDialog onSubmit={onSubmit} onCancel={onCancel} message={"Are you sure you wan't to proceed?"}/>});
+            const res = await showDialog.async({title: view === "all" ? "Delete all" : `Delete all ${view}`, children: (onSubmit, onCancel) => <ConfirmDialog onSubmit={onSubmit} onCancel={onCancel} message={"Are you sure you want to proceed?"}/>});
             if(!res) return;
 
             await HttpController.delete(`/channel/view/${view}&${localStorageCtrl.userIdGet}`);

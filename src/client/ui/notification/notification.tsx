@@ -1,6 +1,6 @@
 import * as ReactDOM from "react-dom";
 import {createPortal} from "react-dom";
-import {Dialog, DialogContainer, getModalRoot} from "../dialog/dialogPortal";
+import {Dialog, DialogContainer, getModalRoot} from "../dialog/dialog";
 import * as React from "react";
 import {ReactNode, useEffect} from "react";
 import css from "./notification.less";

@@ -1,5 +1,5 @@
 import axios, {AxiosPromise, AxiosResponse} from "axios";
-import {showDialog} from "../ui/dialog/dialogPortal";
+import {showDialog} from "../ui/dialog/dialog";
 
 
 export default class HttpController {
