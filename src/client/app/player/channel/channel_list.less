@@ -11,17 +11,24 @@
 
     .content {
         padding-left: 16px;
-        font-size: 0.8em;
+        font-size: 0.9em;
         display: flex;
         flex: 1;
-        font-weight: bold;
         overflow: hidden;
         align-items: center;
 
-        span{
+        .index{
+            padding-right: 8px;
+            font-weight: bold;
+            //font-size: 1em;
+            opacity: 0.4;
+        }
+
+        .description{
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            color: @colorTextPrimary;
         }
     }
 
@@ -53,6 +60,7 @@
     &.selected{
         background-color: @colorSelected;
         box-shadow: 0 0 8px 0 @colorSelected;
+        font-weight: bold;
 
         span{
             color: @colorTextPrimary;

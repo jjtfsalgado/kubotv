@@ -140,7 +140,7 @@ const ChannelItem = (props: IChannelItemProps) => {
                  onMouseEnter={onMouseEnter}
                  onMouseLeave={onMouseLeave}
                  onClick={onClick}>
-                <div className={css.content}>{index}  <span>{entry?.description}</span>  {entry?.is_favourite && <FavoriteSvg size={16} style={{marginLeft: "auto"}} color={"#b3b3b3"}/>}</div>
+                <div className={css.content}><span className={css.index}>{index}</span>  <span className={css.description}>{entry?.description}</span>  {entry?.is_favourite && <FavoriteSvg size={16} style={{marginLeft: "auto"}} color={"#b3b3b3"}/>}</div>
                 <ContextMenu<IChannel> items={ChannelItemMenu} eventType={"click"} entry={proxy}>
                     {(ref) => (
                         <div ref={ref} className={cls(css.button, show && css.show)}>
