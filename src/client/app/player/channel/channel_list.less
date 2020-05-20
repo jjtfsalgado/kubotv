@@ -28,7 +28,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            color: @colorTextPrimary;
+            color: @colorTextSecondary;
         }
     }
 
@@ -55,6 +55,11 @@
 
     &:hover{
         background: @colorBgHover;
+        //transform: scale(1.1);
+        .description{
+            color: @colorTextPrimary;
+            font-weight: bold;
+        }
     }
 
     &.selected{
