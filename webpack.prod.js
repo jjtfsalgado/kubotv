@@ -7,5 +7,6 @@ module.exports = merge(common, {
     mode: 'production',
     plugins: [
         new CompressionPlugin()
-    ]
+    ],
+    devtool: 'source-map'
 });
