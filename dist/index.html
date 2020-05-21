@@ -11,11 +11,55 @@
     <meta name="apple-mobile-web-app-title" content="IPTV">
     <meta name="msapplication-starturl" content="localhost:8080">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>IPTV player</title>
+    <title>KuboTV</title>
+    <style>
+
+        html, body{
+            margin: 0;
+            background-color: #212121;
+        }
+
+        #loading{
+            width: 32px;
+            height: 32px;
+            border: solid 4px #0056FB;
+            border-right-color: transparent;
+            border-radius: 100%;
+            animation: ani-spinner 0.8s linear infinite, ani-delay-show 0.15s;
+            flex: 0 0 auto;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+        }
+
+        @keyframes ani-spinner {
+            from {
+                transform: translate(-50%, -50%) rotate(0);
+            }
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        @keyframes ani-delay-show {
+            0% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
 </head>
 <body>
-<div id="root"></div>
-<div id="modal-root"></div>
-<script src="bundle.js"></script>
+    <div id="loading"></div>
+    <div id="root"></div>
+    <div id="modal-root"></div>
+    <script src="bundle.js"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {Redirect, Route, Switch, useHistory} from "react-router-dom";
 import {HomeRouter} from "./home/home";
 import css from "./app.less";
@@ -9,29 +9,18 @@ import {_HEADER_AUTH_} from "../../../global";
 import {BusyImport, Spinner} from "../ui/busy/busy";
 
 export function App() {
-    const [busy, setBusy] = useState(true);
     const history = useHistory();
 
-    const callback = () => {
-        setBusy(false)
-    };
-
     useEffect(() => {
-        window.addEventListener("load", callback);
         axios.defaults.headers.common[_HEADER_AUTH_] = localStorageCtrl.tokenGet;
+        document.getElementById("loading").style.display = "none";
 
         history.listen((location, action) => {
             const locationEvent = new CustomEvent("location-change", { detail: {location, action}});
             document.dispatchEvent(locationEvent);
         });
 
-        return () => window.removeEventListener("load", callback);
-
     },[]);
-
-    // if(busy){
-    //     return <Spinner/>
-    // }
 
     return (
         <div className={css.app}>
