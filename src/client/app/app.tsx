@@ -29,9 +29,9 @@ export function App() {
 
     },[]);
 
-    if(busy){
-        return <Spinner/>
-    }
+    // if(busy){
+    //     return <Spinner/>
+    // }
 
     return (
         <div className={css.app}>
