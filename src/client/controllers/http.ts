@@ -30,7 +30,7 @@ const errorHandler = async <T extends unknown>(callBack: () => Promise<any>, pro
         return await callBack()
     }catch (e) {
         console.error(e);
-        promptError && showDialog.sync({title:"Something went wrong", children: "Ups, something went wrong. Please try again."})
+        promptError && showDialog.sync({title:"Something went wrong", children: "Oops, something went wrong. Please try again."})
     }
 };
 

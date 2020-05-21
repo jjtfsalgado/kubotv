@@ -17,6 +17,7 @@ export function App() {
     };
 
     useEffect(() => {
+        window.addEventListener("load", callback);
         axios.defaults.headers.common[_HEADER_AUTH_] = localStorageCtrl.tokenGet;
 
         history.listen((location, action) => {
@@ -24,7 +25,6 @@ export function App() {
             document.dispatchEvent(locationEvent);
         });
 
-        window.addEventListener("load", callback);
         return () => window.removeEventListener("load", callback);
 
     },[]);
