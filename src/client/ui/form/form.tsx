@@ -3,6 +3,8 @@ import * as React from "react";
 import {Button} from "../button/button";
 
 import css from "./form.less";
+import {Spinner} from "../busy/busy";
+import {cls} from "../../../utils/function";
 
 export interface IFormInfo{
     title: string,
@@ -70,9 +72,8 @@ export const Form = (props: IFormProps) => {
                 {renderValidations()}
                 <div className={css.actions}>
                     <Button disabled={!canSubmit}
-                            onClick={_onSubmit}>
-                        {submitLabel || "Submit"}
-                    </Button>
+                            text={submitLabel || "Submit"}
+                            onClick={_onSubmit}/>
                 </div>
             </>
         )
@@ -93,13 +94,13 @@ export const Form = (props: IFormProps) => {
     };
 
     return (
-        <form className={className}
+        <form className={cls(css.form, className)}
               onSubmit={_onSubmit}>
-            {isBusy && (
-                <div>Loading</div>
-            )}
-            {!isBusy && !(state.success || state.error) && renderChildren()}
-            {!isBusy && (state.success || state.error) && renderInfo(state.error || state.success)}
+            {isBusy && <Spinner/>}
+            <div style={{visibility: isBusy ? "hidden" : "visible"}}>
+                {!(state.success || state.error) && renderChildren()}
+                {(state.success || state.error) && renderInfo(state.error || state.success)}
+            </div>
         </form>
     )
 };

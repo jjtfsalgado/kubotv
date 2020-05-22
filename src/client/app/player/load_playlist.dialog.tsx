@@ -41,9 +41,9 @@ export function LoadPlaylist(props : {onSubmit: (value: string | FileList) => vo
 
                 <div className={css.buttons}>
                     <Button onClick={(ev) => onChangeSelection(ev, "url")}
-                            type={isUrl && "selected"}>Url</Button>
+                            type={isUrl && "selected"} text={"Url"}/>
                     <Button onClick={(ev) => onChangeSelection(ev, "file")}
-                            type={!isUrl && "selected"}>File</Button>
+                            type={!isUrl && "selected"} text={"File"}/>
 
                 </div>
 

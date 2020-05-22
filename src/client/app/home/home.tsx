@@ -2,8 +2,6 @@ import * as React from "react";
 import {useEffect, useRef} from "react";
 import css from "./home.less"
 import {HashRouter, Link, Route, Switch, useLocation} from "react-router-dom";
-import {Register} from "../register/register";
-import {Login} from "../login/login";
 import {Privacy} from "../privacy/privacy";
 import {Terms} from "../terms/terms";
 
@@ -11,15 +9,26 @@ import Logo from '../../assets/icons/logo.png';
 import Favourites from '../../assets/favourites.png';
 import Playlist from '../../assets/playlist.png';
 import Intro from '../../assets/intro.png';
+import {useHistory} from "react-router-dom";
 
 import {Button} from "../../ui/button/button";
+import {showDialog} from "../../ui/dialog/dialog";
+import {LoginForm} from "./login.dialog";
 
 export function HomeRouter () {
     const { pathname } = useLocation();
+    const history = useHistory();
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [pathname]);
+
+    const onLogin = async () => {
+        const res = await showDialog.async({title: "Sign in", children: (onSubmit, onCancel) => <LoginForm onSubmit={onSubmit}/>});
+        if(!res) return;
+
+        history.push("/player");
+    };
 
     return (
         <div className={css.home}>
@@ -27,13 +36,13 @@ export function HomeRouter () {
                 <div className={css.content}>
                     <div className={css.logo}>
                         <Link to={"/"}>
-                            <img alt={"logo"} src={Logo} style={{width: 28}}/><span>Kubo tv</span>
+                            <img alt={"logo"} src={Logo} style={{width: 28}}/><span>kubo TV</span>
                         </Link>
                     </div>
 
                     <div className={css.user}>
-                        <Link to={"/login"}><Button onClick={() => null} type={pathname === "/login" && "selected"}>Login</Button></Link>
-                        <Link to={"/register"}><Button onClick={() => null} type={pathname === "/register" ? "selected" : "primary"}>Join</Button></Link>
+                        <Button onClick={onLogin} text={"Sign in"} type={pathname === "/login" && "selected"}/>
+                        <Button onClick={onLogin} text={"Join"} type={pathname === "/register" ? "selected" : "primary"}/>
                     </div>
                 </div>
             </header>
@@ -42,15 +51,15 @@ export function HomeRouter () {
                     <Switch>
                         <Route path="/privacy" children={<Privacy/>}/>
                         <Route path="/terms" children={<Terms/>}/>
-                        <Route path="/register" children={<Register/>}/>
-                        <Route path="/login" children={<Login/>}/>
+                        {/*<Route path="/register" children={<Register/>}/>*/}
+                        {/*<Route path="/login" children={<Login/>}/>*/}
                         <Route path="/" children={<Home/>}/>
                     </Switch>
                 </HashRouter>
             </main>
             <footer>
                 <div className={css.content}>
-                    <span>Copyright © 2020 | KuboTV | All rights reserved</span>
+                    <span>Copyright © 2020 | kubo TV | All rights reserved</span>
 
                     <div className={css.links}>
                         <Link to={"/privacy"}>Privacy policy</Link>

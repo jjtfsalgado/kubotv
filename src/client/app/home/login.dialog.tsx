@@ -12,20 +12,17 @@ import {TextField} from "../../ui/fields/text";
 import {PasswordField} from "../../ui/fields/password";
 
 
-export function Login() {
-    return (
-        <LoginForm/>
-    )
-}
-
 interface ILoginState {
     email: string;
     password: string;
 }
 
-const LoginForm = withRouter((props) => {
-    const {history} = props;
+interface ILoginProps {
+    onSubmit: (value) => void;
+}
 
+export const LoginForm = (props: ILoginProps) => {
+    const {onSubmit} = props;
     const [state, setState] = useState<ILoginState>({} as any);
     const {email, password} = state;
 
@@ -40,12 +37,24 @@ const LoginForm = withRouter((props) => {
         }
     ];
 
-    return (
-        <Form className={css.login}
-              validations={validations}
-              onSubmit={() => onLogin(email, password, history)}>
+    const onLogin = async () => {
+        const res = await HttpController.post("/login", {email: email?.toLowerCase(), password});
+        //todo handle wrong password
+        if (!res) return;
 
-            <h3>Sign in to Kubo tv</h3>
+        const token = res.headers[_HEADER_AUTH_];
+
+        axios.defaults.headers.common[_HEADER_AUTH_] = token;
+        localStorageCtrl.tokenSet = token;
+        localStorageCtrl.userId = res.data.UserId;
+        onSubmit(true);
+    };
+
+    return (
+        <Form className={css.form}
+              validations={validations}
+              onSubmit={onLogin}>
+            <h3>Welcome back!</h3>
             <TextField label={"Email"}
                        className={css.email}
                        onChange={onChange}
@@ -62,18 +71,4 @@ const LoginForm = withRouter((props) => {
                             value={password}/>
         </Form>
     )
-});
-
-
-async function onLogin(email: string, password: string, history: H.History<any>) {
-    const res = await HttpController.post("/login", {email, password});
-    //todo handle wrong password
-    if (!res) return;
-
-    const token = res.headers[_HEADER_AUTH_];
-
-    axios.defaults.headers.common[_HEADER_AUTH_] = token;
-    localStorageCtrl.tokenSet = token;
-    localStorageCtrl.userId = res.data.UserId;
-    history.push("/player");
-}
+};

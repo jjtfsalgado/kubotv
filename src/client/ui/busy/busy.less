@@ -9,10 +9,10 @@
 }
 
 .spinner {
-  #spinner(@size: 12px, @thickness: 2px, @color: @colorSelected);
+  #spinner(@size: 12px, @thickness: 3px, @color: @colorSelected);
 }
 
-#spinner(@size: 32px, @thickness: 4px, @speed: 0.15s, @color: #aaa) {
+#spinner(@size: 32px, @thickness: 3px, @speed: 0.15s, @color: #aaa) {
   width: @size;
   height: @size;
   border: solid @thickness @color;
@@ -20,7 +20,6 @@
   border-radius: 100%;
   animation: ani-spinner 0.8s linear infinite, ani-delay-show @speed;
   flex: 0 0 auto;
-
   position: absolute;
   top: 50%;
   left: 50%;

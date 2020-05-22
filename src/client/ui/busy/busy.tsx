@@ -1,17 +1,10 @@
 import * as React from "react";
 import {ReactNode, useEffect, useState} from "react";
 import css from "./busy.less";
-import {PlusSvg} from "../../assets/icons/plus";
 import {CheckSvg} from "../../assets/icons/check";
 
 export const Spinner = () => (
     <div className={css.spinner} style={{height: 24, width: 24}}/>
-);
-
-export const BusyOverlay = () => (
-    <div className={css.busyOverlay}>
-        <Spinner/>
-    </div>
 );
 
 export const BusyRender = <T extends unknown>(props: {promise: () => Promise<T>, children: (data: T) => ReactNode}) => {
@@ -28,7 +21,7 @@ export const BusyRender = <T extends unknown>(props: {promise: () => Promise<T>,
         });
     }, [promise]);
 
-    if(state.loading) return <BusyOverlay/>;
+    if(state.loading) return <Spinner/>;
 
     return (
         <>

@@ -1,5 +1,5 @@
 import * as React from "react";
-import {ReactNode} from "react";
+import {ReactNode, useEffect} from "react";
 import * as ReactDOM from "react-dom";
 import {createPortal} from "react-dom";
 import {cls} from "../../../utils/function";
@@ -60,6 +60,14 @@ interface IDialogContainerProps {
 
 export const DialogContainer = (props: IDialogContainerProps) => {
     const {children, modal} = props;
+
+    useEffect(() => {
+        document.body.style.overflow = "hidden";
+
+        return () => {
+            document.body.style.overflow = "initial";
+        }
+    }, []);
 
     return (
         <div className={cls(css.container, !modal && css.modeless)}>
