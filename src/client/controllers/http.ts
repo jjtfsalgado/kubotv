@@ -32,7 +32,8 @@ const errorHandler = async <T extends unknown>(callBack: () => Promise<any>, pro
         console.error(e);
 
         if(promptError){
-            return showDialog.sync({title:"Something went wrong", children: "Oops, please try again."});
+            showDialog.sync({title:"Something went wrong", children: "Oops, please try again."});
+            return;
         }
 
         throw e;
