@@ -73,6 +73,8 @@ export const Form = (props: IFormProps) => {
                 <div className={css.actions}>
                     <Button disabled={!canSubmit}
                             text={submitLabel || "Submit"}
+                            type={"submit"}
+                            className={css.submit}
                             onClick={_onSubmit}/>
                 </div>
             </>

@@ -1,9 +1,6 @@
 import * as React from "react";
 import {useState} from "react";
 import axios from "axios";
-import css from "./login.less"
-import {withRouter} from "react-router-dom";
-import * as H from "history";
 import {_HEADER_AUTH_} from "../../../../global";
 import localStorageCtrl from "../../controllers/localhost";
 import {Form} from "../../ui/form/form";
@@ -21,7 +18,7 @@ interface ILoginProps {
     onSubmit: (value) => void;
 }
 
-export const LoginForm = (props: ILoginProps) => {
+export const LoginDialog = (props: ILoginProps) => {
     const {onSubmit} = props;
     const [state, setState] = useState<ILoginState>({} as any);
     const {email, password} = state;
@@ -51,19 +48,16 @@ export const LoginForm = (props: ILoginProps) => {
     };
 
     return (
-        <Form className={css.form}
-              validations={validations}
+        <Form validations={validations}
               onSubmit={onLogin}>
             <h3>Welcome back!</h3>
             <TextField label={"Email"}
-                       className={css.email}
                        onChange={onChange}
                        autoComplete={"username"}
                        name={"email"}
                        required={true}
                        value={email}/>
             <PasswordField  label={"Password"}
-                            className={css.password}
                             autoComplete={"current-password"}
                             onChange={onChange}
                             name={"password"}

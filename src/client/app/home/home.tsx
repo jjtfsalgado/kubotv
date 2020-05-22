@@ -13,7 +13,8 @@ import {useHistory} from "react-router-dom";
 
 import {Button} from "../../ui/button/button";
 import {showDialog} from "../../ui/dialog/dialog";
-import {LoginForm} from "./login.dialog";
+import {LoginDialog} from "./login.dialog";
+import {RegisterDialog} from "./register.dialog";
 
 export function HomeRouter () {
     const { pathname } = useLocation();
@@ -24,10 +25,15 @@ export function HomeRouter () {
     }, [pathname]);
 
     const onLogin = async () => {
-        const res = await showDialog.async({title: "Sign in", children: (onSubmit, onCancel) => <LoginForm onSubmit={onSubmit}/>});
+        const res = await showDialog.async({title: "Sign in", children: (onSubmit, onCancel) => <LoginDialog onSubmit={onSubmit}/>});
         if(!res) return;
 
         history.push("/player");
+    };
+
+    const onRegister = async () => {
+        const res = await showDialog.async({title: "Register", children: (onSubmit, onCancel) => <RegisterDialog onSubmit={onSubmit}/>});
+        if(!res) return;
     };
 
     return (
@@ -42,7 +48,7 @@ export function HomeRouter () {
 
                     <div className={css.user}>
                         <Button onClick={onLogin} text={"Sign in"} type={pathname === "/login" && "selected"}/>
-                        <Button onClick={onLogin} text={"Join"} type={pathname === "/register" ? "selected" : "primary"}/>
+                        <Button onClick={onRegister} text={"Join"} type={pathname === "/register" ? "selected" : "primary"}/>
                     </div>
                 </div>
             </header>
@@ -51,8 +57,6 @@ export function HomeRouter () {
                     <Switch>
                         <Route path="/privacy" children={<Privacy/>}/>
                         <Route path="/terms" children={<Terms/>}/>
-                        {/*<Route path="/register" children={<Register/>}/>*/}
-                        {/*<Route path="/login" children={<Login/>}/>*/}
                         <Route path="/" children={<Home/>}/>
                     </Switch>
                 </HashRouter>
