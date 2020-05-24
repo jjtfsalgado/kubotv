@@ -9,7 +9,7 @@ interface IButtonProps {
     disabled?: boolean;
     text?:string;
     className?: string;
-    type?: "transparent" | "selected" | "negative" | "secondary" | "submit" | any
+    type?: "transparent" | "selected" | "negative" | "secondary" | "submit" | "primary" | any
 }
 
 export const Button = (props: IButtonProps) => {
@@ -22,6 +22,7 @@ export const Button = (props: IButtonProps) => {
                     type === "transparent" && css.transparent,
                     type === "submit" && css.submit,
                     type === "primary" && css.primary,
+                    type === "primary-dark" && css.primaryDark,
                     type === "secondary" && css.secondary,
                     type === "selected" && css.selected,
                     type === "negative" && css.negative, className)}>

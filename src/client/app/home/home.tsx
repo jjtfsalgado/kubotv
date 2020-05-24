@@ -55,12 +55,17 @@ export function HomeRouter () {
             </main>
             <footer>
                 <div className={css.content}>
-                    <span>Copyright © 2020 | kubo TV | All rights reserved</span>
-
-                    <div className={css.links}>
-                        <Link to={"/privacy"}>Privacy policy</Link>
-                        <Link to={"/terms"}>Terms of service</Link>
+                    <div>
+                        Got any question or feedback? <a href={"mailto:info@kubotv.org"}>Drop us an email!</a>
                     </div>
+                    <div>
+                        <span>Copyright © 2020 | Kubo TV | All rights reserved</span>
+                        <div className={css.links}>
+                            <Link to={"/privacy"}>Privacy policy</Link>
+                            <Link to={"/terms"}>Terms of service</Link>
+                        </div>
+                    </div>
+
                 </div>
             </footer>
         </div>
@@ -112,8 +117,7 @@ export const Home = () => {
                     <h1>Your tv, everywhere.</h1>
 
                     <div className={css.links}>
-                        <Button onClick={onRegister} type={"transparent"}>Watch now</Button>
-                        <Button onClick={onLearnMore} type={"transparent"}>Learn more</Button>
+                        <Button onClick={onLearnMore} type={"primary-dark"}>Learn more</Button>
                     </div>
                 </div>
             </section>
@@ -122,28 +126,25 @@ export const Home = () => {
             </section>
             <section className={css.info} >
                 <p ref={infoRef}>
-                    Watch for free live IPTV streams, anywhere. Add your favourite M3U playlists and watch them, anywhere. Your phone, your tv and your pc.
-                    There's no limits at kuboTV, you can aggregate your favourite playlists in just one place, customize your channels and save your favourites!
+                    Watch for free your favourite IPTV playlists, anywhere. Your phone, your tv and your pc.
+                    There's no limits at Kubo TV, you can add as many playlist as you want, track your favourite channels, customize your playlists, everything in one place!
                 </p>
             </section>
             <section className={css.demos} >
                 <div className={css.container}>
                     <div className={css.demo}>
                         <p ref={demoRef} id={"one"}>
-                            Watch for free live IPTV streams, anywhere. Add your favourite M3U playlists and watch them, anywhere. Your phone, your tv and your pc.
-                            There's no limits at kuboTV, you can aggregate your favourite playlists in just one place, customize your channels and save your favourites!
+                            Load your playlists (M3U files) either through a URL or a File and that's it! You should then be able to sit back and enjoy your favourite channels. We should tell you though, that we don't provide any playlist whatsoever we just focus on provide the best IPTV player that you can find.
                         </p>
                     </div>
                     <div className={css.demo}>
                         <p ref={demo2Ref} id={"two"}>
-                            Watch for free live IPTV streams, anywhere. Add your favourite M3U playlists and watch them, anywhere. Your phone, your tv and your pc.
-                            There's no limits at kuboTV, you can aggregate your favourite playlists in just one place, customize your channels and save your favourites!
+                           Save your favourites with just one click! Wan't to see them all in one place? Just go to the "Favourites" group on the left panel, where you can browse them all together. We guess that's going to be your favourite place!
                         </p>
                     </div>
                     <div className={css.demo}>
                         <p ref={demo3Ref} id={"three"}>
-                            Watch for free live IPTV streams, anywhere. Add your favourite M3U playlists and watch them, anywhere. Your phone, your tv and your pc.
-                            There's no limits at kuboTV, you can aggregate your favourite playlists in just one place, customize your channels and save your favourites!
+                            Any unwanted channel? Just click on "Delete channel" and that's it, your existing channels remain intact. After you loaded a playlist you can customize it as you wan't. Add as many extra playlists as you wan't, delete what you don't wan't, it's up to you!
                         </p>
                     </div>
                 </div>
