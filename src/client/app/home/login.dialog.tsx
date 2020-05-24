@@ -7,7 +7,9 @@ import {Form} from "../../ui/form/form";
 import HttpController from "../../controllers/http";
 import {TextField} from "../../ui/fields/text";
 import {PasswordField} from "../../ui/fields/password";
+import {showDialog} from "../../ui/dialog/dialog";
 
+import css from "./login.dialog.less"
 
 interface ILoginState {
     email: string;
@@ -18,7 +20,14 @@ interface ILoginProps {
     onSubmit: (value) => void;
 }
 
-export const LoginDialog = (props: ILoginProps) => {
+export const onLogin = async (history) => {
+    const res = await showDialog.async({title: "Sign in", children: (onSubmit, onCancel) => <LoginDialog onSubmit={onSubmit}/>});
+    if(!res) return;
+
+    history.push("/player");
+};
+
+const LoginDialog = (props: ILoginProps) => {
     const {onSubmit} = props;
     const [state, setState] = useState<ILoginState>({} as any);
     const {email, password} = state;
@@ -54,12 +63,14 @@ export const LoginDialog = (props: ILoginProps) => {
             <TextField label={"Email"}
                        onChange={onChange}
                        autoComplete={"username"}
+                       className={css.field}
                        name={"email"}
                        required={true}
                        value={email}/>
             <PasswordField  label={"Password"}
                             autoComplete={"current-password"}
                             onChange={onChange}
+                            className={css.field}
                             name={"password"}
                             required={true}
                             value={password}/>

@@ -1,7 +1,7 @@
 import * as React from "react";
 import {useEffect, useRef} from "react";
 import css from "./home.less"
-import {HashRouter, Link, Route, Switch, useLocation} from "react-router-dom";
+import {HashRouter, Link, Route, Switch, useHistory, useLocation} from "react-router-dom";
 import {Privacy} from "../privacy/privacy";
 import {Terms} from "../terms/terms";
 
@@ -9,12 +9,10 @@ import Logo from '../../assets/icons/logo.png';
 import Favourites from '../../assets/favourites.png';
 import Playlist from '../../assets/playlist.png';
 import Intro from '../../assets/intro.png';
-import {useHistory} from "react-router-dom";
 
 import {Button} from "../../ui/button/button";
-import {showDialog} from "../../ui/dialog/dialog";
-import {LoginDialog} from "./login.dialog";
-import {RegisterDialog} from "./register.dialog";
+import {onLogin} from "./login.dialog";
+import {onRegister} from "./register.dialog";
 
 export function HomeRouter () {
     const { pathname } = useLocation();
@@ -24,17 +22,6 @@ export function HomeRouter () {
         window.scrollTo(0, 0);
     }, [pathname]);
 
-    const onLogin = async () => {
-        const res = await showDialog.async({title: "Sign in", children: (onSubmit, onCancel) => <LoginDialog onSubmit={onSubmit}/>});
-        if(!res) return;
-
-        history.push("/player");
-    };
-
-    const onRegister = async () => {
-        const res = await showDialog.async({title: "Register", children: (onSubmit, onCancel) => <RegisterDialog onSubmit={onSubmit}/>});
-        if(!res) return;
-    };
 
     return (
         <div className={css.home}>
@@ -42,13 +29,12 @@ export function HomeRouter () {
                 <div className={css.content}>
                     <div className={css.logo}>
                         <Link to={"/"}>
-                            <img alt={"logo"} src={Logo} style={{width: 28}}/><span>kubo TV</span>
+                            <img alt={"logo"} src={Logo} style={{width: 28}}/><span>Kubo TV</span>
                         </Link>
                     </div>
-
                     <div className={css.user}>
-                        <Button onClick={onLogin} text={"Sign in"} type={pathname === "/login" && "selected"}/>
-                        <Button onClick={onRegister} text={"Join"} type={pathname === "/register" ? "selected" : "primary"}/>
+                        <Button onClick={() => onLogin(history)} text={"Sign in"}/>
+                        <Button onClick={onRegister} text={"Join"} type={"primary"}/>
                     </div>
                 </div>
             </header>
@@ -120,7 +106,7 @@ export const Home = () => {
                     <h1>Your tv, everywhere.</h1>
 
                     <div className={css.links}>
-                        <Link to={"/register"}>Watch now</Link>
+                        <Button onClick={onRegister} type={"transparent"}>Watch now</Button>
                         <Button onClick={onLearnMore} type={"transparent"}>Learn more</Button>
                     </div>
                 </div>
