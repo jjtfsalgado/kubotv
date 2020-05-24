@@ -83,7 +83,13 @@ export const Form = (props: IFormProps) => {
 
     const renderValidations = () => {
         const v = errors && errors.filter(i => i.condition && i.message);
-        return v && v.map(k => <span>{k.message}</span>)
+
+        if(!v) return;
+        return (
+            <div className={css.errors}>
+                {v.map(k => <span>{k.message}</span>)}
+            </div>
+        )
     };
 
     const renderInfo = (props: IFormInfo) => {

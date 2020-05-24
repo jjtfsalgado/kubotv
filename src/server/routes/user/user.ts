@@ -37,7 +37,7 @@ class User implements IUser{
             return res.sendStatus(HttpStatus.ERROR.SERVER.INTERNAL_SERVER_ERROR.code);
         }
 
-        res.redirect("/#/login")
+        res.redirect("/#/?login=true")
     }
 
     async verifyEmail(req: Request<any, any, any>, res: Response<any>, next: NextFunction){
@@ -66,13 +66,13 @@ class User implements IUser{
             const link = `http://${req.get('host')}/user/${token}`;
 
             const mailOptions = {
-                from: '"Plusnetv" <info@plusnetv.net>', // sender address
-                to: email, // list of receivers
+                from: '"KuboTV" <info@kubotv.org>', // sender address
+                to: email,
                 subject: 'Hi! Please verify your email', // Subject line
                 html: `<p>Please click on the link to confirm your email <br/><a href=${link}>Click Here!</a></p>`, // plain text body
             };
 
-            await transporter.sendMail(mailOptions)
+            await transporter.sendMail(mailOptions);
         }catch(e){
             return res.status(HttpStatus.ERROR.SERVER.INTERNAL_SERVER_ERROR.code).send(`${HttpStatus.ERROR.SERVER.INTERNAL_SERVER_ERROR.description} - ${JSON.stringify(e)}`);
         }

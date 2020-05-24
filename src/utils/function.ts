@@ -1,3 +1,10 @@
+export function parseBool(value) {
+    return value === "true"
+}
+
+
+
+
 export function cls(...args: Array<any>) {
     return args
         .reduce((r, i) => {

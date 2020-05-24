@@ -45,7 +45,6 @@ const LoginDialog = (props: ILoginProps) => {
 
     const onLogin = async () => {
         const res = await HttpController.post("/login", {email: email?.toLowerCase(), password});
-        //todo handle wrong password
         if (!res) return;
 
         const token = res.headers[_HEADER_AUTH_];

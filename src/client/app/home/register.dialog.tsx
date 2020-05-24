@@ -41,7 +41,7 @@ const RegisterDialog = (props: IRegisterDialogProps) => {
         },
         {
             condition: password && password2 && password !== password2,
-            message: "Your passwords don't match"
+            message: "Passwords don't match"
         },
         {
             condition: email && !(/\S+@\S+\.\S+/.test(email)),
@@ -59,9 +59,7 @@ const RegisterDialog = (props: IRegisterDialogProps) => {
     };
 
     const onSignUp = async () => {
-        const res = await HttpController.post("/user", {email, password});
-        if(!res) return;
-        onSubmit(true);
+        await HttpController.post("/user", {email, password});
     };
 
     return (
@@ -69,7 +67,7 @@ const RegisterDialog = (props: IRegisterDialogProps) => {
               onSubmit={onSignUp}
               validations={validations}
               errorMessage={onErrorMessage}
-              successMessage={{title: "Thank you for signing up", message: `We've sent you an email to ${email}, please verify your account.`}}>
+              successMessage={{title: "Thank you for signing up!", message: `We just need you to verify your email and you are good to go. \n We've sent you an email to ${email}. `}}>
             <h3>Join us at kubo tv</h3>
             <TextField onChange={onChange}
                        name={"email"}

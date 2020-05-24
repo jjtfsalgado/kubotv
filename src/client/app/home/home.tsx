@@ -13,13 +13,19 @@ import Intro from '../../assets/intro.png';
 import {Button} from "../../ui/button/button";
 import {onLogin} from "./login.dialog";
 import {onRegister} from "./register.dialog";
+import {parseBool} from "../../../utils/function";
 
 export function HomeRouter () {
-    const { pathname } = useLocation();
+    const {search, pathname} = useLocation();
     const history = useHistory();
 
     useEffect(() => {
         window.scrollTo(0, 0);
+        const params = new URLSearchParams(search);
+        const value = params.get('login'); // bar
+        if(parseBool(value)){
+            onLogin(history)
+        }
     }, [pathname]);
 
 
