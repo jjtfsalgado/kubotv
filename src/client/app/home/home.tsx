@@ -65,7 +65,6 @@ export function HomeRouter () {
                             <Link to={"/terms"}>Terms of service</Link>
                         </div>
                     </div>
-
                 </div>
             </footer>
         </div>
@@ -139,7 +138,7 @@ export const Home = () => {
                     </div>
                     <div className={css.demo}>
                         <p ref={demo2Ref} id={"two"}>
-                           Save your favourites with just one click! Wan't to see them all in one place? Just go to the "Favourites" group on the left panel, where you can browse them all together. We guess that's going to be your favourite place!
+                           Save your favourites with just one click! Wan't to see them all in one place? Just go to the "Favourites" group on the left panel, where you can browse them all together. We guess that's going to be your favourite place! And by the way, you can also browse your recently added channels!
                         </p>
                     </div>
                     <div className={css.demo}>

@@ -39,7 +39,7 @@ const groups: Array<IGroup> = [
     },
     {
         id: "new",
-        description: "New",
+        description: "Recently added",
         icon: <RecentSvg size={28}/>,
         onClick: () => store.dispatch(channelSlice.actions.view("new"))
     },
