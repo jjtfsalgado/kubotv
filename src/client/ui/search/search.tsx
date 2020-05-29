@@ -3,6 +3,7 @@ import {CSSProperties, useState} from "react";
 import {TextField} from "../fields/text";
 
 import css from "./search.less";
+import {cls} from "../../../utils/function";
 
 interface ISearchProps {
     placeholder: string;
@@ -16,7 +17,7 @@ interface ISearchState {
 }
 
 export const SearchField = (props: ISearchProps) =>  {
-    const {onSearch} = props;
+    const {onSearch, className} = props;
     const [state, setState] = useState<ISearchState>({} as any);
     const {value} = state;
 
@@ -34,7 +35,7 @@ export const SearchField = (props: ISearchProps) =>  {
 
     return (
         <TextField placeholder={"Search"}
-                   className={css.search}
+                   className={cls(css.search, className)}
                    autoComplete={"off"}
                    onChange={onChange}
                    value={value}
