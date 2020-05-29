@@ -67,44 +67,44 @@ export default function Player () {
 
     useEffect(() => {
         store.dispatch(channelSlice.actions.view("all"));
-
-        const prom = {
-            description: "First",
-            promise: () => new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    resolve()
-                }, 1000)
-            })
-        };
-
-        const prom2 = {
-            description: "Second",
-            promise: () => new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    resolve()
-                }, 2000)
-            })
-        };
-
-        const prom3 = {
-            description: "Third",
-            promise: () => new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    resolve()
-                }, 1000)
-            })
-        };
-
-        const prom4 = {
-            description: "Fourth",
-            promise: () => new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    resolve()
-                }, 1000)
-            })
-        };
-
-        showNotification({title: "Loading test", promises: [prom, prom2, prom3, prom4]})
+        //
+        // const prom = {
+        //     description: "First",
+        //     promise: () => new Promise((resolve, reject) => {
+        //         setTimeout(() => {
+        //             resolve()
+        //         }, 1000)
+        //     })
+        // };
+        //
+        // const prom2 = {
+        //     description: "Second",
+        //     promise: () => new Promise((resolve, reject) => {
+        //         setTimeout(() => {
+        //             resolve()
+        //         }, 2000)
+        //     })
+        // };
+        //
+        // const prom3 = {
+        //     description: "Third",
+        //     promise: () => new Promise((resolve, reject) => {
+        //         setTimeout(() => {
+        //             resolve()
+        //         }, 1000)
+        //     })
+        // };
+        //
+        // const prom4 = {
+        //     description: "Fourth",
+        //     promise: () => new Promise((resolve, reject) => {
+        //         setTimeout(() => {
+        //             resolve()
+        //         }, 1000)
+        //     })
+        // };
+        //
+        // showNotification({title: "Loading test", promises: [prom, prom2, prom3, prom4]})
     }, []);
 
     const onSearch = (value: string) => dispatch(channelSlice.actions.filter(value?.toLowerCase()));
