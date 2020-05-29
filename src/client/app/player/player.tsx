@@ -114,18 +114,18 @@ export default function Player () {
             <GroupBar data={groups}
                       selected={view}
                       className={css.sidebar}/>
-            <div className={css.channels} style={{display: show ? "flex" : "none"}}>
-                <SearchField placeholder={"Search"}
-                             className={css.search}
-                             onSearch={onSearch}/>
-                <ChannelList className={css.list}/>
-                {show && (
-                    <div className={css.hide} onClick={() => dispatch(channelSlice.actions.show(false))}>
-                        <ArrowLeft color={"#b3b3b3"}/>
-                    </div>
-                )}
-            </div>
             <div className={css.body}>
+                <div className={css.channels} style={{display: show ? "flex" : "none"}}>
+                    <SearchField placeholder={"Search"}
+                                 className={css.search}
+                                 onSearch={onSearch}/>
+                    <ChannelList className={css.list}/>
+                    {show && (
+                        <div className={css.hide} onClick={() => dispatch(channelSlice.actions.show(false))}>
+                            <ArrowLeft color={"#b3b3b3"}/>
+                        </div>
+                    )}
+                </div>
                 <VideoContainer className={css.video}/>
             </div>
         </div>

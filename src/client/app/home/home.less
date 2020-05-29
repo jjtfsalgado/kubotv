@@ -8,6 +8,46 @@
     justify-content: center;
     flex-direction: column;
 
+    header{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: @colorBg;
+        height: 56px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 2;
+
+        .content{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex: 1;
+            max-width: @maxWidth;
+            padding: 0 24px;
+
+            .logo{
+                a{
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    span{
+                        padding-left: 4px;
+                    }
+                }
+            }
+
+            .user{
+                & > * {
+                    padding: 8px;
+                    margin: 0 4px;
+                }
+            }
+        }
+    }
+
     main{
         flex: 1;
         display: flex;
@@ -18,16 +58,13 @@
                 position: sticky;
                 top: 0;
                 display: flex;
-                //align-items: center;
                 justify-content: center;
                 height: 100vh;
                 background: @colorBg4;
-                //background: radial-gradient(ellipse at center, #36383f 0%, #1a1d22 60%, #000 90%);
 
                 &:after{
                     position: absolute;
                     content: "";
-                    //background-image: url("./src/assets/intro.gif");
                     background-repeat: no-repeat;
                     background-position: center;
                     opacity: 0.3;
@@ -47,9 +84,11 @@
 
                     h1{
                         margin: unset;
-                        font-size: 80px;
+                        font-size: 5em;
                         font-weight: 700;
-                        padding: 24px 0;
+                        padding: 24px;
+                        text-align: center;
+                        overflow: hidden;
                     }
 
                     h4{
@@ -63,6 +102,12 @@
 
                         & > * {
                             margin: 0 4px;
+                        }
+                    }
+
+                    @media all and (max-width: 1024px) {
+                        h1{
+                            font-size: 4em;
                         }
                     }
 
@@ -106,6 +151,12 @@
                 font-weight: 600;
                 letter-spacing: .004em;
             }
+
+            @media all and (max-width: 1024px) {
+                p{
+                    font-size: 1.5em;
+                }
+            }
         }
 
         .demos{
@@ -117,7 +168,7 @@
 
             .container{
                 flex: 2;
-                padding-right: 24px;
+                padding-right: 56px;
 
                 .demo{
                     display: flex;
@@ -133,8 +184,11 @@
                         font-weight: 600;
                         letter-spacing: .004em;
                     }
+
+
                 }
             }
+
 
             .view{
                 flex: 3;
@@ -152,6 +206,22 @@
 
             }
 
+            @media all and (max-width: 1024px) {
+                .container{
+                    padding: unset;
+
+                    .demo{
+                        justify-content: center;
+                        text-align: center;
+                    }
+                }
+
+                .view{
+                    display: none;
+                }
+            }
+
+
         }
     }
 
@@ -160,7 +230,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 34px 0 21px 0;
+        padding: 42px 0;
         z-index: 1;
         position: relative;
         font-size: 0.8em;
@@ -170,7 +240,7 @@
             display: flex;
             flex: 1;
             max-width: @maxWidth;
-            padding: 8px 0;
+            padding: 8px 24px;
             flex-direction: column;
 
             & > div{
@@ -194,41 +264,3 @@
     }
 }
 
-header{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: @colorBg;
-    height: 56px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 2;
-
-    .content{
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex: 1;
-        max-width: @maxWidth;
-
-        .logo{
-            a{
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                span{
-                    padding-left: 4px;
-                }
-            }
-        }
-
-        .user{
-            & > * {
-                padding: 8px;
-                margin: 0 4px;
-            }
-        }
-    }
-}

@@ -12,53 +12,32 @@
     display: flex;
   }
 
-  .channels {
-    flex: 0 1 300px;
-    //min-height: 0;
-    flex-direction: column;
-    display: flex;
-    position: relative;
-    background: linear-gradient(45deg, @colorFg 20%, @colorBg 100%);
-
-    .list{
-      flex: 1;
-      //background: @colorBg1;
-    }
-
-    .hide{
-      position: absolute;
-      background: @colorFg;
-      height: 32px;
-      right: -24px;
-      bottom: 24px;
-      border-top-right-radius: 5px;
-      border-bottom-right-radius: 5px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-  }
-
-  .footer {
-    grid-area: footer;
-  }
-
   .body {
     flex: 1;
-    grid-area: body;
-    overflow: hidden;
-    display: grid;
-    grid-template-rows: 56px auto;
-    grid-template-areas: "video" "video";
+    display: flex;
 
-    .header{
-      grid-area: header;
-      display: grid;
-      grid-template-columns: auto 225px;
-      grid-template-areas: "search user";
 
-      .user{
-        grid-area: user;
+    .channels {
+      flex: 0 1 300px;
+      //min-height: 0;
+      flex-direction: column;
+      display: flex;
+      position: relative;
+      background: linear-gradient(45deg, @colorFg 20%, @colorBg 100%);
+
+      .list{
+        flex: 1;
+        //background: @colorBg1;
+      }
+
+      .hide{
+        position: absolute;
+        background: @colorFg;
+        height: 32px;
+        right: -24px;
+        bottom: 24px;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -76,23 +55,33 @@
     }
   }
 
-  @media screen and (max-width: 1400px) {
+  @media all and (max-width: 1024px) {
     .body {
-      grid-template-columns: 100%;
-      grid-template-areas: "video""channels";
-      grid-template-rows: 50% 50%;
-      grid-row-gap: 30px;
-    }
+      flex-direction: column-reverse;
 
-    .footer {
-      grid-area: unset;
+      .channels{
+        flex: 1;
+
+        .hide{
+          display: none;
+        }
+      }
+
+      .video{
+        padding: 0;
+      }
     }
   }
 
-  @media (max-width: 500px) {
-
+  @media all and (max-width: 768px) {
     .body {
-      padding: 10px;
+      .channels{
+        flex: 2;
+      }
     }
+  }
+
+  .footer {
+    grid-area: footer;
   }
 }

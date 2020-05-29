@@ -56,7 +56,7 @@ export function HomeRouter () {
             <footer>
                 <div className={css.content}>
                     <div>
-                        Got any question or feedback? <a href={"mailto:info@kubotv.org"}>Drop us an email!</a>
+                        Got any question or feedback? Drop us an email <a href={"mailto:info@kubotv.org"}>info@kubotv.org</a>.
                     </div>
                     <div>
                         <span>Copyright © 2020 | Kubo TV | All rights reserved</span>
