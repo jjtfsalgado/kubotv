@@ -34,7 +34,7 @@ export function HomeRouter () {
             <header>
                 <div className={css.content}>
                     <div className={css.logo}>
-                        <Link to={"/"}>
+                        <Link to={"/"} onClick={() => window.scrollTo(0, 0)}>
                             <img alt={"logo"} src={Logo} style={{width: 28}}/><span>Kubo TV</span>
                         </Link>
                     </div>
