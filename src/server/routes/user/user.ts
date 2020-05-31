@@ -66,7 +66,7 @@ class User implements IUser{
             const link = `http://${req.get('host')}/user/${token}`;
 
             const mailOptions = {
-                from: '"KuboTV" <info@kubotv.org>', // sender address
+                from: '"Kubo TV" <info@kubotv.org>', // sender address
                 to: email,
                 subject: 'Hi! Please verify your email', // Subject line
                 html: `<p>Please click on the link to confirm your email <br/><a href=${link}>Click Here!</a></p>`, // plain text body

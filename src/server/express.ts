@@ -7,6 +7,7 @@ import {_HASH_, _HEADER_AUTH_} from "../../global";
 import Login, {verifyToken} from "./routes/login/login";
 import {NextFunction, Request, Response} from "express-serve-static-core";
 import * as request from "request";
+import compression from "compression";
 
 class ExpressCtrl{
     private readonly _app: Express;
@@ -34,6 +35,8 @@ class ExpressCtrl{
 
     private _init = () => {
         const PORT = process.env.PORT;
+        this.app.use(compression())
+
         this.app.use((req, res, next) => {
             if (req.protocol === 'https') {
                 return res.redirect('http://' + req.hostname + req.url);
