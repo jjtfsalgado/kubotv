@@ -56,7 +56,7 @@ export function HomeRouter () {
             <footer>
                 <div className={css.content}>
                     <div>
-                        Got any question or feedback? Drop us an email <a href={"mailto:info@kubotv.org"}>info@kubotv.org</a>.
+                        Got any question or feedback? Drop us an email at <a href={"mailto:info@kubotv.org"}>info@kubotv.org</a>.
                     </div>
                     <div>
                         <span>Copyright © 2020 | Kubo TV | All rights reserved</span>
@@ -125,7 +125,7 @@ export const Home = () => {
             </section>
             <section className={css.info} >
                 <p ref={infoRef}>
-                    Watch for free your favourite IPTV playlists, anywhere. Your phone, your tv and your pc.
+                    Watch for free your favourite IPTV playlists online.
                     There's no limits at Kubo TV, you can add as many playlist as you want, track your favourite channels, customize your playlists, everything in one place!
                 </p>
             </section>

@@ -21,11 +21,9 @@ export function VideoContainer(props: IVideoProps) {
     return (
         <div className={cls(className)}>
             <Video showControls={true} url={selected && selected.url}/>
-            <div className={css.title} style={{flex: "0 0 40px"}}>
-                {selected && (
-                    <h2>{selected.description}</h2>
-                )}
-            </div>
+            {selected && <div className={css.title} style={{flex: "0 0 20px"}}>
+                <h2>{selected.description}</h2>
+            </div>}
         </div>
     )
 };
