@@ -3,14 +3,18 @@
 body{
     font-family: "Roboto", sans-serif;
     color: @colorTextSecondary;
-}
 
-.app{
-    display: flex;
-    min-height: 100vh;
-}
 
+    :global(#root){
+        height: 100%;
+    }
+}
 
 a{
     color: @colorSelected;
+}
+
+
+.app{
+    height: 100%;
 }
