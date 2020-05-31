@@ -6,9 +6,9 @@ import {Privacy} from "../privacy/privacy";
 import {Terms} from "../terms/terms";
 
 import Logo from '../../assets/icons/logo.png';
-import Favourites from '../../assets/favourites.png';
-import Playlist from '../../assets/playlist.png';
-import Intro from '../../assets/intro.png';
+import Favourites from '../../assets/favourites.jpg';
+import Playlist from '../../assets/playlist.jpg';
+import Intro from '../../assets/intro.jpg';
 
 import {Button} from "../../ui/button/button";
 import {onLogin} from "./login.dialog";
