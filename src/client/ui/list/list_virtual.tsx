@@ -126,7 +126,7 @@ export const ListVirtual = <T extends unknown>(props: IListVirtualProps<T>) => {
                                                width={width}
                                                className={css.list}
                                                height={height}
-                                               itemSize={40}
+                                               itemSize={42}
                                                onItemsRendered={onItemsRendered}
                                                itemCount={total || 1}>
                                     {onRenderItem}

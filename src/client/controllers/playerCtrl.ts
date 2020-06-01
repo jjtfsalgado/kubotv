@@ -1,19 +1,19 @@
 import axios from "axios";
-import {m3uToJson} from "../../utils/m3u_json_parser";
 import {readFile} from "../../utils/function";
 import HttpController from "./http";
 import {IChannelView} from "../reducers/channel";
+import {m3uToJson} from "../../utils/m3u_parser";
 
 export interface IChannel {
-    count?: number; //fixme;
     description: string;
     url: string;
     is_favourite?: boolean;
     logo_url?: string
     language?: string;
-    channel_name: string;
+    channel_name?: string;
+    group_title?: string;
     parent_id?: string
-    user_account_id: string;
+    user_account_id?: string;
     id?: string;
 }
 

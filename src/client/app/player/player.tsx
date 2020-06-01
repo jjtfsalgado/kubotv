@@ -138,7 +138,7 @@ const addChannelsDialog = async () => {
 
     const data =  typeof res === "string" ? await playerCtrl.loadFromUrl(res) : await playerCtrl.loadFromFile(res);
     const channels: Array<IChannel> = data.map(i => ({...i, user_account_id: localStorageCtrl.userIdGet, channel_name: i.description}));
-    const sliceSize = 300;
+    const sliceSize = 100;
 
     const channelsChunks = [];
     for (let i = 0; i < channels.length; i+= sliceSize) {
