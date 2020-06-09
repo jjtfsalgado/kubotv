@@ -1,4 +1,4 @@
-@import "../../variables.less";
+@import "../../../variables.less";
 
 .channel{
     flex: 1;
@@ -25,16 +25,13 @@
 
         .logo{
             padding-right: 16px;
-
-
-
         }
 
         .description{
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            color: @colorTextSecondary;
+            color: @colorTextPrimary;
         }
     }
 
@@ -62,10 +59,6 @@
     &:hover{
         background: @colorBgHover;
         //transform: scale(1.1);
-        .description{
-            color: @colorTextPrimary;
-            //font-weight: bold;
-        }
     }
 
     &.selected{

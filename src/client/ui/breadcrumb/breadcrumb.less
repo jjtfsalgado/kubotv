@@ -1,0 +1,41 @@
+@import "../../app/variables";
+
+.breadcrumb {
+    padding: 8px;
+    cursor: pointer;
+    color: @colorTextSecondary;
+    display: flex;
+    align-items: center;
+
+    & > * + * {
+        margin-left: 16px;
+
+        &:before {
+            content: "//";
+            left: -14px;
+            position: absolute;
+        }
+    }
+
+    div {
+        padding: 8px;
+        position: relative;
+
+        span{
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 200px;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        &:not(:last-child){
+            color: @colorSelected;
+            &:hover {
+                background: @colorBgHover;
+            }
+        }
+    }
+
+
+}

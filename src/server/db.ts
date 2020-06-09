@@ -30,13 +30,12 @@ export namespace db{
 
     export function update<T>(tableName: string, values: Array<T>, primaryColumn = 'id'){
         const val = values[0];
-        const vals = Object.values(val).map(i => i);
         const setValues: Array<Array<any>> = values.map(i => Object.values(i));
         const setColumns: Array<string> = Object.keys(val).filter(i => i != primaryColumn).map((i, ix) => `${i} = x.${i}`);
         const columns: Array<string> = Object.keys(val);
         const q = pgFormat(`UPDATE %s AS y set %2$s FROM (VALUES %3$L) as x(%4$s) where x.%5$s = y.%5$s::text`, tableName, setColumns, setValues, columns, primaryColumn);
 
-        console.log(q);
+        // console.log(q);
 
         return q;
     }

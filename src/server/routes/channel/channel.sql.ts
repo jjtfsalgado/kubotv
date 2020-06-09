@@ -2,13 +2,13 @@ import {db} from "../../db";
 import pgFormat from "pg-format";
 
 const ChannelSql = {
-    get: (id: string, opts: {limit, offset, filter, isFavourite, isRecent}) => ({
-        text: `select * from db.getUserChannels($1, $2, $3, $4, $5, $6)`,
-        values: [id, opts.limit, opts.offset, opts.filter, opts.isFavourite, opts.isRecent]
+    get: (id: string, playlistId: string, opts: {limit, offset, filter, isFavourite?, group?}) => ({
+        text: `select * from db.getUserChannels($1, $2, $3, $4, $5, $6, $7)`,
+        values: [id, playlistId, opts.limit, opts.offset, opts.filter, opts.group, opts.isFavourite]
     }),
-    getTotal: (id: string, opts: {filter, isFavourite, isRecent}) => ({
-        text: `select db.getUserChannelsTotal($1, $2, $3, $4) as count`,
-        values: [id, opts.filter, opts.isFavourite, opts.isRecent]
+    getTotal: (id: string, playlistId: string, opts: {filter, isFavourite?, group?}) => ({
+        text: `select db.getUserChannelsTotal($1, $2, $3, $4, $5) as count`,
+        values: [id, playlistId, opts.filter, opts.group, opts.isFavourite]
     }),
     delete: (channelId: string, userId: string) => ({
         text: `delete from db.user_channel uc where uc.id = $1 and uc.user_account_id = $2`,

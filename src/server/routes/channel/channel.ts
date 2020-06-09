@@ -14,10 +14,9 @@ interface IChannel {
 class Channel implements IChannel{
     async get(req: Request<any, any, any>, res: Response<any>, next: NextFunction){
         try{
-            const {userId} = req.params;
-            const {limit, offset, filter, view} = req.query;
-            let v: IChannelView = view;
-            const result = await dbCtrl.pool.query(ChannelSql.get(userId, {offset: parseInt(offset), limit: parseInt(limit), filter, isFavourite: v === "favourites", isRecent: v === "new"}));
+            const {userId, playlistId} = req.params;
+            const {limit, offset, filter, group} = req.query;
+            const result = await dbCtrl.pool.query(ChannelSql.get(userId, playlistId, {offset: parseInt(offset), limit: parseInt(limit), filter, group}));
             if(!result) return res.sendStatus(HttpStatus.ERROR.SERVER.INTERNAL_SERVER_ERROR.code);
             return res.status(HttpStatus.SUCCESSFUL.OK.code).json(result.rows)
         } catch (e) {
@@ -27,10 +26,33 @@ class Channel implements IChannel{
 
     async getTotal(req: Request<any, any, any>, res: Response<any>, next: NextFunction){
         try{
-            const {userId} = req.params;
-            const {filter, view} = req.query;
-            let v: IChannelView = view;
-            const result = await dbCtrl.pool.query(ChannelSql.getTotal(userId, {filter, isFavourite: v === "favourites", isRecent: v === "new"}));
+            const {userId, playlistId} = req.params;
+            const {filter, group} = req.query;
+            const result = await dbCtrl.pool.query(ChannelSql.getTotal(userId, playlistId, {filter, group}));
+            if(!result) return res.sendStatus(HttpStatus.ERROR.SERVER.INTERNAL_SERVER_ERROR.code);
+            return res.status(HttpStatus.SUCCESSFUL.OK.code).json(result?.rows[0]?.count)
+        } catch (e) {
+            return res.sendStatus(HttpStatus.ERROR.SERVER.INTERNAL_SERVER_ERROR.code);
+        }
+    }
+
+    async getFavourites(req: Request<any, any, any>, res: Response<any>, next: NextFunction){
+        try{
+            const {userId, playlistId} = req.params;
+            const {limit, offset, filter} = req.query;
+            const result = await dbCtrl.pool.query(ChannelSql.get(userId, playlistId, {offset: parseInt(offset), limit: parseInt(limit), filter, isFavourite: true}));
+            if(!result) return res.sendStatus(HttpStatus.ERROR.SERVER.INTERNAL_SERVER_ERROR.code);
+            return res.status(HttpStatus.SUCCESSFUL.OK.code).json(result.rows)
+        } catch (e) {
+            return res.sendStatus(HttpStatus.ERROR.SERVER.INTERNAL_SERVER_ERROR.code);
+        }
+    }
+
+    async getFavouritesTotal(req: Request<any, any, any>, res: Response<any>, next: NextFunction){
+        try{
+            const {userId, playlistId} = req.params;
+            const {filter} = req.query;
+            const result = await dbCtrl.pool.query(ChannelSql.getTotal(userId, playlistId, {filter, isFavourite: true}));
             if(!result) return res.sendStatus(HttpStatus.ERROR.SERVER.INTERNAL_SERVER_ERROR.code);
             return res.status(HttpStatus.SUCCESSFUL.OK.code).json(result?.rows[0]?.count)
         } catch (e) {
@@ -92,6 +114,8 @@ class Channel implements IChannel{
             return res.sendStatus(HttpStatus.ERROR.SERVER.INTERNAL_SERVER_ERROR.code);
         }
     }
+
+
 }
 
 export default new Channel();

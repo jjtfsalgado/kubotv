@@ -1,6 +1,6 @@
 import * as React from "react";
 import {cls} from "../../../../utils/function";
-import css from "./group.less";
+import css from "./sidebar.less";
 import {ReactNode} from "react";
 
 export interface IGroup{
@@ -18,7 +18,7 @@ interface IGroupBar {
     selected?: string;
 }
 
-export const GroupBar = (props: IGroupBar) => {
+export const SideBar = (props: IGroupBar) => {
     const {data, className, selected} = props;
 
     const onGroupRender = (item, ix) => {

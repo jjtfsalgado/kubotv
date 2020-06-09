@@ -1,5 +1,5 @@
 import {VideoContainer} from "./video/container";
-import {ChannelList} from "./channel/channel_list";
+import {ChannelList} from "./view/channel/channel_list";
 import * as React from "react";
 import {useEffect} from "react";
 import axios from "axios";
@@ -15,7 +15,7 @@ import HttpController from "../../controllers/http";
 import {IProgressBarPromise} from "../../ui/busy/busy";
 import {channelSlice, IChannelView} from "../../reducers/channel";
 import {useDispatch, useSelector} from "react-redux";
-import {GroupBar, IGroup} from "./group/group";
+import {SideBar, IGroup} from "./sidebar/sidebar";
 import Logo from '../../assets/icons/logo.png';
 import {StarSvg} from "../../assets/icons/star";
 import {RecentSvg} from "../../assets/icons/history";
@@ -23,6 +23,9 @@ import {PlusSvg} from "../../assets/icons/plus";
 import {ExitSvg} from "../../assets/icons/exit";
 import {ArrowLeft} from "../../assets/icons/arrow_left";
 import {ConfirmDialog} from "../../ui/dialog/variants/confirm";
+import {IPlaylist} from "../../controllers/playlistCtrl";
+import {newGuid} from "../../../utils/function";
+import {PlaylistView} from "./view/playlist/playlist";
 
 const groups: Array<IGroup> = [
     {
@@ -36,12 +39,6 @@ const groups: Array<IGroup> = [
         description: "Favourites",
         icon: <StarSvg size={28}/>,
         onClick: () => store.dispatch(channelSlice.actions.view("favourites"))
-    },
-    {
-        id: "new",
-        description: "Recently added",
-        icon: <RecentSvg size={28}/>,
-        onClick: () => store.dispatch(channelSlice.actions.view("new"))
     },
     {
         id: "create",
@@ -67,59 +64,21 @@ export default function Player () {
 
     useEffect(() => {
         store.dispatch(channelSlice.actions.view("all"));
-        //
-        // const prom = {
-        //     description: "First",
-        //     promise: () => new Promise((resolve, reject) => {
-        //         setTimeout(() => {
-        //             resolve()
-        //         }, 1000)
-        //     })
-        // };
-        //
-        // const prom2 = {
-        //     description: "Second",
-        //     promise: () => new Promise((resolve, reject) => {
-        //         setTimeout(() => {
-        //             resolve()
-        //         }, 2000)
-        //     })
-        // };
-        //
-        // const prom3 = {
-        //     description: "Third",
-        //     promise: () => new Promise((resolve, reject) => {
-        //         setTimeout(() => {
-        //             resolve()
-        //         }, 1000)
-        //     })
-        // };
-        //
-        // const prom4 = {
-        //     description: "Fourth",
-        //     promise: () => new Promise((resolve, reject) => {
-        //         setTimeout(() => {
-        //             resolve()
-        //         }, 1000)
-        //     })
-        // };
-        //
-        // showNotification({title: "Loading test", promises: [prom, prom2, prom3, prom4]})
     }, []);
 
     const onSearch = (value: string) => dispatch(channelSlice.actions.filter(value?.toLowerCase()));
 
     return (
         <div className={css.player}>
-            <GroupBar data={groups}
-                      selected={view}
-                      className={css.sidebar}/>
+            <SideBar data={groups}
+                     selected={view}
+                     className={css.sidebar}/>
             <div className={css.body}>
                 <div className={css.channels} style={{display: show ? "flex" : "none"}}>
                     <SearchField placeholder={"Search"}
                                  className={css.search}
                                  onSearch={onSearch}/>
-                    <ChannelList className={css.list}/>
+                    <PlaylistView className={css.list}/>
                     {show && (
                         <div className={css.hide} onClick={() => dispatch(channelSlice.actions.show(false))}>
                             <ArrowLeft color={"#b3b3b3"}/>
@@ -133,17 +92,24 @@ export default function Player () {
 };
 
 const addChannelsDialog = async () => {
-    const res = await showDialog.async<string | FileList>({title: 'Load playlist', children: (onSubmit, onCancel) => <LoadPlaylist onSubmit={onSubmit} onCancel={onCancel}/>});
-    if(!res) return;
+    const res = await showDialog.async<{data: string | FileList, description: string}>({title: 'Load playlist', children: (onSubmit, onCancel) => <LoadPlaylist onSubmit={onSubmit} onCancel={onCancel}/>});
+    if(!res || !res.data) return;
 
-    const data =  typeof res === "string" ? await playerCtrl.loadFromUrl(res) : await playerCtrl.loadFromFile(res);
-    const channels: Array<IChannel> = data.map(i => ({...i, user_account_id: localStorageCtrl.userIdGet, channel_name: i.description}));
+    const playlistId = newGuid();
+    const userAccountId = localStorageCtrl.userIdGet;
     const sliceSize = 100;
+    const data = typeof res.data === "string" ? await playerCtrl.loadFromUrl(res.data) : await playerCtrl.loadFromFile(res.data);
+    const channels: Array<IChannel> = data.map(i => ({...i, user_account_id: userAccountId, channel_name: i.description, user_playlist_id: playlistId}));
 
     const channelsChunks = [];
     for (let i = 0; i < channels.length; i+= sliceSize) {
         const arr = channels.slice(i, i + sliceSize);
         channelsChunks.push(arr);
+    }
+
+    const playlistCreate = {
+        description: `Creating playlist: ${res.description}`,
+        promise: async () => await HttpController.post("/playlist", {playlist: [{id: playlistId, user_account_id: userAccountId, description: res.description} as IPlaylist]})
     }
 
     const channelsChunksProms = channelsChunks.map(i => ({
@@ -152,7 +118,7 @@ const addChannelsDialog = async () => {
     }));
 
     const loadChannels = {description: "Refreshing channel list", promise: async () => await Promise.resolve(store.dispatch(channelSlice.actions.requestUpdate()))};
-    const promises: Array<IProgressBarPromise> = [...channelsChunksProms, loadChannels];
+    const promises: Array<IProgressBarPromise> = [playlistCreate, ...channelsChunksProms, loadChannels];
     showNotification({title: "Loading playlist", promises});
 };
 

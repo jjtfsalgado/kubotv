@@ -1,26 +1,29 @@
 import * as React from "react";
 import {CSSProperties, useCallback, useEffect, useState} from "react";
-import {IChannel, playerCtrl} from "../../../controllers/playerCtrl";
+import {IChannel, playerCtrl} from "../../../../controllers/playerCtrl";
 import css from "./channel_list.less";
-import {cls, throttle} from "../../../../utils/function";
+import {cls, throttle} from "../../../../../utils/function";
 import {useDispatch, useSelector} from "react-redux";
-import {IRootState, store} from "../../../reducers";
-import {channelSlice, IChannelView} from "../../../reducers/channel";
-import localStorageCtrl from "../../../controllers/localhost";
-import {ListVirtual} from "../../../ui/list/list_virtual";
-import {ContextMenu, IMenuItem} from "../../../ui/menu/menu";
-import HttpController from "../../../controllers/http";
-import {showDialog} from "../../../ui/dialog/dialog";
-import {ConfirmDialog} from "../../../ui/dialog/variants/confirm";
-import {MenuSvg} from "../../../assets/icons/menu";
-import {FavoriteSvg} from "../../../assets/icons/favorite";
+import {IRootState, store} from "../../../../reducers";
+import {channelSlice, IChannelView} from "../../../../reducers/channel";
+import localStorageCtrl from "../../../../controllers/localhost";
+import {ListVirtual} from "../../../../ui/list/list_virtual";
+import {ContextMenu, IMenuItem} from "../../../../ui/menu/menu";
+import {showDialog} from "../../../../ui/dialog/dialog";
+import {ConfirmDialog} from "../../../../ui/dialog/variants/confirm";
+import {MenuSvg} from "../../../../assets/icons/menu";
+import {FavoriteSvg} from "../../../../assets/icons/favorite";
+import {Breadcrumb, ILevel} from "../../../../ui/breadcrumb/breadcrumb";
 
 interface IChannelListProps {
     className?: string;
+    playlistId: string;
+    group?: string;
+    levels?: Array<ILevel>;
 }
 
 export const ChannelList = (props: IChannelListProps) => {
-    const {className} = props;
+    const {className, playlistId, group, levels} = props;
 
     const filter = useSelector<IRootState, string>(state => state?.channel?.filter);
     const view = useSelector<IRootState, IChannelView>(state => state?.channel?.view);
@@ -34,22 +37,25 @@ export const ChannelList = (props: IChannelListProps) => {
     ), []);
 
     const loadItems = useCallback(async (start, stop) => {
-        return await playerCtrl.getUserChannels(localStorageCtrl.userIdGet, (stop + 1) - start, start, filter, view);
-    }, [filter, view]);
+        return await playerCtrl.getUserChannels(localStorageCtrl.userIdGet, playlistId, (stop + 1) - start, start, filter, group);
+    }, [filter, view, group ]);
 
     const loadTotal = useCallback(async () => {
-        return await playerCtrl.getUserChannelsTotal(localStorageCtrl.userIdGet, filter, view)
-    }, [filter, view]);
+        return await playerCtrl.getUserChannelsTotal(localStorageCtrl.userIdGet, playlistId, filter, group)
+    }, [filter, view, group]);
 
     const dependencies = [refreshIndex, loadItems, view];
 
     return (
-        <ListVirtual<IChannel> renderer={onRenderItem}
-                               className={className}
-                               dependencies={dependencies}
-                               loadTotal={loadTotal}
-                               loadItems={loadItems}/>
-    );
+        <>
+            <Breadcrumb levels={levels}/>
+            <ListVirtual<IChannel> renderer={onRenderItem}
+                                   className={className}
+                                   dependencies={dependencies}
+                                   loadTotal={loadTotal}
+                                   loadItems={loadItems}/>
+        </>
+   );
 };
 
 interface IChannelItemProps {
@@ -68,7 +74,8 @@ const ChannelItemMenu: Array<IMenuItem<IChannel>> = [
             item.is_favourite = !item.is_favourite;
 
             const i: Partial<IChannel> = {id: item.id, is_favourite: item.is_favourite};
-            await HttpController.patch("/channel/favourites", {channels: [i]});
+            await playerCtrl.updateFavourite(i);
+
         }, this, 500)
     },
     {type: "separator"},
@@ -81,25 +88,25 @@ const ChannelItemMenu: Array<IMenuItem<IChannel>> = [
             const res = await showDialog.async({title: "Delete channel", children: (onSubmit, onCancel) => <ConfirmDialog onSubmit={onSubmit} onCancel={onCancel} message={"Are you sure you want to delete this channel?"}/>});
             if(!res) return;
 
-            await HttpController.delete(`/channel/${item.id}&${localStorageCtrl.userIdGet}`);
-            store.dispatch(channelSlice.actions.requestUpdate());
-    }},
-    {
-        description: (item) => {
-            const view = store?.getState()?.channel?.view;
-            return view === "all" ? "Delete all" : `Delete all ${view}`;
-        },
-        type: "action",
-        onClick: async (item, ev) => {
-            ev.stopPropagation();
-            const view = store?.getState()?.channel?.view;
-
-            const res = await showDialog.async({title: view === "all" ? "Delete all" : `Delete all ${view}`, children: (onSubmit, onCancel) => <ConfirmDialog onSubmit={onSubmit} onCancel={onCancel} message={"Are you sure you want to proceed?"}/>});
-            if(!res) return;
-
-            await HttpController.delete(`/channel/view/${view}&${localStorageCtrl.userIdGet}`);
+            await playerCtrl.deleteChannel(item);
             store.dispatch(channelSlice.actions.requestUpdate());
     }}
+    // {
+    //     description: (item) => {
+    //         const view = store?.getState()?.channel?.view;
+    //         return view === "all" ? "Delete all" : `Delete all ${view}`;
+    //     },
+    //     type: "action",
+    //     onClick: async (item, ev) => {
+    //         ev.stopPropagation();
+    //         const view = store?.getState()?.channel?.view;
+    //
+    //         const res = await showDialog.async({title: view === "all" ? "Delete all" : `Delete all ${view}`, children: (onSubmit, onCancel) => <ConfirmDialog onSubmit={onSubmit} onCancel={onCancel} message={"Are you sure you want to proceed?"}/>});
+    //         if(!res) return;
+    //
+    //         await HttpController.delete(`/channel/view/${view}&${localStorageCtrl.userIdGet}`);
+    //         store.dispatch(channelSlice.actions.requestUpdate());
+    // }}
 ];
 
 
@@ -109,7 +116,7 @@ interface IChannelItemState {
     show: boolean;
 }
 
-const ChannelItem = (props: IChannelItemProps) => {
+export const ChannelItem = (props: IChannelItemProps) => {
     const {item, style, index} = props;
     const selected = useSelector<IRootState, IChannel>(state => state?.channel?.selected);
     const dispatch = useDispatch();
@@ -157,17 +164,18 @@ const ChannelLogo = (props: {item: IChannel, className?: string}) => {
 
     return (
         <span className={cls(css.logo, className)}>
-            {item.logo_url ? <img alt={"logo"} src={item.logo_url}/> : <ChannelInitials description={item.description}/>}
+            {item.logo_url ? <img alt={"logo"} src={item.logo_url}/> : <Initials description={item.description}/>}
         </span>
     )
 }
 
-const ChannelInitials = ({description}) => {
+export const Initials = ({description, className} : {description: string, className?: string}) => {
+    if(!description) return null;
 
-    const init1 = description[description.length - 1].toUpperCase();
-    const init2 = description[0].toUpperCase();
+    const init1 = description[0].toUpperCase();
+    const init2 = description[description.length - 1].toUpperCase();
 
-    return <div className={css.initials}>
+    return <div className={cls(css.initials, className)}>
         <span>{init1}{init2}</span>
     </div>
 };

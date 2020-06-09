@@ -1,0 +1,45 @@
+@import "../../app/variables";
+
+.nodata{
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  height: 100%;
+  width: 100%;
+
+  .content{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    span{
+      padding-left: 4px;
+    }
+  }
+}
+
+
+.list {
+  flex: 1;
+  flex-direction: column;
+  overflow-x: hidden !important;
+
+
+  #scrollbar();
+
+  .title{
+    padding: 8px 24px;
+    text-transform: uppercase;
+  }
+
+  .item {
+    list-style-type: none;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+
+    &:hover{
+      background: @colorBgHover;
+      color: @colorTextPrimary;
+    }
+  }
+}

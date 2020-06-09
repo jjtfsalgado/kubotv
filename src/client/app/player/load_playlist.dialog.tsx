@@ -9,12 +9,13 @@ interface ILoadPlaylistState {
     url: string
     files: FileList;
     isUrl: boolean;
+    description: string;
 };
 
-export function LoadPlaylist(props : {onSubmit: (value: string | FileList) => void, onCancel: () => void}){
+export function LoadPlaylist(props : {onSubmit: (value: {data: string | FileList, description: string}) => void, onCancel: () => void}){
     const {onSubmit, onCancel} = props;
 
-    const [state, setState] = useState<ILoadPlaylistState>({url:null, files: null, isUrl: true});
+    const [state, setState] = useState<ILoadPlaylistState>({url:null, files: null, isUrl: true, description: null});
     const {isUrl, url, files} = state;
 
     const onChange = (ev) => {
@@ -34,6 +35,10 @@ export function LoadPlaylist(props : {onSubmit: (value: string | FileList) => vo
         setState({...state, isUrl: value == "url"});
     };
 
+    const onChangeDescription = (ev) => {
+        setState({...state, description: ev?.target?.value});
+    }
+
     return (
         <div className={css.load}>
             <div className={css.body}>
@@ -47,6 +52,8 @@ export function LoadPlaylist(props : {onSubmit: (value: string | FileList) => vo
 
                 </div>
 
+                <TextField required={true} value={state.description} placeholder={"Description"} name={"Description"} onChange={onChangeDescription}/>
+
                 {isUrl && (
                     <TextField value={state.url} placeholder={"Url"} name={"Url"} onChange={onChange}/>
                 )}
@@ -58,7 +65,7 @@ export function LoadPlaylist(props : {onSubmit: (value: string | FileList) => vo
                     </label>
                 )}
             </div>
-            {renderAction({type: EActionTypes.okCancel, onSubmit: () => onSubmit(isUrl ? url : files), onCancel})}
+            {renderAction({type: EActionTypes.okCancel, onSubmit: () => onSubmit({description: state.description, data: isUrl ? url : files}), onCancel})}
         </div>
     )
 }

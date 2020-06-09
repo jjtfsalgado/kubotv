@@ -4,6 +4,8 @@ import {TextField} from "../fields/text";
 
 import css from "./search.less";
 import {cls} from "../../../utils/function";
+import {useSelector} from "react-redux";
+import {IRootState} from "../../reducers";
 
 interface ISearchProps {
     placeholder: string;

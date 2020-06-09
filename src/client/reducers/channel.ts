@@ -1,7 +1,8 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {IChannel} from "../controllers/playerCtrl";
+import {IPlaylist} from "../controllers/playlistCtrl";
 
-export type IChannelView = "favourites" | "all" | "new";
+export type IChannelView = "favourites" | "all";
 
 export interface IChannelState  {
     selected?: IChannel;
@@ -9,12 +10,13 @@ export interface IChannelState  {
     view?: IChannelView;
     show?: boolean;
     refreshIndex: number;
+    playlist?: IPlaylist
+    group?: string;
 };
 
 export const channelSlice = createSlice({
     name: "channel",
     initialState: {
-        // selected: null,
         refreshIndex: 0
     } as IChannelState,
     reducers: {
@@ -25,7 +27,15 @@ export const channelSlice = createSlice({
             state.filter = action.payload;
         },
         view: (state, action: PayloadAction<IChannelView>) => {
-            state.view = action.payload;
+            const view = action.payload;
+
+            if(view === "favourites"){
+                state.playlist = null;
+                state.group = null;
+                state.filter = null;
+            }
+
+            state.view = view;
             state.show = true;
         },
         show: (state, action: PayloadAction<boolean>) => {
@@ -37,6 +47,15 @@ export const channelSlice = createSlice({
         },
         requestUpdate: (state) => {
             state.refreshIndex += 1;
+        },
+        selectPlaylist: (state, action: PayloadAction<IPlaylist>) => {
+            state.playlist = action.payload;
+            state.group = null;
+            state.filter = null;
+        },
+        selectGroup: (state, action: PayloadAction<string>) => {
+            state.group = action.payload;
+            state.filter = null;
         }
     }
 });

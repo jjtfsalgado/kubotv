@@ -1,8 +1,8 @@
 import axios from "axios";
 import {readFile} from "../../utils/function";
 import HttpController from "./http";
-import {IChannelView} from "../reducers/channel";
 import {m3uToJson} from "../../utils/m3u_parser";
+import localStorageCtrl from "./localhost";
 
 export interface IChannel {
     description: string;
@@ -12,7 +12,7 @@ export interface IChannel {
     language?: string;
     channel_name?: string;
     group_title?: string;
-    parent_id?: string
+    user_playlist_id?: string
     user_account_id?: string;
     id?: string;
 }
@@ -28,19 +28,55 @@ export const playerCtrl = new class{
         return m3uToJson(response)
     }
 
-    public async getUserChannels(userId: string, limit: number, offset: number, filter?: string, view?: IChannelView): Promise<Array<IChannel>>{
-        const res = await HttpController.get<Array<IChannel>>(`/channel/${userId}/?offset=${offset}&limit=${limit}${filter ? `&filter=${filter}` : ""}${view ? `&view=${view}` : ""}`, {promptError: true});
+    public async getUserChannels(userId: string, playlistId: string, limit: number, offset: number, filter?: string, group?: string): Promise<Array<IChannel>>{
+        const res = await HttpController.get<Array<IChannel>>(`/channel/${userId}/${playlistId}/?offset=${offset}&limit=${limit}${filter ? `&filter=${filter}` : ""}${group ? `&group=${group}` : ""}`, {promptError: true});
         if(!res){
             return
         }
         return res.data;
     }
 
-    public async getUserChannelsTotal(userId: string, filter?: string, view?: IChannelView): Promise<number>{
-        const res = await HttpController.get<number>(`/channel/total/${userId}/?${filter ? `&filter=${filter}` : ""}${view ? `&view=${view}` : ""}`, {promptError: true});
+    public async getUserChannelsTotal(userId: string, playlistId: string, filter?: string, group?: string): Promise<number>{
+        const res = await HttpController.get<number>(`/channel/total/${userId}/${playlistId}/?${filter ? `&filter=${filter}` : ""}${group ? `&group=${group}` : ""}`, {promptError: true});
         if(!res){
             return
         }
+        return res.data;
+    }
+
+    public async getUserFavourites(userId: string, limit: number, offset: number, filter?: string): Promise<Array<IChannel>>{
+        const res = await HttpController.get<Array<IChannel>>(`/favourite/${userId}/?offset=${offset}&limit=${limit}${filter ? `&filter=${filter}` : ""}`, {promptError: true});
+        if(!res){
+            return
+        }
+        return res.data;
+    }
+
+    public async getUserFavouritesTotal(userId: string, filter?: string): Promise<number>{
+        const res = await HttpController.get<number>(`/favourite/total/${userId}/?${filter ? `&filter=${filter}` : ""}`, {promptError: true});
+        if(!res){
+            return
+        }
+        return res.data;
+    };
+
+    public async updateFavourite(channel: Partial<IChannel>){
+        const res = await HttpController.patch("/favourite", {channels: [channel]});
+
+        if(!res){
+            return
+        }
+
+        return res.data;
+    }
+
+    public async deleteChannel(channel: IChannel){
+        const res = await HttpController.delete(`/channel/${channel.id}&${localStorageCtrl.userIdGet}`);
+
+        if(!res){
+            return
+        }
+
         return res.data;
     }
 }();

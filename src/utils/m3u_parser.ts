@@ -44,7 +44,7 @@ function parse (content) {
                 url: line.getAttribute('tvg-url'),
             },
             group: {
-                title: line.getAttribute('group-title'),
+                title: line.getAttribute('group-title') || null,
             },
             http: {
                 referrer: line.getVlcOption('http-referrer'),

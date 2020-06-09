@@ -14,6 +14,21 @@ interface IUser {
     verifyEmail(req: Request<any, any, any>, res: Response<any>, next: NextFunction) : Promise<any>,
 }
 
+const transporter = nodemailer.createTransport({
+    host: "mail.privateemail.com",
+    port: 587,
+    secure: false,
+    auth:{
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    },
+    tls:{
+        secureProtocol: "TLSv1_method",
+        rejectUnauthorized: false
+    }
+});
+
+
 class User implements IUser{
     async insert(req: Request<any, any, any>, res: Response<any>, next: NextFunction){
         try{
@@ -52,16 +67,6 @@ class User implements IUser{
                 return res.sendStatus(HttpStatus.ERROR.CLIENT.CONFLICT.code);
             }
 
-            const transporter = nodemailer.createTransport({
-                host: "mail.privateemail.com",
-                port: 587,
-                secure: false,
-                auth:{
-                    user: process.env.EMAIL_USER,
-                    pass: process.env.EMAIL_PASS
-                }
-            });
-
             const token = jwt.sign({email, password}, _HASH_);
             const link = `http://${req.get('host')}/user/${token}`;
 
@@ -82,6 +87,12 @@ class User implements IUser{
 
     //todo patch -> change password
     //todo delete -> delete user
+
+}
+
+
+
+function sendEmail() {
 
 }
 
