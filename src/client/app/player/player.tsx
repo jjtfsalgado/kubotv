@@ -1,10 +1,8 @@
 import {VideoContainer} from "./video/container";
-import {ChannelList} from "./view/channel/channel_list";
 import * as React from "react";
 import {useEffect} from "react";
 import axios from "axios";
 import localStorageCtrl from "../../controllers/localhost";
-import {IChannel, playerCtrl} from "../../controllers/playerCtrl";
 import {LoadPlaylist} from "./load_playlist.dialog";
 import css from "./player.less";
 import {SearchField} from "../../ui/search/search";
@@ -15,16 +13,14 @@ import HttpController from "../../controllers/http";
 import {IProgressBarPromise} from "../../ui/busy/busy";
 import {channelSlice, IChannelView} from "../../reducers/channel";
 import {useDispatch, useSelector} from "react-redux";
-import {SideBar, IGroup} from "./sidebar/sidebar";
+import {IGroup, SideBar} from "./sidebar/sidebar";
 import Logo from '../../assets/icons/logo.png';
 import {StarSvg} from "../../assets/icons/star";
-import {RecentSvg} from "../../assets/icons/history";
 import {PlusSvg} from "../../assets/icons/plus";
 import {ExitSvg} from "../../assets/icons/exit";
 import {ArrowLeft} from "../../assets/icons/arrow_left";
 import {ConfirmDialog} from "../../ui/dialog/variants/confirm";
-import {IPlaylist} from "../../controllers/playlistCtrl";
-import {newGuid} from "../../../utils/function";
+import {readFile} from "../../../utils/function";
 import {PlaylistView} from "./view/playlist/playlist";
 
 const groups: Array<IGroup> = [
@@ -92,33 +88,26 @@ export default function Player () {
 };
 
 const addChannelsDialog = async () => {
-    const res = await showDialog.async<{data: string | FileList, description: string}>({title: 'Load playlist', children: (onSubmit, onCancel) => <LoadPlaylist onSubmit={onSubmit} onCancel={onCancel}/>});
+    const res = await showDialog.async<{data: string | FileList, description: string, type: "url" | "file"}>({title: 'Load playlist', children: (onSubmit, onCancel) => <LoadPlaylist onSubmit={onSubmit} onCancel={onCancel}/>});
     if(!res || !res.data) return;
-
-    const playlistId = newGuid();
     const userAccountId = localStorageCtrl.userIdGet;
-    const sliceSize = 10;
-    const data = typeof res.data === "string" ? await playerCtrl.loadFromUrl(res.data) : await playerCtrl.loadFromFile(res.data);
-    const channels: Array<IChannel> = data.map(i => ({...i, user_account_id: userAccountId, channel_name: i.description, user_playlist_id: playlistId}));
 
-    const channelsChunks = [];
-    for (let i = 0; i < channels.length; i+= sliceSize) {
-        const arr = channels.slice(i, i + sliceSize);
-        channelsChunks.push(arr);
+    // const playlistId = newGuid();
+    // const sliceSize = 10;
+
+    if(typeof res.data !== "string"){
+        const file = await readFile(res.data);
+        res.data = file as any
+        res.type = "file";
     }
 
-    const playlistCreate = {
-        description: `Creating playlist: ${res.description}`,
-        promise: async () => await HttpController.post("/playlist", {playlist: [{id: playlistId, user_account_id: userAccountId, description: res.description} as IPlaylist]})
-    }
-
-    const channelsChunksProms = channelsChunks.map(i => ({
+    const channelsChunksProms = {
         description: "Uploading channels",
-        promise: async () => await HttpController.post("/channel", {channels: i})
-    }));
+        promise: async () => await HttpController.post(`/channel/${userAccountId}`, {file: res})
+    };
 
     const loadChannels = {description: "Refreshing channel list", promise: async () => await Promise.resolve(store.dispatch(channelSlice.actions.requestUpdate()))};
-    const promises: Array<IProgressBarPromise> = [playlistCreate, ...channelsChunksProms, loadChannels];
+    const promises: Array<IProgressBarPromise> = [channelsChunksProms, loadChannels];
     showNotification({title: "Loading playlist", promises});
 };
 

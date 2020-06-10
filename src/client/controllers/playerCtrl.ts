@@ -1,7 +1,4 @@
-import axios from "axios";
-import {readFile} from "../../utils/function";
 import HttpController from "./http";
-import {m3uToJson} from "../../utils/m3u_parser";
 import localStorageCtrl from "./localhost";
 
 export interface IChannel {
@@ -18,15 +15,7 @@ export interface IChannel {
 }
 
 export const playerCtrl = new class{
-    public async loadFromUrl(url: string){
-        const response = await axios.get(`/proxy/${url}`);
-        return m3uToJson(response.data)
-    }
 
-    public async loadFromFile(file: any){
-        const response = await readFile(file);
-        return m3uToJson(response)
-    }
 
     public async getUserChannels(userId: string, playlistId: string, limit: number, offset: number, filter?: string, group?: string): Promise<Array<IChannel>>{
         const res = await HttpController.get<Array<IChannel>>(`/channel/${userId}/${playlistId}/?offset=${offset}&limit=${limit}${filter ? `&filter=${filter}` : ""}${group ? `&group=${group}` : ""}`, {promptError: true});

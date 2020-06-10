@@ -37,7 +37,8 @@ class ExpressCtrl{
     private _init = () => {
         const PORT = process.env.PORT;
         this.app.use(compression())
-
+        this.app.use(express.urlencoded({limit: '10mb', extended: true}))
+        this.app.use(express.json({limit: '10mb'}));
         this.app.use((req, res, next) => {
             if (req.protocol === 'https') {
                 return res.redirect('http://' + req.hostname + req.url);
@@ -51,7 +52,6 @@ class ExpressCtrl{
         this.app.post('/user', User.verifyEmail);
         this.app.get('/user/:token', User.insert);
 
-        this.app.post('/playlist', this._authenticate, Playlist.insert);
         this.app.get('/playlist/:userId', this._authenticate, Playlist.get);
         this.app.get('/playlist/groups/:userId/:playlistId', this._authenticate, Playlist.getGroups);
 
@@ -60,7 +60,7 @@ class ExpressCtrl{
         this.app.patch('/favourite', this._authenticate, Channel.updateFavourites);
 
 
-        this.app.post('/channel', this._authenticate, Channel.insert);
+        this.app.post('/channel/:userId', this._authenticate, Channel.insert);
         this.app.get('/channel/:userId/:playlistId', this._authenticate, Channel.get);
         this.app.get('/channel/total/:userId/:playlistId', this._authenticate, Channel.getTotal);
         this.app.delete('/channel/:channelId&:userId', this._authenticate, Channel.delete);

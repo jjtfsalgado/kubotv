@@ -1,4 +1,3 @@
-import {IChannel} from "../client/controllers/playerCtrl";
 
 declare global {
     interface String {
@@ -10,7 +9,7 @@ declare global {
 }
 
 
-export function m3uToJson(str: string): Array<IChannel> {
+export function m3uToJson(str: string) {
     //fixme catch incorrect playlist
     const parsedManifest = parse(str);
 

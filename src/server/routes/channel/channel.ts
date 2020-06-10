@@ -3,12 +3,30 @@ import ChannelSql from "./channel.sql";
 import {NextFunction, Request, Response} from "express-serve-static-core";
 import {HttpStatus} from "../../../utils/http_status";
 import {IChannelView} from "../../../client/reducers/channel";
+import PlaylistSql from "../playlist/playlist.sql";
+import {newGuid} from "../../../utils/function";
+import {IPlaylist} from "../../../client/controllers/playlistCtrl";
+import {m3uToJson} from "../../../utils/m3u_parser";
+import * as request from "request";
 
 interface IChannel {
     get(req: Request<any, any, any>, res: Response<any>, next: NextFunction) : Promise<any>
     insert(req: Request<any, any, any>, res: Response<any>, next: NextFunction) : Promise<any>
     getTotal(req: Request<any, any, any>, res: Response<any>, next: NextFunction) : Promise<any>
     updateFavourites(req: Request<any, any, any>, res: Response<any>, next: NextFunction) : Promise<any>
+}
+
+interface IChannelPlaylist {
+    description: string;
+    url: string;
+    is_favourite?: boolean;
+    logo_url?: string
+    language?: string;
+    channel_name?: string;
+    group_title?: string;
+    user_playlist_id?: string
+    user_account_id?: string;
+    id?: string;
 }
 
 class Channel implements IChannel{
@@ -96,9 +114,26 @@ class Channel implements IChannel{
     }
 
     async insert(req: Request<any, any, any>, res: Response<any>, next: NextFunction): Promise<any> {
-        const {channels} = req.body;
+        const {userId} = req.params;
+        const {file} = req.body;
+
         try{
+            const playlistId = newGuid();
+            const playlist: Array<IPlaylist> = [{id: playlistId, user_account_id: userId, description: file.description}]
+
+            let data;
+
+            if(file.type === "url"){
+                const url = `${req.protocol}://${req.get('host')}/proxy/${file.data}`
+                data = await loadFromUrl(url)
+            } else{
+                data = await m3uToJson(file.data);
+            }
+            const channels: Array<IChannelPlaylist> = data.map(i => ({...i, user_account_id: userId, channel_name: i.description, user_playlist_id: playlistId}));
+
+            await dbCtrl.pool.query(PlaylistSql.insert(playlist))
             await dbCtrl.pool.query(ChannelSql.insert(channels));
+
             return res.sendStatus(HttpStatus.SUCCESSFUL.CREATED.code);
         } catch (e) {
             return res.sendStatus(HttpStatus.ERROR.SERVER.INTERNAL_SERVER_ERROR.code);
@@ -116,6 +151,17 @@ class Channel implements IChannel{
     }
 
 
+}
+
+const loadFromUrl = async (url: string) => {
+    return new Promise((res, rej) => {
+        request.get(url, (error, response, body) => {
+            if(error){
+                return rej(error)
+            }
+            return res(m3uToJson(body))
+        });
+    })
 }
 
 export default new Channel();
