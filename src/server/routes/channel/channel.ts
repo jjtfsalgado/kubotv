@@ -123,11 +123,11 @@ class Channel implements IChannel{
 
             let data;
 
-            if(file.type === "url"){
+            if(file.type === "file"){
+                data = await m3uToJson(file.data);
+            } else{
                 const url = `${req.protocol}://${req.get('host')}/proxy/${file.data}`
                 data = await loadFromUrl(url)
-            } else{
-                data = await m3uToJson(file.data);
             }
             const channels: Array<IChannelPlaylist> = data.map(i => ({...i, user_account_id: userId, channel_name: i.description, user_playlist_id: playlistId}));
 
