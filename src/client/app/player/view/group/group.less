@@ -1,0 +1,39 @@
+@import "../../../variables.less";
+
+.tile{
+    cursor: pointer;
+    display: flex;
+
+    .content{
+        position: relative;
+        height: 100%;
+        width: 100%;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        .icon{
+            color: @colorTextPrimary;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .description{
+            font-size: 0.7em;
+            color: @colorTextPrimary;
+            max-width: 80%;
+            text-overflow: clip;
+            white-space: nowrap;
+            overflow: hidden;
+            display: inline-block;
+        }
+    }
+
+    &:hover{
+        .content{
+            background: @colorBgHover;
+        }
+    }
+}

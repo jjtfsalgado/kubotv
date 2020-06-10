@@ -6,11 +6,8 @@ import {IRootState, store} from "../../../../reducers";
 import {channelSlice, IChannelView} from "../../../../reducers/channel";
 import localStorageCtrl from "../../../../controllers/localhost";
 import {IPlaylist, playlistCtrl} from "../../../../controllers/playlistCtrl";
-
-import css from "./playlist.less"
-import {Initials} from "../channel/channel_list";
 import {FavouriteList} from "../channel/favourite_list";
-import {GroupView} from "../group/group";
+import {GroupTile, GroupView} from "../group/group";
 import {Breadcrumb, ILevel} from "../../../../ui/breadcrumb/breadcrumb";
 
 interface IPlaylistViewProps {
@@ -48,18 +45,8 @@ export const PlaylistView = (props: IPlaylistViewProps) => {
             <Breadcrumb levels={rootLevel}/>
             <GridVirtual<IPlaylist> className={className}
                          dependencies={dependencies}
-                         renderer={PlaylistTile}
+                         renderer={(item, style, index) => GroupTile(item.description, style, index, () => store.dispatch(channelSlice.actions.selectPlaylist(item)))}
                          loadItems={loadItems}/>
         </>
-    )
-}
-
-const PlaylistTile = (item: IPlaylist, style, index) => {
-
-    return (
-        <div className={css.playlist} style={style} onClick={() => store.dispatch(channelSlice.actions.selectPlaylist(item))}>
-            <Initials className={css.icon} description={item.description}/>
-            <span className={css.description}>{item.description}</span>
-        </div>
     )
 }

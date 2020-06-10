@@ -2,10 +2,10 @@
 
 .breadcrumb {
     padding: 8px;
-    cursor: pointer;
-    color: @colorTextSecondary;
+    color: @colorTextTertiary;
     display: flex;
     align-items: center;
+    font-size: 0.9em;
 
     & > * + * {
         margin-left: 16px;
@@ -14,11 +14,14 @@
             content: "//";
             left: -14px;
             position: absolute;
+            color: @colorTextTertiary;
         }
     }
 
     div {
-        padding: 8px;
+        padding: 0 8px;
+        cursor: pointer;
+
         position: relative;
 
         span{
@@ -27,12 +30,17 @@
             max-width: 200px;
             overflow: hidden;
             display: inline-block;
+            transition: 0.2s color;
+        }
+
+        &:last-child{
+            color: @colorTextPrimary;
         }
 
         &:not(:last-child){
-            color: @colorSelected;
-            &:hover {
-                background: @colorBgHover;
+
+            &:hover{
+                color: @colorSelected;
             }
         }
     }

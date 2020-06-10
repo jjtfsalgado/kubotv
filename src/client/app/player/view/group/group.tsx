@@ -6,7 +6,7 @@ import {IRootState, store} from "../../../../reducers";
 import localStorageCtrl from "../../../../controllers/localhost";
 import {IGroupPlaylist, playlistCtrl} from "../../../../controllers/playlistCtrl";
 
-import css from "../playlist/playlist.less"
+import css from "./group.less"
 import {ChannelList, Initials} from "../channel/channel_list";
 import {Breadcrumb, ILevel} from "../../../../ui/breadcrumb/breadcrumb";
 import {channelSlice} from "../../../../reducers/channel";
@@ -47,18 +47,20 @@ export const GroupView = (props: IGroupViewProps) => {
             <Breadcrumb levels={levels}/>
             <GridVirtual<IGroupPlaylist> className={className}
                                         dependencies={dependencies}
-                                        renderer={(item, style, index) => GroupTile(item, style, index, onClick)}
+                                        renderer={(item, style, index) => GroupTile(item.group_title, style, index, () => onClick(item))}
                                         loadItems={loadGroups}/>
         </>
     )
 }
 
-const GroupTile = (item: IGroupPlaylist, style, index, onClick) => {
+export const GroupTile = (description: string, style, index, onClick) => {
 
     return (
-        <div className={css.playlist} style={style} onClick={(ev) => onClick(item)}>
-            <Initials className={css.icon} description={item.group_title}/>
-            <span className={css.description}>{item.group_title}</span>
+        <div className={css.tile} style={style} onClick={onClick}>
+            <div className={css.content}>
+                <Initials className={css.icon} description={description}/>
+                <span className={css.description}>{description}</span>
+            </div>
         </div>
     )
 }
