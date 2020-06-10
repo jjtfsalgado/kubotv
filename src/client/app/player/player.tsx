@@ -97,7 +97,7 @@ const addChannelsDialog = async () => {
 
     const playlistId = newGuid();
     const userAccountId = localStorageCtrl.userIdGet;
-    const sliceSize = 100;
+    const sliceSize = 10;
     const data = typeof res.data === "string" ? await playerCtrl.loadFromUrl(res.data) : await playerCtrl.loadFromFile(res.data);
     const channels: Array<IChannel> = data.map(i => ({...i, user_account_id: userAccountId, channel_name: i.description, user_playlist_id: playlistId}));
 
