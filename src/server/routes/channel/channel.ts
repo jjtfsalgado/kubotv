@@ -136,6 +136,7 @@ class Channel implements IChannel{
 
             return res.sendStatus(HttpStatus.SUCCESSFUL.CREATED.code);
         } catch (e) {
+            console.log(e)
             return res.sendStatus(HttpStatus.ERROR.SERVER.INTERNAL_SERVER_ERROR.code);
         }
     }
