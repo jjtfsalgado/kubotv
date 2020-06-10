@@ -32,6 +32,11 @@ export class Video extends React.Component<IVideoProps,{}>{
         const {url} = this.props;
 
         if(url && prevProps.url !== url){
+            if(url.includes("youtube")){
+                window.open(url);
+                return
+            }
+
             const mimeType = mime.lookup(url);
             this._player.load(`/proxy/${url}`, mimeType || undefined);
             this._player.play();
