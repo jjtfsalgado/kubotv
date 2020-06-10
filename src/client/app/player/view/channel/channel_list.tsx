@@ -18,7 +18,7 @@ import {Breadcrumb, ILevel} from "../../../../ui/breadcrumb/breadcrumb";
 interface IChannelListProps {
     className?: string;
     playlistId: string;
-    group?: string;
+    group?: string | "All";
     levels?: Array<ILevel>;
 }
 
@@ -37,11 +37,11 @@ export const ChannelList = (props: IChannelListProps) => {
     ), []);
 
     const loadItems = useCallback(async (start, stop) => {
-        return await playerCtrl.getUserChannels(localStorageCtrl.userIdGet, playlistId, (stop + 1) - start, start, filter, group);
+        return await playerCtrl.getUserChannels(localStorageCtrl.userIdGet, playlistId, (stop + 1) - start, start, filter, group === "All" ? null : group);
     }, [filter, view, group ]);
 
     const loadTotal = useCallback(async () => {
-        return await playerCtrl.getUserChannelsTotal(localStorageCtrl.userIdGet, playlistId, filter, group)
+        return await playerCtrl.getUserChannelsTotal(localStorageCtrl.userIdGet, playlistId, filter, group === "All" ? null : group)
     }, [filter, view, group]);
 
     const dependencies = [refreshIndex, loadItems, view];

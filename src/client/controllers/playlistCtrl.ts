@@ -7,7 +7,7 @@ export interface IPlaylist {
 }
 
 export interface IGroupPlaylist {
-    group_title: string;
+    group_title: string | "All"
 }
 
 export const playlistCtrl = new class{

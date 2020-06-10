@@ -10,6 +10,7 @@ import css from "./group.less"
 import {ChannelList, Initials} from "../channel/channel_list";
 import {Breadcrumb, ILevel} from "../../../../ui/breadcrumb/breadcrumb";
 import {channelSlice} from "../../../../reducers/channel";
+import {cls} from "../../../../../utils/function";
 
 interface IGroupViewProps {
     className?: string;
@@ -26,7 +27,9 @@ export const GroupView = (props: IGroupViewProps) => {
     const userId = localStorageCtrl.userIdGet;
 
     const loadGroups = useCallback(async () => {
-        return await playlistCtrl.getPlaylistGroups(userId, playlistId, filter);
+        const groups = await playlistCtrl.getPlaylistGroups(userId, playlistId, filter);
+
+        return [{group_title: "All"},...groups] as Array<IGroupPlaylist>;
     }, [filter, playlistId])
 
     const dependencies = [loadGroups];
@@ -38,9 +41,7 @@ export const GroupView = (props: IGroupViewProps) => {
                             playlistId={playlistId}/>
     }
 
-    const onClick = (item) => {
-        store.dispatch(channelSlice.actions.selectGroup(item.group_title))
-    }
+    const onClick = (item) => store.dispatch(channelSlice.actions.selectGroup(item.group_title));
 
     return (
         <>
@@ -55,12 +56,22 @@ export const GroupView = (props: IGroupViewProps) => {
 
 export const GroupTile = (description: string, style, index, onClick) => {
 
+    const isAll = description === "All" && index === 0;
+
     return (
         <div className={css.tile} style={style} onClick={onClick}>
-            <div className={css.content}>
-                <Initials className={css.icon} description={description}/>
-                <span className={css.description}>{description}</span>
-            </div>
+            {!isAll && (
+                <div className={css.content}>
+                    <Initials className={css.icon} description={description}/>
+                    <span className={css.description}>{description}</span>
+                </div>
+                )
+            }
+            {isAll && (
+                <div className={cls(css.content)}>
+                    <span style={{fontWeight: "bold"}}>{description}</span>
+                </div>
+            )}
         </div>
     )
 }
