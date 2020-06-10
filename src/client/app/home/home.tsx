@@ -112,7 +112,7 @@ export const Home = () => {
         <>
             <section className={css.intro}>
                 <div className={css.content}>
-                    <h4>kubo TV</h4>
+                    {/*<h4>kubo TV</h4>*/}
                     <h1>Your tv, everywhere.</h1>
 
                     <div className={css.links}>

@@ -68,7 +68,7 @@ const RegisterDialog = (props: IRegisterDialogProps) => {
               validations={validations}
               errorMessage={onErrorMessage}
               successMessage={{title: "Thank you for signing up!", message: `We just need you to verify your email and you are good to go. \n We've sent you an email to ${email}. `}}>
-            <h3>Join us at kubo tv</h3>
+            <h3>Join us at Kubo TV</h3>
             <TextField onChange={onChange}
                        name={"email"}
                        className={css.field}
