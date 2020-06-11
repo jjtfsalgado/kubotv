@@ -12,14 +12,12 @@ import compression from "compression";
 const HttpProxy = require('http-proxy');
 const proxy = HttpProxy.createProxyServer({changeOrigin: true, ignorePath: true, cookieDomainRewrite: {"*": ""}});
 
-proxy.on('proxyReq', function(proxyReq, req, res, options) {
-proxy.on('error', function (err, req, res) {
-    console.log("error -> ", err)
-});
-
-
-proxy.on('proxyRes', function(proxyRes, req, res, options) {
-});
+// proxy.on('proxyReq', function(proxyReq, req, res, options) {
+// proxy.on('error', function (err, req, res) {
+//     console.log("error -> ", err)
+// });
+// proxy.on('proxyRes', function(proxyRes, req, res, options) {
+// });
 
 
 
