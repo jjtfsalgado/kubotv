@@ -1,7 +1,8 @@
 import * as React from "react";
-import {Player} from "clappr";
+import Clappr from "clappr";
 import {cls} from "../../../../utils/function";
 import * as mime from "mime-types";
+const {Player} = Clappr
 
 interface IVideoProps{
     showControls?: boolean;
@@ -12,7 +13,7 @@ interface IVideoProps{
 // Log.setLevel(0);
 
 export class Video extends React.Component<IVideoProps,{}>{
-    private _player: Player;
+    private _player: any;
 
     constructor(props) {
         super(props);
@@ -34,7 +35,6 @@ export class Video extends React.Component<IVideoProps,{}>{
         if(url && prevProps.url !== url){
             if(url.includes("youtube")){
                 window.open(url);
-                return
             }
 
             const mimeType = mime.lookup(url);

@@ -157,8 +157,8 @@ class Channel implements IChannel{
 const loadFromUrl = async (url: string) => {
     return new Promise((res, rej) => {
         request.get(url, (error, response, body) => {
-            if(error){
-                return rej(error)
+            if(error || response.statusCode !== 200){
+                return rej(error || new Error("Couldn't fetch url"))
             }
             return res(m3uToJson(body))
         });

@@ -7,8 +7,21 @@ import Token from "./routes/token/token";
 import {_HASH_, _HEADER_AUTH_} from "../../global";
 import Login, {verifyToken} from "./routes/login/login";
 import {NextFunction, Request, Response} from "express-serve-static-core";
-import * as request from "request";
 import compression from "compression";
+
+const HttpProxy = require('http-proxy');
+const proxy = HttpProxy.createProxyServer({changeOrigin: true, ignorePath: true, cookieDomainRewrite: {"*": ""}});
+
+proxy.on('proxyReq', function(proxyReq, req, res, options) {
+proxy.on('error', function (err, req, res) {
+    console.log("error -> ", err)
+});
+
+
+proxy.on('proxyRes', function(proxyRes, req, res, options) {
+});
+
+
 
 class ExpressCtrl{
     private readonly _app: Express;
@@ -39,14 +52,6 @@ class ExpressCtrl{
         this.app.use(compression())
         this.app.use(express.urlencoded({limit: '10mb', extended: true}))
         this.app.use(express.json({limit: '10mb'}));
-        this.app.use((req, res, next) => {
-            if (req.protocol === 'https') {
-                return res.redirect('http://' + req.hostname + req.url);
-            };
-
-            next();
-        });
-
         this.app.use(express.json());
 
         this.app.post('/user', User.verifyEmail);
@@ -74,9 +79,9 @@ class ExpressCtrl{
             const u = req.params[0];
             res.header("Access-Control-Allow-Origin", "*");
             try{
-                request.get(u).on("error", next).pipe(res);
-            }catch(e){
-                console.error(e);
+                return proxy.web(req, res, {target: u}, next);
+            }catch (e) {
+                console.log(e)
             }
         });
 
