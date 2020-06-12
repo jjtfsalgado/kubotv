@@ -12,15 +12,6 @@ import compression from "compression";
 const HttpProxy = require('http-proxy');
 const proxy = HttpProxy.createProxyServer({changeOrigin: true, ignorePath: true, cookieDomainRewrite: {"*": ""}});
 
-// proxy.on('proxyReq', function(proxyReq, req, res, options) {
-// proxy.on('error', function (err, req, res) {
-//     console.log("error -> ", err)
-// });
-// proxy.on('proxyRes', function(proxyRes, req, res, options) {
-// });
-
-
-
 class ExpressCtrl{
     private readonly _app: Express;
 
@@ -74,10 +65,15 @@ class ExpressCtrl{
 
         this.app.post('/verify/:token', Token.verify);
         this.app.get('/proxy/*', (req: Request, res: Response, next: NextFunction) => {
-            const u = req.params[0];
+            const groups = req.originalUrl.match(/(?<=\/proxy\/).*$/g);
+            if(!groups){
+                throw new Error("Invalid url")
+            }
+
+            const url = groups[0]
             res.header("Access-Control-Allow-Origin", "*");
             try{
-                return proxy.web(req, res, {target: u}, next);
+                return proxy.web(req, res, {target: url}, next);
             }catch (e) {
                 console.log(e)
             }
