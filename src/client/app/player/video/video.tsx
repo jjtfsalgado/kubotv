@@ -38,7 +38,7 @@ export class Video extends React.Component<IVideoProps,{}>{
             }
 
             const mimeType = mime.lookup(url);
-            this._player.load(`/proxy/${url}`, mimeType || 'application/vnd.apple.mpegurl');
+            this._player.load(`/proxy/${url}`, mimeType || undefined);
             this._player.play();
         }
     }
