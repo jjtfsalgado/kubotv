@@ -1,5 +1,6 @@
 .idea/
 dist/bundle.*
+.env
 
 # User-specific stuff
 .idea/**/workspace.xml
@@ -24,7 +25,6 @@ server.js*
 
 # production
 /build
-
 # misc
 .DS_Store
 .env.local
