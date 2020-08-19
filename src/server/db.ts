@@ -10,7 +10,7 @@ class DbCtrl {
 
     constructor() {
         this._pool = new Pool({
-            connectionString: process.env.DATABASE_URL,
+            connectionString: process.env.DATABASE_URI,
             ssl: true
         });
     }
